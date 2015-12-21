@@ -1,0 +1,11 @@
+{
+    "email" : "email@address.com",
+    "password" : "This is your bot password.",
+    "youtube" : {
+        "DEVELOPER_KEY" : "Put your YouTube developer key here. Leave the other parameters alone.",
+        "API_SERVICE_NAME" : "youtube",
+        "API_VERSION" : "v3",
+        "request_limit" : 5
+    },
+    "log_request_limit" : 50
+}
