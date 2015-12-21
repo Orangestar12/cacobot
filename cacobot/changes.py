@@ -5,12 +5,13 @@ import random # To print random emojis.
 # the list is a server name: Use 'all' to send to all servers, or type a server
 # name to make that server the only one that can see that change.
 change_list = [
-    ["all", "SOON: I'm gonna fix that glitch where you can't use tags in DMs."],
+    ["all", "I fixed that glitch where you can't use tags in DMs."],
     ["all", "We Github now. https://github.com/Orangestar12/cacobot"],
     ["all", "Call .tag list mine and paste the result back into the channel: CacoBot will count your tags!"],
     ["all", ".tag list now lists only the tags created in the server you've posted the command now. Use .tag list all to list all tags."],
     ["all", "New! .choice!"],
     ["all", "YouTube search is back! Use .yt."],
+    ["all", "Cacobot should now get a random game ID once every so often!... In theory."],
     ["/g/entoo", "STILL COMING SOON: Radio?"],
     ["Undertale", ".summon is now back and better than ever! You can present as many monster codes as you want, space-seperated, and case doesn't matter anymore!"],
     ["Undertale", ".determinate now has a new function where you can provide a space-seperated specific font. I don't have a lot of fonts, so maybe suggest a few? Example: font=Segoe_UI_Semilight"],
