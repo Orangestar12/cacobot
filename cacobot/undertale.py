@@ -144,7 +144,7 @@ def summon(message, client, *args, **kwargs):
         monsters.update(hidden)
 
         for x in cmd:
-            for y in monsters
+            for y in monsters:
                 if x.lower() == y.lower():
                     msg.append(monsters[x])
             else:
@@ -300,13 +300,13 @@ def determinate(message, client, *args, **kwargs):
         "You know what's going on here, don't you? You just wanted to see me suffer.",
         "You don't understand how it works down here, do you?",
         "Was it something I did? Did *I* do something to make you do this?"
-        ])
+        ]))
     else:
         if color == 'RAINBOW':
             clr = ["#"]
             for x in range(0, 6):
                 clr.append(random.choice('0123456789ABCDEF'))
-            color = "".join(me))
+            color = "".join(clr)
 
         #find font
         if 'font=' in TextToSay.lower() or 'font:' in TextToSay.lower():
