@@ -26,12 +26,11 @@ def aan(string):
         return 'a'
 
 # random game status
-@asyncio.coroutine
 def random_retro_game():
     while True:
         # Change currently-playing game to Doom 3, Quake Live, Quake, Quake II, Q3A, Warsow, Xonotic, System Shock, System Shock 2, Strife: Veteran Edition, Star Wars Jedi Knight, Star Wars Jedi Knight II, Wolfenstein - ET, Unreal, Alien Vs Predator, Thief (choices in that order)
         yield from client.change_status(game_id=choice([712, 385, 482, 483, 484, 738, 815, 701, 534, 601, 602, 613, 635, 714, 822]), idle=False)
-        yield from asyncio.sleep(60000)
+        yield from asyncio.sleep(3600)
 
 @client.async_event
 def on_ready():
@@ -39,7 +38,7 @@ def on_ready():
     print(client.user.name)
     print(client.user.id)
     print('------')
-    yield from random_retro_game()
+    random_retro_game()
     # No ioquake or ZDoom or PrBoom+, but S:VE more than makes up for that.
 
 @client.async_event

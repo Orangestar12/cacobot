@@ -94,4 +94,4 @@ def log(message, client, *args, **kwargs):
                       x.author.name,
                       x.content))
 
-                yield from asyncio.sleep(3000)
+                yield from asyncio.sleep(3)

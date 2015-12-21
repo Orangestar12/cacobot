@@ -57,7 +57,7 @@ def tag(message, client, *args, **kwargs):
                     if not message.channel.is_private:
                         tags[params[1]]['server'] = message.server.id
                     else:
-                        tags[params[0]]['server'] = 'None'
+                        tags[params[1]]['server'] = 'None'
                     yield from client.send_message(message.channel, ":heavy_check_mark: Successfully created the tag `{}`.".format(params[1]))
 
             elif cmd == 'delete':
@@ -157,7 +157,7 @@ def tag(message, client, *args, **kwargs):
                         if not message.channel.is_private:
                             tags[params[1]]['server'] = message.server.id
                         else:
-                            tags[params[0]]['server'] = 'None'
+                            tags[params[1]]['server'] = 'None'
                         yield from client.send_message(message.channel, ':children_crossing: You have claimed the tag `{}`.'.format(params[1]))
                     else:
                         yield from client.send_message(message.channel, ':no_entry_sign: This tag is owned by <@{}>.'.format(tags[params[1]]['owner']))

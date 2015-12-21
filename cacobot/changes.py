@@ -12,10 +12,18 @@ change_list = [
     ["all", "New! .choice!"],
     ["all", "YouTube search is back! Use .yt."],
     ["all", "Cacobot should now get a random game ID once every so often!... In theory."],
+    ["all", "Hotfix: Fixed a glitch where you couldn't claim tags in DMs."],
+    ["all", "Hotfix: Fixed a glitch where log would send over 3000 seconds instead of 3."],
+    ["all", "Hotfix: Fixed the timing on CacoBot so he changes games every hour instead of every 16 hours."],
     ["/g/entoo", "STILL COMING SOON: Radio?"],
     ["Undertale", ".summon is now back and better than ever! You can present as many monster codes as you want, space-seperated, and case doesn't matter anymore!"],
     ["Undertale", ".determinate now has a new function where you can provide a space-seperated specific font. I don't have a lot of fonts, so maybe suggest a few? Example: font=Segoe_UI_Semilight"],
-    ["Undertale", "Something else? `:^)`"]
+    ["Undertale", "Something else? `:^)`"],
+    ["Undertale", "Hotfix: Fixed a glitch where summon still required correct casing."],
+    ["Undertale", "Hotfix: Fixed a glitch where summon threw an error with an empty array of characters."],
+    ["Undertale", "Hotfix: Installed those extra fonts."],
+    ["Undertale", "Hotfix: Fixed an exploit where making every single summon \"Jerry\" caused an array of indecipherable gibberish to spawn instead."],
+    ["Undertale", "Hotfix: Fixed a typo that caused special summon cases not to occur."]
 ]
 
 # There's a few more emojis I could use for bullets, but these stuck out the most to me.

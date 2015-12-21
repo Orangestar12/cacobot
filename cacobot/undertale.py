@@ -146,13 +146,17 @@ def summon(message, client, *args, **kwargs):
         for x in cmd:
             for y in monsters:
                 if x.lower() == y.lower():
-                    msg.append(monsters[x])
+                    msg.append(monsters[y])
             else:
                 if x.lower() == 'jerry':
                     msg.append("Jerry came, too.")
 
+        # every message is jerry
+        if len(msg) == len([x for x in msg if x == 'Jerry came, too.']):
+            msg = ["Jerry came, too."]
+
         # detect jerry
-        if msg[0] == 'Jerry came, too.':
+        while msg and msg[0] == 'Jerry came, too.':
             if len(msg) == 1:
                 msg.insert(0, monsters[random.choice(list(monsters))])
             else:
@@ -162,49 +166,49 @@ def summon(message, client, *args, **kwargs):
 
         # KK+Madjick: Mercenaries
         if set(['Madjick pops out of its hat!','Knight Knight blocks the way!']).issubset(msg):
-            save = [i for i,x in enumerate(testlist) if x == 'Knight Knight blocks the way!']
+            save = [i for i,x in enumerate(msg) if x == 'Knight Knight blocks the way!']
             msg.remove('Madjick pops out of its hat!')
             msg.remove('Knight Knight blocks the way!')
             msg.insert(save, 'Mercenaries emerge from the shadows.')
 
         # Pyrope*2: Double Davis
         if set(['Pyrope bounds towards you!','Pyrope bounds towards you!']).issubset(msg):
-            save = [i for i,x in enumerate(testlist) if x == 'Pyrope bounds towards you!']
+            save = [i for i,x in enumerate(msg) if x == 'Pyrope bounds towards you!']
             msg.remove('Pyrope bounds towards you!')
             msg.remove('Pyrope bounds towards you!')
             msg.insert(save, 'The rare and threatening Double Davis.')
 
         # Vulkin + Tsun: Jealous
         if set(['Tsunderplane gets in the way! Not on purpose or anything.','Vulkin strolls in.']).issubset(msg):
-            save = [i for i,x in enumerate(testlist) if x == 'Tsunderplane gets in the way! Not on purpose or anything.']
+            save = [i for i,x in enumerate(msg) if x == 'Tsunderplane gets in the way! Not on purpose or anything.']
             msg.remove('Tsunderplane gets in the way! Not on purpose or anything.')
             msg.remove('Vulkin strolls in.')
             msg.insert(save, 'Tsunderplane attacks! Not because it\'s jealous Vulkin is paying attention to you.')
 
         # Vulkin + Vulkin: Strange Parade
         if set(['Vulkin strolls in.','Vulkin strolls in.']).issubset(msg):
-            save = [i for i,x in enumerate(testlist) if x == 'Vulkin strolls in.']
+            save = [i for i,x in enumerate(msg) if x == 'Vulkin strolls in.']
             msg.remove('Vulkin strolls in.')
             msg.remove('Vulkin strolls in.')
             msg.insert(save, 'A strange parade blocks the path.')
 
         # Aaron + Woshua: Easter Egg
         if set(['Aaron flexes in!','Woshua shuffles up.']).issubset(msg):
-            save = [i for i,x in enumerate(testlist) if x == 'Aaron flexes in!']
+            save = [i for i,x in enumerate(msg) if x == 'Aaron flexes in!']
             msg.remove('Aaron flexes in!')
             msg.remove('Woshua shuffles up.')
             msg.insert(save, 'Woshua and Aaron appear.')
 
         # Snowdrake + Ice Cap: pose
         if set(['Snowdrake flutters forth!','Ice Cap struts into view.']).issubset(msg):
-            save = [i for i,x in enumerate(testlist) if x == 'Snowdrake flutters forth!']
+            save = [i for i,x in enumerate(msg) if x == 'Snowdrake flutters forth!']
             msg.remove('Snowdrake flutters forth!')
             msg.remove('Icecap struts into view.')
             msg.insert(save, 'Icecap and Snowdrake pose like bad guys.')
 
         # Loox + Veg/Migosp: loox & Co.
         if set(['Loox drew near!','Vegetoid came out of the earth!', 'Migosp crawled up close!']).issubset(msg) or set(['Loox drew near!','Vegetoid came out of the earth!']).issubset(msg) or set(['Loox drew near!', 'Migosp crawled up close!']).issubset(msg):
-            save = [i for i,x in enumerate(testlist) if x == 'You tripped into a line of Moldmals.']
+            save = [i for i,x in enumerate(msg) if x == 'You tripped into a line of Moldmals.']
             msg.remove('Loox drew near!')
             try:
                 msg.remove('Migosp crawled up close!')
@@ -218,14 +222,14 @@ def summon(message, client, *args, **kwargs):
 
         # Two Moldsmal: "Moldsmal and Moldsmal"
         if set(['You tripped into a line of Moldmals.','You tripped into a line of Moldmals.']).issubset(msg):
-            save = [i for i,x in enumerate(testlist) if x == 'You tripped into a line of Moldmals.']
+            save = [i for i,x in enumerate(msg) if x == 'You tripped into a line of Moldmals.']
             msg.remove('You tripped into a line of Moldmals.')
             msg.remove('You tripped into a line of Moldmals.')
             msg.insert(save, 'Moldsmal and Moldsmal block the way.')
 
             # Astig, FF, Whim: ULTRA-VIOLENCE
             if set(['Whimsalot rushed in!', 'Final Froggit was already there, waiting for you.','Eyes appeared from the shadows.']).issubset(msg):
-                save = [i for i,x in enumerate(testlist) if x == 'Final Froggit was already there, waiting for you.']
+                save = [i for i,x in enumerate(msg) if x == 'Final Froggit was already there, waiting for you.']
                 msg.remove('Eyes appeared from the shadows.')
                 msg.remove('Whimsalot rushed in!')
                 msg.remove('Final Froggit was already there, waiting for you.')
@@ -233,14 +237,14 @@ def summon(message, client, *args, **kwargs):
 
             # Astig + FF: Not correct...
             if set(['Final Froggit was already there, waiting for you.','Eyes appeared from the shadows.']).issubset(msg):
-                save = [i for i,x in enumerate(testlist) if x == 'Final Froggit was already there, waiting for you.']
+                save = [i for i,x in enumerate(msg) if x == 'Final Froggit was already there, waiting for you.']
                 msg.remove('Eyes appeared from the shadows.')
                 msg.remove('Final Froggit was already there, waiting for you.')
                 msg.insert(save, 'That doesn’t seem correct.')
 
         # Whimsalot + FF: Believe it?
         if set(['Final Froggit was already there, waiting for you.','Whimsalot rushed in!']).issubset(msg):
-            save = [i for i,x in enumerate(testlist) if x == 'Final Froggit was already there, waiting for you.']
+            save = [i for i,x in enumerate(msg) if x == 'Final Froggit was already there, waiting for you.']
             msg.remove('Whimsalot rushed in!')
             msg.remove('Final Froggit was already there, waiting for you.')
             msg.insert(save, 'Can you believe it?')
@@ -299,6 +303,7 @@ def determinate(message, client, *args, **kwargs):
         "Can you just stop for a little while? That'll at least give me a second to wipe the tears from my eyes.",
         "You know what's going on here, don't you? You just wanted to see me suffer.",
         "You don't understand how it works down here, do you?",
+        "You IDIOT.",
         "Was it something I did? Did *I* do something to make you do this?"
         ]))
     else:
