@@ -1,5 +1,6 @@
 import cacobot.base as base
 import json, discord
+from random import choice
 
 @base.cacofunc
 def memo(message, client, *args, **kwargs):
@@ -106,7 +107,7 @@ def connect(message, client, *args, **kwargs):
     **.connect** [*invite*]
     Allows CacoBot to join your server! Yep, I'm throwing him out into the wild!
     You should probably also invite <@88401933936640000> to your server to wrangle CacoBot should things get out of hand.
-    *Example: .connect http:\/\/discord\.gg/1a2b3c4d5e6f7g*
+    *Example: .connect http:\/\/discord\.gg/0iLJFytdVRBR1vgh*
     """
     yield from client.accept_invite(message.content.split(" ")[1])
     yield from client.send_message(message.author, ":heart: I have successfully joined your server.")
@@ -160,3 +161,23 @@ def unplug(message, client, *args, **kwargs):
             json.dump(plugs, data, indent=4)
     else:
         yield from client.send_message(message.channel, ":no_entry_sign: You are not authorized to perform that command.")
+
+@base.cacofunc
+def git(message, client, *args, **kwargs):
+    """
+    **.git** [*file*]
+    Sends a link to the CacoBot repo on Github. Provide [*file*] to link to a specific file. This is naive.
+    *Example: .git cacobot/changes.py*
+    """
+    snark = [
+        "Stare into the abyss, and the abyss will stare back at you.",
+        "Like, comment, and subscribe.",
+        "Stick your head in it.",
+        "Now browsing code on NIGHTMARE difficulty!",
+        "Ohhhhhhhhhhhhhh yeeeeeeeeeeeessssssss!",
+        "*Nervous coughing*"
+    ]
+    if message.content.strip() == '.git':
+        yield from client.send_message(message.channel, '{}\nhttps://github.com/Orangestar12/cacobot/'.format(choice(snark)))
+    else:
+        yield from client.send_message(message.channel, '{}\nhttps://github.com/Orangestar12/cacobot/blob/master/{}'.format(choice(snark), message.content.split(' ')[1]))

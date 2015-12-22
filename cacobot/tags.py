@@ -62,7 +62,7 @@ def tag(message, client, *args, **kwargs):
 
             elif cmd == 'delete':
                 if params[1] in tags:
-                    if message.author.id == tags[params[1]]['owner']:
+                    if message.author.id == tags[params[1]]['owner'] or (not message.channel.is_private and message.channel.permissions_for(message.author).can_manage_roles):
                         tags.pop(params[1])
                         yield from client.send_message(message.channel, ":heavy_check_mark: Successfully deleted the tag `{}`.".format(params[1]))
                     else:

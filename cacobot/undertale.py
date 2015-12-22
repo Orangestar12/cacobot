@@ -11,40 +11,41 @@ def goatnick(message, client, *args, **kwargs):
     Generates a politically incorrect name for Asgore from a list.
     *Example: .goatnick*
     """
-    asgore_nicks = [\
-        'King Kindergarten Killer',\
-        'Spike The Tyke',\
-        'Ankle-Biter Beater',\
-        'Crying Child Crusher',\
-        'Non-Senior Citizen Slayer',\
-        'Toddler Terminator',\
-        'Munchkin Murderer',\
-        'Innocent Infanticider',\
-        'Punt The Runt',\
-        'Mourning Mother-Maker',\
-        'Child Coffin Collector',\
-        'Youngster Euthanizer',\
-        'Splat The Brat',\
-        'Be Mean To Teens',\
-        'Maybe Killed A Baby',\
-        'Gerber Grow-Up Plan Gleaner',\
-        'Preschool Purifier',\
-        'When They Hit The Flowers, They’re Dead In Hours',\
-        'Extra-Small Exterminator',\
-        'Kiddy Cleanser',\
-        'You Must Be This Tall To Live',\
-        'Crueler for the Preschooler',\
-        'Offspring Annihilator',\
-        'Get Rid Of The Kid',\
-        'Infant Slayer Player',\
-        'Stabbed Some Kids Through The Ribs',\
-        'Trust Fund Refund',\
-        'Playground Flaying Round',\
-        'Adolescent Suppressant',\
-        'Youthanizer',\
-        'Out Of The Womb, Into The Tomb',\
-        'No Longer Married Cause Some Kids Got Buried',\
-        'My Hobbies Include Child Murder'\
+    asgore_nicks = [
+        'King Kindergarten Killer',
+        'Spike The Tyke',
+        'Ankle-Biter Beater',
+        'Crying Child Crusher',
+        'Non-Senior Citizen Slayer',
+        'Toddler Terminator',
+        'Munchkin Murderer',
+        'Innocent Infanticider',
+        'Punt The Runt',
+        'Mourning Mother-Maker',
+        'Child Coffin Collector',
+        'Youngster Euthanizer',
+        'Splat The Brat',
+        'Be Mean To Teens',
+        'Maybe Killed A Baby',
+        'Gerber Grow-Up Plan Gleaner',
+        'Preschool Purifier',
+        'When They Hit The Flowers, They’re Dead In Hours',
+        'Extra-Small Exterminator',
+        'Kiddy Cleanser',
+        'You Must Be This Tall To Live',
+        'Crueler for the Preschooler',
+        'Offspring Annihilator',
+        'Get Rid Of The Kid',
+        'Infant Slayer Player',
+        'Stabbed Some Kids Through The Ribs',
+        'Trust Fund Refund',
+        'Playground Flaying Round',
+        'Adolescent Suppressant',
+        'Youthanizer',
+        'Out Of The Womb, Into The Tomb',
+        'No Longer Married Cause Some Kids Got Buried',
+        'My Hobbies Include Child Murder',
+        'Big Sad Goat Dad'
     ];
     yield from client.send_message(message.channel, '{}: Asgore "{}" Dreemurr'.format(message.author.mention(), random.choice(asgore_nicks)))
 goatnick.server = "Undertale"
@@ -132,7 +133,12 @@ def summon(message, client, *args, **kwargs):
         yield from client.send_message(message.channel, msg)
 
     elif message.content.strip() == '.summon list':
-        yield from client.send_message(message.author, 'List of Monster Codes:\n```\n{}\n```'.format(" ".join(list(monsters))))
+        if message.channel.is_private or message.channel.name not in ['torielshome', 'fanworks', 'workshop']:
+            monsters.update(spoilers)
+
+        monsters.update(hidden)
+
+        yield from client.send_message(message.channel, 'List of Monster Codes:\n```\n{}\n```'.format(" ".join(sorted(list(monsters)))))
 
     else:
         cmd = message.content.split(' ')[1:]
@@ -152,7 +158,7 @@ def summon(message, client, *args, **kwargs):
                     msg.append("Jerry came, too.")
 
         # every message is jerry
-        if len(msg) == len([x for x in msg if x == 'Jerry came, too.']):
+        if 'Jerry came, too' in msg and len(msg) == len([x for x in msg if x == 'Jerry came, too.']):
             msg = ["Jerry came, too."]
 
         # detect jerry
@@ -164,51 +170,51 @@ def summon(message, client, *args, **kwargs):
 
         # Detect special cases
 
-        # KK+Madjick: Mercenaries
+        # KK & Madjick: Mercenaries
         if set(['Madjick pops out of its hat!','Knight Knight blocks the way!']).issubset(msg):
-            save = [i for i,x in enumerate(msg) if x == 'Knight Knight blocks the way!']
+            save = [i for i,x in enumerate(msg) if x == 'Knight Knight blocks the way!'][0]
             msg.remove('Madjick pops out of its hat!')
             msg.remove('Knight Knight blocks the way!')
             msg.insert(save, 'Mercenaries emerge from the shadows.')
 
-        # Pyrope*2: Double Davis
+        # Pyrope & Pyrope: Double Davis
         if set(['Pyrope bounds towards you!','Pyrope bounds towards you!']).issubset(msg):
-            save = [i for i,x in enumerate(msg) if x == 'Pyrope bounds towards you!']
+            save = [i for i,x in enumerate(msg) if x == 'Pyrope bounds towards you!'][0]
             msg.remove('Pyrope bounds towards you!')
             msg.remove('Pyrope bounds towards you!')
             msg.insert(save, 'The rare and threatening Double Davis.')
 
         # Vulkin + Tsun: Jealous
         if set(['Tsunderplane gets in the way! Not on purpose or anything.','Vulkin strolls in.']).issubset(msg):
-            save = [i for i,x in enumerate(msg) if x == 'Tsunderplane gets in the way! Not on purpose or anything.']
+            save = [i for i,x in enumerate(msg) if x == 'Tsunderplane gets in the way! Not on purpose or anything.'][0]
             msg.remove('Tsunderplane gets in the way! Not on purpose or anything.')
             msg.remove('Vulkin strolls in.')
             msg.insert(save, 'Tsunderplane attacks! Not because it\'s jealous Vulkin is paying attention to you.')
 
         # Vulkin + Vulkin: Strange Parade
         if set(['Vulkin strolls in.','Vulkin strolls in.']).issubset(msg):
-            save = [i for i,x in enumerate(msg) if x == 'Vulkin strolls in.']
+            save = [i for i,x in enumerate(msg) if x == 'Vulkin strolls in.'][0]
             msg.remove('Vulkin strolls in.')
             msg.remove('Vulkin strolls in.')
             msg.insert(save, 'A strange parade blocks the path.')
 
         # Aaron + Woshua: Easter Egg
         if set(['Aaron flexes in!','Woshua shuffles up.']).issubset(msg):
-            save = [i for i,x in enumerate(msg) if x == 'Aaron flexes in!']
+            save = [i for i,x in enumerate(msg) if x == 'Aaron flexes in!'][0]
             msg.remove('Aaron flexes in!')
             msg.remove('Woshua shuffles up.')
             msg.insert(save, 'Woshua and Aaron appear.')
 
         # Snowdrake + Ice Cap: pose
         if set(['Snowdrake flutters forth!','Ice Cap struts into view.']).issubset(msg):
-            save = [i for i,x in enumerate(msg) if x == 'Snowdrake flutters forth!']
+            save = [i for i,x in enumerate(msg) if x == 'Snowdrake flutters forth!'][0]
             msg.remove('Snowdrake flutters forth!')
             msg.remove('Icecap struts into view.')
             msg.insert(save, 'Icecap and Snowdrake pose like bad guys.')
 
         # Loox + Veg/Migosp: loox & Co.
         if set(['Loox drew near!','Vegetoid came out of the earth!', 'Migosp crawled up close!']).issubset(msg) or set(['Loox drew near!','Vegetoid came out of the earth!']).issubset(msg) or set(['Loox drew near!', 'Migosp crawled up close!']).issubset(msg):
-            save = [i for i,x in enumerate(msg) if x == 'You tripped into a line of Moldmals.']
+            save = [i for i,x in enumerate(msg) if x == 'Loox drew near!'][0]
             msg.remove('Loox drew near!')
             try:
                 msg.remove('Migosp crawled up close!')
@@ -222,29 +228,29 @@ def summon(message, client, *args, **kwargs):
 
         # Two Moldsmal: "Moldsmal and Moldsmal"
         if set(['You tripped into a line of Moldmals.','You tripped into a line of Moldmals.']).issubset(msg):
-            save = [i for i,x in enumerate(msg) if x == 'You tripped into a line of Moldmals.']
+            save = [i for i,x in enumerate(msg) if x == 'You tripped into a line of Moldmals.'][0]
             msg.remove('You tripped into a line of Moldmals.')
             msg.remove('You tripped into a line of Moldmals.')
             msg.insert(save, 'Moldsmal and Moldsmal block the way.')
 
-            # Astig, FF, Whim: ULTRA-VIOLENCE
-            if set(['Whimsalot rushed in!', 'Final Froggit was already there, waiting for you.','Eyes appeared from the shadows.']).issubset(msg):
-                save = [i for i,x in enumerate(msg) if x == 'Final Froggit was already there, waiting for you.']
-                msg.remove('Eyes appeared from the shadows.')
-                msg.remove('Whimsalot rushed in!')
-                msg.remove('Final Froggit was already there, waiting for you.')
-                msg.insert(save, 'What a nightmare!')
+        # Astig, FF, Whim: ULTRA-VIOLENCE
+        if set(['Whimsalot rushed in!', 'Final Froggit was already there, waiting for you.','Eyes appeared from the shadows.']).issubset(msg):
+            save = [i for i,x in enumerate(msg) if x == 'Final Froggit was already there, waiting for you.'][0]
+            msg.remove('Eyes appeared from the shadows.')
+            msg.remove('Whimsalot rushed in!')
+            msg.remove('Final Froggit was already there, waiting for you.')
+            msg.insert(save, 'What a nightmare!')
 
-            # Astig + FF: Not correct...
-            if set(['Final Froggit was already there, waiting for you.','Eyes appeared from the shadows.']).issubset(msg):
-                save = [i for i,x in enumerate(msg) if x == 'Final Froggit was already there, waiting for you.']
-                msg.remove('Eyes appeared from the shadows.')
-                msg.remove('Final Froggit was already there, waiting for you.')
-                msg.insert(save, 'That doesn’t seem correct.')
+        # Astig + FF: Not correct...
+        if set(['Final Froggit was already there, waiting for you.','Eyes appeared from the shadows.']).issubset(msg):
+            save = [i for i,x in enumerate(msg) if x == 'Final Froggit was already there, waiting for you.'][0]
+            msg.remove('Eyes appeared from the shadows.')
+            msg.remove('Final Froggit was already there, waiting for you.')
+            msg.insert(save, 'That doesn’t seem correct.')
 
         # Whimsalot + FF: Believe it?
         if set(['Final Froggit was already there, waiting for you.','Whimsalot rushed in!']).issubset(msg):
-            save = [i for i,x in enumerate(msg) if x == 'Final Froggit was already there, waiting for you.']
+            save = [i for i,x in enumerate(msg) if x == 'Final Froggit was already there, waiting for you.'][0]
             msg.remove('Whimsalot rushed in!')
             msg.remove('Final Froggit was already there, waiting for you.')
             msg.insert(save, 'Can you believe it?')
@@ -325,11 +331,12 @@ def determinate(message, client, *args, **kwargs):
             elif newfnt == 'papyrus':
                 font = 'Papyrus'
                 strokewidth = '1'
-                fontwidth = '18px'
+                fontwidth = '20px'
             elif newfnt == 'wd':
                 font = 'Wingdings'
                 strokewidth = '1'
-                fontwidth = '22px'
+                fontwidth = '18px'
+                lineheight = 24
             elif newfnt == 'ut':
                 font = 'Monster Friend Fore'
                 width = '700'
@@ -489,3 +496,11 @@ def forebode(message, client, *args, **kwargs):
     else:
         yield from client.send_message(message.channel, "{}: You do not have the permission to manage roles.".format(message.author.mention()))
 forebode.server = "Undertale"
+
+@base.cacofunc
+def say(message, client, *args, **kwargs):
+    """
+    **.say** [*params*]
+    A shorcut to .determinate.
+    """
+    determinate(message, client, args, kwargs)

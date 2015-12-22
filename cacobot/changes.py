@@ -5,25 +5,16 @@ import random # To print random emojis.
 # the list is a server name: Use 'all' to send to all servers, or type a server
 # name to make that server the only one that can see that change.
 change_list = [
-    ["all", "I fixed that glitch where you can't use tags in DMs."],
-    ["all", "We Github now. https://github.com/Orangestar12/cacobot"],
-    ["all", "Call .tag list mine and paste the result back into the channel: CacoBot will count your tags!"],
-    ["all", ".tag list now lists only the tags created in the server you've posted the command now. Use .tag list all to list all tags."],
-    ["all", "New! .choice!"],
-    ["all", "YouTube search is back! Use .yt."],
-    ["all", "Cacobot should now get a random game ID once every so often!... In theory."],
-    ["all", "Hotfix: Fixed a glitch where you couldn't claim tags in DMs."],
-    ["all", "Hotfix: Fixed a glitch where log would send over 3000 seconds instead of 3."],
-    ["all", "Hotfix: Fixed the timing on CacoBot so he changes games every hour instead of every 16 hours."],
-    ["/g/entoo", "STILL COMING SOON: Radio?"],
-    ["Undertale", ".summon is now back and better than ever! You can present as many monster codes as you want, space-seperated, and case doesn't matter anymore!"],
-    ["Undertale", ".determinate now has a new function where you can provide a space-seperated specific font. I don't have a lot of fonts, so maybe suggest a few? Example: font=Segoe_UI_Semilight"],
-    ["Undertale", "Something else? `:^)`"],
-    ["Undertale", "Hotfix: Fixed a glitch where summon still required correct casing."],
-    ["Undertale", "Hotfix: Fixed a glitch where summon threw an error with an empty array of characters."],
-    ["Undertale", "Hotfix: Installed those extra fonts."],
-    ["Undertale", "Hotfix: Fixed an exploit where making every single summon \"Jerry\" caused an array of indecipherable gibberish to spawn instead."],
-    ["Undertale", "Hotfix: Fixed a typo that caused special summon cases not to occur."]
+    ["all", "If you can manage roles in a server, you are allowed to delete tags. This is on trial: Abuse will lead to this function being removed."],
+    ['all', 'Call `.git` to quickly be linked to the CacoBot Repo on Github. Call `.git [*file*]` to get a link to a specific file. (I.E. `.git cacobot/base.py`)'],
+    ['all', 'Changed the `.connect` example to link to CacoServer'],
+    ['all', 'CacoBot stopped playing games for some reason. That should be fixed.'],
+    ["Undertale", "Increased the size of the Papyrus font in .determinate... but tentatively."],
+    ["Undertale", "`.summon` should stop throwing errors on the special cases."],
+    ["Undertale", "Decreased WD font size and line height."],
+    ["Undertale", "Added a shortcut to `.determinate` through `.say!`"],
+    ["Undertale", "Fixed a glitch where `.summon` only posted the spoiler-free list in all channels."],
+    ["Undertale", "Fixed a glitch where `.summon` with no valid monster codes resulted in summoning Jerry."]
 ]
 
 # There's a few more emojis I could use for bullets, but these stuck out the most to me.
