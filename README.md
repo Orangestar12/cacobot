@@ -24,7 +24,7 @@ Create a folder called `configs` with these two files, filling in any necessary 
     "email" : "email@address.com",
     "password" : "This is your bot password.",
     "youtube" : {
-        "DEVELOPER_KEY" : "Put your YouTube developer key here. Leave the other parameters alone.",
+        "DEVELOPER_KEY" : "Put your YouTube developer key here. Change the request limits if you feel like it. ['youtube']['request_limit'] is the max amount of videos that can be recieved. ['log_request_limit'] is the max amount of messages .log can retrieve.",
         "API_SERVICE_NAME" : "youtube",
         "API_VERSION" : "v3",
         "request_limit" : 5
@@ -36,12 +36,12 @@ Create a folder called `configs` with these two files, filling in any necessary 
 `configs/tags.json`
 ```
 {
-  "sleep": {
+  "orangestars-tag": {
       "tag": "This tag belongs to Orangestar in the CacoServer server!",
       "server": "128043020418285568",
       "owner": "88401933936640000"
   },
-  "15": {
+  "nobodys-tag": {
       "tag": "This is an orphaned tag, and anyone can claim it!",
       "server": "None",
       "owner": "None"
