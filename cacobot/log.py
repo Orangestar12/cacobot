@@ -48,12 +48,12 @@ def log(message, client, *args, **kwargs):
         yield from client.send_message(
           message.channel,
           "{}: That's way too many messages to send, as decreed by my creator. Acceptable amounts end at {}.".format(
-             message.author.mention(),
+             message.author.mention,
              str(config['log_request_limit'])
           )
         )
     elif req < 1:
-        yield from client.send_message(message.channel, "{}: Very clever, smart ass. Type a whole number next time.".format(message.author.mention()))
+        yield from client.send_message(message.channel, "{}: Very clever, smart ass. Type a whole number next time.".format(message.author.mention))
     else:
         requests = int(req) + 1 #Because logs_from will get the last message (which will, invariably, be ".logs x"), we anticipate that here.
 

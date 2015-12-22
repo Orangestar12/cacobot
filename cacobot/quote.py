@@ -35,10 +35,10 @@ def addquote(message, client, *args, **kwargs):
     # Complain about cheeky asses.
 
     if cmd.startswith(".addquote"):
-        yield from client.send_message(message.channel, "{}: Hah hah, very funny, but that wouldn't work anyway.".format(message.author.mention()))
+        yield from client.send_message(message.channel, "{}: Hah hah, very funny, but that wouldn't work anyway.".format(message.author.mention))
 
     elif cmd.startswith(".quote"):
-        yield from client.send_message(message.channel, "{}: Not only would that not work, but that's really annoying. Stop that shit.".format(message.author.mention()))
+        yield from client.send_message(message.channel, "{}: Not only would that not work, but that's really annoying. Stop that shit.".format(message.author.mention))
 
     else: # Actually add a quote
 
@@ -58,4 +58,4 @@ def addquote(message, client, *args, **kwargs):
         with open('configs/quotes.json', 'w') as data:
             json.dump(quotes, data, indent=4)
 
-        yield from client.send_message(message.channel, "{}: Successfully added that to my quote database as quote number {}.".format(message.author.mention(), str(len(quotes))))
+        yield from client.send_message(message.channel, "{}: Successfully added that to my quote database as quote number {}.".format(message.author.mention, str(len(quotes))))

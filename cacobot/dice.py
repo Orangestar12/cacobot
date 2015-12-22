@@ -20,12 +20,12 @@ def d(message, client, *args, **kwargs):
 
         #If the list only has 1 die, just print that number.
         if len(rolls) == 1:
-            yield from client.send_message(message.channel, "{}: {}".format(message.author.mention(), str(rolls[0])))
+            yield from client.send_message(message.channel, "{}: {}".format(message.author.mention, str(rolls[0])))
 
         #Otherwise, print the list, and the list's sum.
         else:
             yield from client.send_message(message.channel, "{}: {} | {} of possible {}".format(
-              message.author.mention(),
+              message.author.mention,
               str(rolls),
               str(sum(rolls)),
               str(dice * sides)
@@ -33,7 +33,7 @@ def d(message, client, *args, **kwargs):
 
     except IndexError:
         # user did not format command correctly
-        yield from client.send_message(message.channel, "{}: You must specify the number of dice and the faces each dice has seperated with a d. For example: .d 1d6 rolls one six-sided die. .d 5d2 rolls 5 2-sided die.".format(message.author.mention()))
+        yield from client.send_message(message.channel, "{}: You must specify the number of dice and the faces each dice has seperated with a d. For example: .d 1d6 rolls one six-sided die. .d 5d2 rolls 5 2-sided die.".format(message.author.mention))
 
 @base.cacofunc
 def roll(message, client, *args, **kwargs):
@@ -47,9 +47,9 @@ def roll(message, client, *args, **kwargs):
     # This was written by @NoKeksGiven. Give that guy a shout-out!
     num = str(round(int(round(time.time() * 100) % 100000000)))
     if num[-1] == num[-2]:
-        yield from client.send_message(message.channel, "{}: {}, check 'em!".format(message.author.mention(), num))
+        yield from client.send_message(message.channel, "{}: {}, check 'em!".format(message.author.mention, num))
     else:
-        yield from client.send_message(message.channel, "{}: {}".format(message.author.mention(), num))
+        yield from client.send_message(message.channel, "{}: {}".format(message.author.mention, num))
 roll.server = "/g/"
 
 @base.cacofunc
@@ -61,4 +61,4 @@ def choice(message, client, *args, **kwargs):
     """
 
     choices = message.content.split(" ", 1)[1].split(",")
-    yield from client.send_message(message.channel, "{}: {}".format(message.author.mention(), random.choice(choices).strip()))
+    yield from client.send_message(message.channel, "{}: {}".format(message.author.mention, random.choice(choices).strip()))

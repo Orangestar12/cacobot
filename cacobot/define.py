@@ -41,7 +41,7 @@ def define(message, client, *args, **kwargs):
         speech = {}
 
         # and this list will store each definition.
-        definitions = ["{}: **{}**".format(message.author.mention(), title)]
+        definitions = ["{}: **{}**".format(message.author.mention, title)]
 
         # Find the first instance of 'id="Noun"'.
         if result.find('id="Noun"') != -1:
@@ -108,11 +108,11 @@ def define(message, client, *args, **kwargs):
             yield from client.send_message(message.channel, msg)
 
         except ValueError: # If no part of speech was found, then just send this:
-            yield from client.send_message(message.channel, message.author.mention() + ": I can't get the definition of that word, but it exists. Go here: https://en.wiktionary.org/wiki/{}".format(encoded))
+            yield from client.send_message(message.channel, message.author.mention + ": I can't get the definition of that word, but it exists. Go here: https://en.wiktionary.org/wiki/{}".format(encoded))
             print(traceback.format_exc())
 
     except urllib.error.HTTPError: # 404 errors mean the word doesn't exist.
-        yield from client.send_message(message.channel, "{}: That's not a word, or Wiktionary doesn't have an entry on it.".format(message.author.mention()))
+        yield from client.send_message(message.channel, "{}: That's not a word, or Wiktionary doesn't have an entry on it.".format(message.author.mention))
         print(traceback.format_exc())
 
 @base.cacofunc
@@ -132,7 +132,7 @@ def urbdef(message, client, *args, **kwargs):
         definitions.append(result['list'][0]['definition'])
         definitions.append("*Read more at {}*".format(result['list'][0]['permalink']))
         msg = "\n".join(definitions)
-        yield from client.send_message(message.channel, "{}: {}".format(message.author.mention(),msg))
+        yield from client.send_message(message.channel, "{}: {}".format(message.author.mention,msg))
     except: # I shouldn't be doing a general except, but I forgot what this throws. I think urllib.error.HTTPError?
-        yield from client.send_message(message.channel, "{}: Urban Dictionary doesn't have that word.".format(message.author.mention()))
+        yield from client.send_message(message.channel, "{}: Urban Dictionary doesn't have that word.".format(message.author.mention))
         print(traceback.format_exc())

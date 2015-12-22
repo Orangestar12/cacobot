@@ -61,18 +61,18 @@ def hush(message, client, *args, **kwargs):
         # Server hush
         if message.content == '.hush server':
             hushed[message.server.id] = 'server'
-            yield from client.send_message(message.channel, ':mute: **Server hush!** :mute:\n' + message.author.mention() + ': I will no longer respond to commands in this server. Call `.listen` if you want me back. Ask Orangestar to remove me if you want me gone permanently.')
+            yield from client.send_message(message.channel, ':mute: **Server hush!** :mute:\n' + message.author.mention + ': I will no longer respond to commands in this server. Call `.listen` if you want me back. Ask Orangestar to remove me if you want me gone permanently.')
 
         # Channel hush
         else:
             hushed[message.channel.id] = 'channel'
-            yield from client.send_message(message.channel, ':mute: **Channel hush!** :mute:\n' + message.author.mention() + ': I will no longer respond to commands in this channel. Call `.listen` if you want to bring me back. Call `.hush server` if you were hoping to silence me on the whole server. (Hint: Do it somewhere I can hear it since you silenced me here.)')
+            yield from client.send_message(message.channel, ':mute: **Channel hush!** :mute:\n' + message.author.mention + ': I will no longer respond to commands in this channel. Call `.listen` if you want to bring me back. Call `.hush server` if you were hoping to silence me on the whole server. (Hint: Do it somewhere I can hear it since you silenced me here.)')
 
         # Save hush list.
         with open('configs/hush.json', 'w') as data:
             json.dump(hushed, data, indent=4)
     else:
-        yield from client.send_message(message.channel, ':no_entry_sign: {} You do not have permission to call this command.'.format(message.author.mention()))
+        yield from client.send_message(message.channel, ':no_entry_sign: {} You do not have permission to call this command.'.format(message.author.mention))
 
 @base.cacofunc
 def call(message, client, *args, **kwargs):
@@ -91,15 +91,15 @@ def call(message, client, *args, **kwargs):
             if x.name.lower() == roleToMention:
                 for y in message.server.members:
                     if discord.utils.find(lambda m: m == x, y.roles) != None:
-                        mentions.append(y.mention())
+                        mentions.append(y.mention)
         # Yeah, that *is* a shitty way of doing it.
 
         if mentions:
-            yield from client.send_message(message.channel, "{}, you have been mentioned by {}!".format(", ".join(mentions), message.author.mention()))
+            yield from client.send_message(message.channel, "{}, you have been mentioned by {}!".format(", ".join(mentions), message.author.mention))
         else:
-            yield from client.send_message(message.channel, "{}: Nobody in this server has that role.".format(message.author.mention()))
+            yield from client.send_message(message.channel, "{}: Nobody in this server has that role.".format(message.author.mention))
     else:
-        yield from client.send_message(message.channel, "{}: You have already mentioned everyone in that role.".format(message.author.mention()))
+        yield from client.send_message(message.channel, "{}: You have already mentioned everyone in that role.".format(message.author.mention))
 
 @base.cacofunc
 def connect(message, client, *args, **kwargs):

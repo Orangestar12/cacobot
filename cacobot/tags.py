@@ -78,7 +78,7 @@ def tag(message, client, *args, **kwargs):
                     if tags[params[1]]['owner'] == message.author.id:
                         if message.mentions:
                             tags[params[1]]['owner'] = message.mentions[0].id
-                            yield from client.send_message(message.channel, ':heart: {}: {} has gifted you the tag `{}`.'.format(message.mentions[0].mention(), message.author.mention(), params[1]))
+                            yield from client.send_message(message.channel, ':heart: {}: {} has gifted you the tag `{}`.'.format(message.mentions[0].mention, message.author.mention, params[1]))
                         else:
                             yield from client.send_message(message.channel, ':no_entry_sign: You did not specify a user to gift the tag to.')
                     else:

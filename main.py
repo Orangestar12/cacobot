@@ -19,7 +19,7 @@ with open('configs/config.json') as data:
 client = discord.Client(max_messages=5000)
 
 def aan(string):
-    """Returns "a" or "an" depending on a string's first letter."""
+    '''Returns "a" or "an" depending on a string's first letter.'''
     if string[0].lower() in 'aeiou':
         return 'an'
     else:
@@ -30,7 +30,7 @@ def aan(string):
 def random_retro_game():
     while True:
         # Change currently-playing game to Doom 3, Quake Live, Quake, Quake II, Q3A, Warsow, Xonotic, System Shock, System Shock 2, Strife: Veteran Edition, Star Wars Jedi Knight, Star Wars Jedi Knight II, Wolfenstein - ET, Unreal, Alien Vs Predator, Thief (choices in that order)
-        yield from client.change_status(game_id=choice([712, 385, 482, 483, 484, 738, 815, 701, 534, 601, 602, 613, 635, 714, 822]), idle=False)
+        yield from client.change_status(game_id=choice([712, 385, 482, 483, 484, 738, 815, 701, 534, 600, 601, 613, 635, 714, 822]), idle=False)
         yield from asyncio.sleep(3600)
 
 @client.async_event
@@ -57,14 +57,14 @@ def on_message(message):
     if message.channel.is_private == False and message.server.id in hushed and hushed[message.server.id] == 'server':
         if message.content.startswith('.listen'):
             hushed.pop(message.server.id)
-            yield from client.send_message(message.channel, ":loud_sound: **Now listening!** :loud_sound:\n{}: I will now respond to commands in this channel.".format(message.author.mention()))
+            yield from client.send_message(message.channel, ':loud_sound: **Now listening!** :loud_sound:\n{}: I will now respond to commands in this channel.'.format(message.author.mention))
             with open('configs/hush.json', 'w') as data:
                 json.dump(hushed, data, indent=4)
 
     elif message.channel.is_private == False and message.channel.id in hushed and hushed[message.channel.id] == 'channel':
         if message.content.startswith('.listen'):
             hushed.pop(message.channel.id)
-            yield from client.send_message(message.channel, ":loud_sound: **Now listening!** :loud_sound:\n{}: I will now respond to commands in this server.".format(message.author.mention()))
+            yield from client.send_message(message.channel, ':loud_sound: **Now listening!** :loud_sound:\n{}: I will now respond to commands in this server.'.format(message.author.mention))
             with open('configs/hush.json', 'w') as data:
                 json.dump(hushed, data, indent=4)
 
@@ -87,12 +87,12 @@ def on_message(message):
                     yield from client.send_typing(message.channel)
                     yield from cacobot.base.functions[command](message, client)
                 else:
-                    yield from client.send_message(message.channel, "{}: Sorry, but you have been plugged.".format(message.author.mention()))
+                    yield from client.send_message(message.channel, '{}: Sorry, but you have been plugged.'.format(message.author.mention))
 
         # Print tag count.
         if message.content.startswith('Retrieving tags owned by'):
-            msglist = message.content[message.content.index('\n')+1:].split(", ")
-            yield from client.send_message(message.channel, message.author.mention() + ": I calculated **{}** tags from that list.".format(len(msglist)))
+            msglist = message.content[message.content.index('\n')+1:].split(', ')
+            yield from client.send_message(message.channel, message.author.mention + ': I calculated **{}** tags from that list.'.format(len(msglist)))
 
         if message.mentions: # False if no mentions
             # Load memo list
@@ -104,32 +104,40 @@ def on_message(message):
                 with open('configs/memos.json', 'w') as data:
                     json.dump(memos, data, indent=4)
 
+            msgme = []
+
             for mention in message.mentions:
                 # The async branch turned status into an enum. It's nice.
                 # If the mentioned user is not online and signed up for memos:
                 if mention.id in memos and mention.status != discord.Status.online:
-                    # yield from is weird: You can only call it in specific
-                    # places. Here we reverse a log of the last 5 messages.
-                    log = yield from client.logs_from(message.channel, 5)
-                    log = reversed(list(log))
-                    # If your net/computer is slow enough, sometimes you'll
-                    # get a few messages after the mention. Deal with it.
+                    # Store user for later messaging.
+                    msgme.append(mention)
 
-                    yield from client.send_message(mention, "**You were mentioned in {}'s #{} channel.** Here is the context:\n".format(message.server.name, message.channel.name))
+            # yield from is weird: You can only call it in specific
+            # places. Here we reverse a log of the last 5 messages.
+            if msgme:
+                log = yield from client.logs_from(message.channel, 5)
+                log = reversed(list(log))
+                # If your net/computer is slow enough, sometimes you'll
+                # get a few messages after the mention. Deal with it.
+                msgToSend = '**You were mentioned in {}\'s #{} channel.** Here is the context:\n'.format(message.server.name, message.channel.name)
 
-                    # refer to log.py for info on how this works:
-                    for x in log:
-                        minute = '00'
-                        if len(str(x.timestamp.minute)) != 2:
-                            minute = '0' + str(x.timestamp.minute)
-                        else:
-                            minute = str(x.timestamp.minute)
-                        yield from client.send_message(mention, '{}:{} - {}: {}\n'.format(
-                          str(x.timestamp.hour),
-                          minute,
-                          x.author.name,
-                          x.content)
-                      )
+                # refer to log.py for info on how this works:
+                for x in log:
+                    minute = '00'
+                    if len(str(x.timestamp.minute)) != 2:
+                        minute = '0' + str(x.timestamp.minute)
+                    else:
+                        minute = str(x.timestamp.minute)
+                    msgToSend += '{}:{} - {}: {}\n'.format(
+                      str(x.timestamp.hour),
+                      minute,
+                      x.author.name,
+                      x.content)
+
+                for mention in msgme:
+                    yield from client.send_message(mention, msgToSend[:1980]) # Really shitty way of making sure it's beneath 2k characters but IT WORKS, SO CAN IT
+                    asyncio.sleep(5)
 
         if message.mention_everyone: # @everyone
 
@@ -147,24 +155,31 @@ def on_message(message):
                 # Find member object based on id
                 usr = discord.utils.find(lambda x: x.id == mem, message.server.members)
                 # Prevent mentions in cannels people can't read from being sent
-                if usr != None and message.channel.permissions_for(usr).can_read_messages and usr.status != discord.Status.offline:
+                if usr != None and message.channel.permissions_for(usr).can_read_messages and usr.status != discord.Status.online:
                     msgme.append(usr)
 
-            for mention in msgme:
-                yield from client.send_message(mention, "**Someone used @everyone in {}'s #{} channel.** Here is the context:\n".format(message.server.name, message.channel.name))
+            if msgme:
+                log = yield from client.logs_from(message.channel, 5)
+                log = reversed(list(log))
 
+                msgToSend = '**Someone used \@everyone in {}\'s #{} channel.** Here is the context:\n'.format(message.server.name, message.channel.name)
+
+                # refer to log.py for info on how this works:
                 for x in log:
                     minute = '00'
                     if len(str(x.timestamp.minute)) != 2:
                         minute = '0' + str(x.timestamp.minute)
                     else:
                         minute = str(x.timestamp.minute)
-                    yield from client.send_message(mention, '{}:{} - {}: {}\n'.format(
+                    msgToSend += '{}:{} - {}: {}\n'.format(
                       str(x.timestamp.hour),
                       minute,
                       x.author.name,
                       x.content)
-                  )
+
+                for mention in msgme:
+                    yield from client.send_message(mention, msgToSend[:1980])
+                    asyncio.sleep(5)
 
 
 @client.async_event
@@ -174,8 +189,8 @@ def on_error(event, *args, **kwargs):
     # message.
     if args and type(args[0]) == discord.Message:
         print(traceback.format_exc())
-        yield from client.send_message(args[0].channel, "Niiiice work, {}, you just caused {} **{}**!".format(args[0].author.mention(), aan(sys.exc_info()[0].__name__), sys.exc_info()[0].__name__))
-        yield from client.send_message(args[0].channel, "```\n{}\n```".format(traceback.format_exc()))
+        yield from client.send_message(args[0].channel, 'Niiiice work, {}, you just caused {} **{}**!'.format(args[0].author.mention, aan(sys.exc_info()[0].__name__), sys.exc_info()[0].__name__))
+        yield from client.send_message(args[0].channel, '```\n{}\n```'.format(traceback.format_exc()))
 
 # I'm gonna be honest, I have *no clue* how asyncio works. This is all from the
 # example in the docs.

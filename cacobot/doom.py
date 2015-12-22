@@ -28,6 +28,6 @@ def wadidea(message, client, *args, **kwargs):
     #Next, we remove all <br>s and line breaks.
     result = result.replace("<br>\n", " ")
 
-    yield from client.send_message(message.channel,  '{}: {}\n\n*Provided by boris.slipgate.org/?a=mapgen*'.format(author.mention(), result))
+    yield from client.send_message(message.channel,  '{}: {}\n\n*Provided by boris.slipgate.org/?a=mapgen*'.format(author.mention, result))
     return
 wadidea.server = 'Doom'

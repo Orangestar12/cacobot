@@ -33,14 +33,14 @@ colors = [
 ]
 
 def polar2cartesian(centerX, centerY, radius, angleInDegrees):
-    """
+    '''
     Generate a tuple of cartesian coordinates from polar ones.
 
     This was originally some JS code posted on StackOverflow because I failed
     geometry too many times. I have adapted it for use in Python. The original
     code is here:
     http://stackoverflow.com/questions/5736398/how-to-calculate-the-svg-path-for-an-arc-of-a-circle
-    """
+    '''
     angleInRadians = angleInDegrees * math.pi / 180.0
     x = centerX + radius * math.cos(angleInRadians)
     y = centerY + radius * math.sin(angleInRadians)
@@ -48,15 +48,15 @@ def polar2cartesian(centerX, centerY, radius, angleInDegrees):
 
 @base.cacofunc
 def stats(message, client, *args, **kwargs):
-    """
+    '''
     **.stats**
     Generates a pie chart, representing the last 1000 messages in this channel. Each wedge represents how many messages were sent by the person as a percentage.
     *Example: .stats*
-    """
+    '''
 
     #Get the most recent logs
     history = yield from client.logs_from(message.channel, 1000)
-    users = { "totalmsgcount" : 0 }
+    users = { 'totalmsgcount' : 0 }
 
     #Determine amount of messages sent by each user and total messages.
     #Save message content to be compared later.
@@ -102,15 +102,20 @@ def stats(message, client, *args, **kwargs):
 
     #write the SVG file
     result = r'<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="300" height="' + str(txtspace) + '" viewBox="0 0 300 ' + str(txtspace) + '" xmlns="http://www.w3.org/2000/svg" version="1.1"><rect width="100%" height="100%" fill="white"/>'
+
     for usr in users:
         if usr != 'totalmsgcount':
             result += users[usr]['svgpiestring']
-    for usr in users:
+
+    order = list(users)
+    random.shuffle(order)
+
+    for usr in order:
         if usr != 'totalmsgcount':
             result += users[usr]['svgtextstring']
     result += r'</svg>'
 
-    with open('tmpsvg.svg', 'w') as data:
+    with open('tmp.svg', 'w') as data:
         data.write(result)
 
     subprocess.check_call(['convert', 'tmp.svg', 'tmp.png'])
@@ -120,5 +125,5 @@ def stats(message, client, *args, **kwargs):
     If you want to output directly to the channel as messages, use this:
 
     for usr in users:
-        client.send_message(c, "**" + str(usr) + "**: " + str(users[usr]['percent']) + "% (" + str(users[usr]['msgcount']) + "of" + str(users['totalmsgcount']) + "))
+        client.send_message(c, '**' + str(usr) + '**: ' + str(users[usr]['percent']) + '% (' + str(users[usr]['msgcount']) + 'of' + str(users['totalmsgcount']) + '))
     '''
