@@ -5,13 +5,12 @@ import random # To print random emojis.
 # the list is a server name: Use 'all' to send to all servers, or type a server
 # name to make that server the only one that can see that change.
 change_list = [
-    ['all', 'I fixed `.stats`. Sorry.'],
-    ['all', 'Now @*everyone* mentions *actually do* memo you if you\'re on the memo list.'],
-    ['all', 'Memos were made less API-intensive. I made the guarantee that the message would send a higher priority than sending the message quickly. You will definitely recieve memos (And now all as 1 message!)'],
-    ['all', '`.stats` is now nondescriminatory. To be fair it was already, but now we shuffle the list so the order is not based on Python quirks anymore.'],
-    ["Undertale", "Special cases in `.summon` are finally definitely, *unconditionally* unbroken."],
-    ['Undertale', '`.summon` now removes duplicates.'],
-    ['Undertale', 'Unbroke `.say`. Sorry...']
+    ['all', 'This is basically "The Plugs Update"'],
+    ['all', 'Plugs are now server-based. You\'re probably gonna want to go ahead and re-plug all the bots in your server.'],
+    ['all', 'Existing plugs are now cleared.'],
+    ['all', 'Orangestar can globally plug bots.'],
+    ['all', 'Please stop abusing plugs.'],
+    ['all', 'Further prevented errors from being thrown with .determinate']
 ]
 
 # There's a few more emojis I could use for bullets, but these stuck out the most to me.

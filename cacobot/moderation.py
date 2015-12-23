@@ -133,10 +133,14 @@ def plug(message, client, *args, **kwargs):
     """
 
     if message.author.id == '88401933936640000' or message.channel.permissions_for(message.author).can_kick_members:
+        if message.author.id == '88401933936640000' and message.content.split(' ')[1] == 'GLOBAL':
+            srv = 'GLOBAL'
+        else:
+            srv = message.server.id
         with open('configs/plugs.json') as data:
             plugs = json.load(data)
         for mention in message.mentions:
-            plugs.append(mention.id)
+            plugs[mention.id] = srv
             yield from client.send_message(message.channel, ":heavy_check_mark: {} has been plugged.".format(mention.name))
         with open('configs/plugs.json', 'w') as data:
             json.dump(plugs, data, indent=4)
@@ -146,9 +150,9 @@ def plug(message, client, *args, **kwargs):
 @base.cacofunc
 def unplug(message, client, *args, **kwargs):
     """
-    **.plug** [*mention*]
+    **.unplug** [*mention*]
     Makes CacoBot listen to a user that has been plugged. Only users that can kick can plug and unplug.
-    *Example: .plug @BooBot*
+    *Example: .unplug @Orangestar*
     """
 
     if message.author.id == '88401933936640000' or message.channel.permissions_for(message.author).can_kick_members:

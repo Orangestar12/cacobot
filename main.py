@@ -72,7 +72,7 @@ def on_message(message):
     # This code is pretty self-explanitory.
     else:
 
-        plugs = []
+        plugs = {}
         try:
             with open('configs/plugs.json') as data:
                 plugs = json.load(data)
@@ -83,11 +83,11 @@ def on_message(message):
         if message.content.startswith('.') and message.author.id != client.user.id: # ignore our own commands
             command = message.content[1:].split(' ')[0].lower() # So basically if the message was ".Repeat Butt talker!!!" this would be "repeat"
             if command in cacobot.base.functions:
-                if message.author.id not in plugs:
+                if message.author.id in plugs and (plugs[message.author.id] == 'GLOBAL' or plugs[message.author.id] == message.server.id):
+                    yield from client.send_message(message.channel, '{}: Sorry, but you have been plugged.'.format(message.author.mention))
+                else:
                     yield from client.send_typing(message.channel)
                     yield from cacobot.base.functions[command](message, client)
-                else:
-                    yield from client.send_message(message.channel, '{}: Sorry, but you have been plugged.'.format(message.author.mention))
 
         # Print tag count.
         if message.content.startswith('Retrieving tags owned by'):
@@ -187,8 +187,10 @@ def on_error(event, *args, **kwargs):
     # args[0] is the message that was recieved prior to the error. At least,
     # it should be. We check it first in case the cause of the error wasn't a
     # message.
+    print('An error has been caught.')
+    print(traceback.format_exc())
     if args and type(args[0]) == discord.Message:
-        print(traceback.format_exc())
+        print('This error was caused by a message.\nServer: {}. Channel: #{}.'.format(message.server.name, message.channel.name))
         yield from client.send_message(args[0].channel, 'Niiiice work, {}, you just caused {} **{}**!'.format(args[0].author.mention, aan(sys.exc_info()[0].__name__), sys.exc_info()[0].__name__))
         yield from client.send_message(args[0].channel, '```\n{}\n```'.format(traceback.format_exc()))
 

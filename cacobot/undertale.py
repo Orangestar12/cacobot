@@ -281,194 +281,197 @@ def determinate(message, client, *args, **kwargs):
     # *Example: .determinate color=#FF0000 Where are the knives.*
     # Then the spoiler rules got more strict so I had to change it.
 
-    color = '#FFFFFF'
-    font = 'Determination Mono'
-    strokewidth = '0'
-    lineheight = 36 #This is actually slightly big for the height of lines but *Shrug*
-    fontwidth = '28px'
-    precedent = 32
-    width = '640'
-
-    # I'm basically only using this to quickly strip ".determinate" from the message
-    TextToSay = message.content.split(' ', 1)[1]
-
-    # find color
-    if 'color=' in TextToSay.lower() or 'color:' in TextToSay.lower():
-        index = TextToSay.find('color=') + 6
-        end = TextToSay.find(' ', index)
-        color = TextToSay[index:end]
-        index = index - 6
-        end = end + 1
-        TextToSay = TextToSay[:index] + TextToSay[end:]
-
-    if color == 'rainbow':
-        # MEME STOPPER CODE #STOPMEMESNOW
-        yield from client.send_message(message.channel, random.choice([
-        'See, this is why we can\'t have nice things.',
-        'It was Jerry, wasn\'t it. *He* put you up to this.',
-        'Why don\'t you call your mother or something? It\'d be more productive than exhausting my list of snarky comments for when you post memes.',
-        'Seriously, keep this up and nobody will love you.',
-        'I think this counts as spam at this point.',
-        '`* CacoBot is sparing you.`',
-        'Can you just stop for a little while? That\'ll at least give me a second to wipe the tears from my eyes.',
-        'You know what\'s going on here, don\'t you? You just wanted to see me suffer.',
-        'You don\'t understand how it works down here, do you?',
-        'You IDIOT.',
-        'Was it something I did? Did *I* do something to make you do this?'
-        ]))
+    if message.content.strip() == '.say' or message.content.strip() == '.determinate':
+        yield from client.send_message(message.channel, 'If you do not know how to use this command, call `.help determinate`!')
     else:
-        if color == 'RAINBOW':
-            clr = ['#']
-            for x in range(0, 6):
-                clr.append(random.choice('0123456789ABCDEF'))
-            color = ''.join(clr)
+        color = '#FFFFFF'
+        font = 'Determination Mono'
+        strokewidth = '0'
+        lineheight = 36 #This is actually slightly big for the height of lines but *Shrug*
+        fontwidth = '28px'
+        precedent = 32
+        width = '640'
 
-        #find font
-        if 'font=' in TextToSay.lower() or 'font:' in TextToSay.lower():
-            index = TextToSay.find('font=') + 5
+        # I'm basically only using this to quickly strip ".determinate" from the message
+        TextToSay = message.content.split(' ', 1)[1]
+
+        # find color
+        if 'color=' in TextToSay.lower() or 'color:' in TextToSay.lower():
+            index = TextToSay.find('color=') + 6
             end = TextToSay.find(' ', index)
-            newfnt = TextToSay[index:end].lower()
-
-            if newfnt == 'sans':
-                font = 'Comic Sans MS'
-                lineheight = 40
-            elif newfnt == 'papyrus':
-                font = 'Papyrus'
-                strokewidth = '1'
-                fontwidth = '20px'
-            elif newfnt == 'wd':
-                font = 'Wingdings'
-                strokewidth = '1'
-                fontwidth = '18px'
-                lineheight = 24
-            elif newfnt == 'ut':
-                font = 'Monster Friend Fore'
-                width = '700'
-                precedent = 22
-            else:
-                font = newfnt.replace('_', ' ')
-
-            index = index - 5
+            color = TextToSay[index:end]
+            index = index - 6
+            end = end + 1
             TextToSay = TextToSay[:index] + TextToSay[end:]
 
-        TextToSay = TextToSay.strip()
-        if font == 'Wingdings':
-            TextToSay = TextToSay.upper()
-
-        if TextToSay.startswith('* '):
-            indent = True
+        if color == 'rainbow':
+            # MEME STOPPER CODE #STOPMEMESNOW
+            yield from client.send_message(message.channel, random.choice([
+            'See, this is why we can\'t have nice things.',
+            'It was Jerry, wasn\'t it. *He* put you up to this.',
+            'Why don\'t you call your mother or something? It\'d be more productive than exhausting my list of snarky comments for when you post memes.',
+            'Seriously, keep this up and nobody will love you.',
+            'I think this counts as spam at this point.',
+            '`* CacoBot is sparing you.`',
+            'Can you just stop for a little while? That\'ll at least give me a second to wipe the tears from my eyes.',
+            'You know what\'s going on here, don\'t you? You just wanted to see me suffer.',
+            'You don\'t understand how it works down here, do you?',
+            'You IDIOT.',
+            'Was it something I did? Did *I* do something to make you do this?'
+            ]))
         else:
-            indent = False
+            if color == 'RAINBOW':
+                clr = ['#']
+                for x in range(0, 6):
+                    clr.append(random.choice('0123456789ABCDEF'))
+                color = ''.join(clr)
 
-        TextList = []
+            #find font
+            if 'font=' in TextToSay.lower() or 'font:' in TextToSay.lower():
+                index = TextToSay.find('font=') + 5
+                end = TextToSay.find(' ', index)
+                newfnt = TextToSay[index:end].lower()
 
-        while TextToSay:
-            if indent == True:
-                # Indent mode must determine whether the next string starts with
-                # '* ' or not.
-                # 'prec' is a variable I made to determine how many characters can
-                # be on each line
-                if TextToSay.startswith('* '):
-                    prec = precedent
+                if newfnt == 'sans':
+                    font = 'Comic Sans MS'
+                    lineheight = 40
+                elif newfnt == 'papyrus':
+                    font = 'Papyrus'
+                    strokewidth = '1'
+                    fontwidth = '20px'
+                elif newfnt == 'wd':
+                    font = 'Wingdings'
+                    strokewidth = '1'
+                    fontwidth = '18px'
+                    lineheight = 24
+                elif newfnt == 'ut':
+                    font = 'Monster Friend Fore'
+                    width = '700'
+                    precedent = 22
                 else:
-                    prec = precedent - 2
+                    font = newfnt.replace('_', ' ')
+
+                index = index - 5
+                TextToSay = TextToSay[:index] + TextToSay[end:]
+
+            TextToSay = TextToSay.strip()
+            if font == 'Wingdings':
+                TextToSay = TextToSay.upper()
+
+            if TextToSay.startswith('* '):
+                indent = True
             else:
-                prec = precedent
+                indent = False
 
-            fore = prec + 1
+            TextList = []
 
-            if '\n' in TextToSay[:prec]:
-                index = TextToSay.find('\n')
-                TextList.append(TextToSay[:index])
-                TextToSay = TextToSay[index+1:]
-
-            else: # line break was not found
-                try:
-                    if TextToSay[prec] == ' ':
-                        TextList.append(TextToSay[:prec])
-                        TextToSay = TextToSay[fore:]
+            while TextToSay:
+                if indent == True:
+                    # Indent mode must determine whether the next string starts with
+                    # '* ' or not.
+                    # 'prec' is a variable I made to determine how many characters can
+                    # be on each line
+                    if TextToSay.startswith('* '):
+                        prec = precedent
                     else:
-                        # I could do this with a for loop, but the way I wanted it
-                        # to be done worked much better with a While loop, so I used
-                        # it instead.
-                        x = prec-1
-                        while True:
-                            if x == -1:
-                                TextList.append(TextToSay[:prec])
-                                TextToSay = TextToSay[fore:]
-                                break
-
-                            elif TextToSay[x] in r' -\/':
-                                # I include the line break so we can break things
-                                # like "Democratic-Republican."" and keep the -.
-
-                                # ...Sorry, that was a shitty example.
-
-                                TextList.append(TextToSay[:x+1])
-                                TextToSay = TextToSay[x+1:]
-                                break
-
-                            # After the loop, if we haven't broken, subtract x by 1
-                            # so we can check the next character down in the next
-                            # loop.
-                            x = x-1
-
-                # IndexError occurs when TextToSay is less than 32 characters
-                # This means we can just shove the rest onto it wholesale
-                except IndexError:
-                    TextList.append(TextToSay)
-                    TextToSay = '' # blank the var. This kills the loop.
-
-        # end while TextToSay:
-
-        if indent:
-            #indent mode: detect "* "s
-            for x in TextList:
-                if x.startswith('* '):
-                    TextToSay += x + '\n'
+                        prec = precedent - 2
                 else:
-                    TextToSay += '  ' + x + '\n'
-        else:
-            # Not in indent mode: just join list
-            TextToSay = '\n'.join(TextList)
+                    prec = precedent
 
-        save = TextToSay
-        TextToSay = htmlEntities(TextToSay)
-        lines = len(TextList)
-        height = (lines * lineheight) + 94
+                fore = prec + 1
 
-        svgString = r'<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="' + width + '" height ="' + str(height) + '" viewBox="0 0 ' + width + ' ' + str(height) + '" xmlns="http://www.w3.org/2000/svg" version="1.1" shape-rendering="optimizeSpeed"><rect width="100%" height="100%" fill="black"/>'
+                if '\n' in TextToSay[:prec]:
+                    index = TextToSay.find('\n')
+                    TextList.append(TextToSay[:index])
+                    TextToSay = TextToSay[index+1:]
 
-        # MFF requires no rect and a back layer.
-        if font != 'Monster Friend Fore':
-            svgString += '<rect width="576" height="' + str(height - 64) + '" x="33" y="33" stroke-width="6" stroke="white"/>'
-        else:
-            svgString += '<text fill="' + color + '" stroke="' + color + '" stroke-width="' + strokewidth + '" x="50" y="50" dy="' + fontwidth + '" font-size="' + fontwidth + '" font-family="Monster Friend Back" xml:space="preserve" opacity="0.65">' + TextToSay + '</text>'
+                else: # line break was not found
+                    try:
+                        if TextToSay[prec] == ' ':
+                            TextList.append(TextToSay[:prec])
+                            TextToSay = TextToSay[fore:]
+                        else:
+                            # I could do this with a for loop, but the way I wanted it
+                            # to be done worked much better with a While loop, so I used
+                            # it instead.
+                            x = prec-1
+                            while True:
+                                if x == -1:
+                                    TextList.append(TextToSay[:prec])
+                                    TextToSay = TextToSay[fore:]
+                                    break
 
-        svgString += '<text fill="' + color + '" stroke="' + color + '" stroke-width="' + strokewidth + '" x="50" y="50" dy="' + fontwidth + '" font-size="' + fontwidth + '" font-family="' + font + '" xml:space="preserve">' + TextToSay + '</text></svg>'
+                                elif TextToSay[x] in r' -\/':
+                                    # I include the line break so we can break things
+                                    # like "Democratic-Republican."" and keep the -.
 
-        # write svg
-        with open('tmp.svg', 'w') as data:
-            data.write(svgString)
+                                    # ...Sorry, that was a shitty example.
 
-        # requires imagemagick
-        subprocess.check_call(['convert', 'tmp.svg', 'tmp.png'])
+                                    TextList.append(TextToSay[:x+1])
+                                    TextToSay = TextToSay[x+1:]
+                                    break
 
-        yield from client.send_file(message.channel, 'tmp.png')
+                                # After the loop, if we haven't broken, subtract x by 1
+                                # so we can check the next character down in the next
+                                # loop.
+                                x = x-1
 
-        # Try to delete the message.
-        try:
-            yield from client.delete_message(message)
-        except (discord.Forbidden, discord.HTTPException):
-            # do nothing if no permission or message
-            pass
+                    # IndexError occurs when TextToSay is less than 32 characters
+                    # This means we can just shove the rest onto it wholesale
+                    except IndexError:
+                        TextList.append(TextToSay)
+                        TextToSay = '' # blank the var. This kills the loop.
 
-        # send msg if wingdings
-        if font == 'Wingdings':
-            yield from client.send_message(message.channel, '*{}*'.format(save))
+            # end while TextToSay:
 
-        # send author
-        yield from client.send_message(message.channel, '*Sent by {}.*'.format(message.author.mention))
+            if indent:
+                #indent mode: detect "* "s
+                for x in TextList:
+                    if x.startswith('* '):
+                        TextToSay += x + '\n'
+                    else:
+                        TextToSay += '  ' + x + '\n'
+            else:
+                # Not in indent mode: just join list
+                TextToSay = '\n'.join(TextList)
+
+            save = TextToSay
+            TextToSay = htmlEntities(TextToSay)
+            lines = len(TextList)
+            height = (lines * lineheight) + 94
+
+            svgString = r'<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="' + width + '" height ="' + str(height) + '" viewBox="0 0 ' + width + ' ' + str(height) + '" xmlns="http://www.w3.org/2000/svg" version="1.1" shape-rendering="optimizeSpeed"><rect width="100%" height="100%" fill="black"/>'
+
+            # MFF requires no rect and a back layer.
+            if font != 'Monster Friend Fore':
+                svgString += '<rect width="576" height="' + str(height - 64) + '" x="33" y="33" stroke-width="6" stroke="white"/>'
+            else:
+                svgString += '<text fill="' + color + '" stroke="' + color + '" stroke-width="' + strokewidth + '" x="50" y="50" dy="' + fontwidth + '" font-size="' + fontwidth + '" font-family="Monster Friend Back" xml:space="preserve" opacity="0.65">' + TextToSay + '</text>'
+
+            svgString += '<text fill="' + color + '" stroke="' + color + '" stroke-width="' + strokewidth + '" x="50" y="50" dy="' + fontwidth + '" font-size="' + fontwidth + '" font-family="' + font + '" xml:space="preserve">' + TextToSay + '</text></svg>'
+
+            # write svg
+            with open('tmp.svg', 'w') as data:
+                data.write(svgString)
+
+            # requires imagemagick
+            subprocess.check_call(['convert', 'tmp.svg', 'tmp.png'])
+
+            yield from client.send_file(message.channel, 'tmp.png')
+
+            # Try to delete the message.
+            try:
+                yield from client.delete_message(message)
+            except (discord.Forbidden, discord.HTTPException):
+                # do nothing if no permission or message
+                pass
+
+            # send msg if wingdings
+            if font == 'Wingdings':
+                yield from client.send_message(message.channel, '*{}*'.format(save))
+
+            # send author
+            yield from client.send_message(message.channel, '*Sent by {}.*'.format(message.author.mention))
 determinate.server = 'Undertale'
 
 # You know, while I'm here, here's the StackOverflow post that has the function.
