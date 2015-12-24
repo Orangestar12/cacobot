@@ -111,7 +111,7 @@ def summon(message, client, *args, **kwargs):
     }
 
     # Just summon
-    if message.content.strip() == '.summon':
+    if message.content.strip()[1:] == 'summon':
 
         # Add spoilers unless spoiler-free channel
         if message.channel.is_private or message.channel.name not in ['torielshome', 'fanworks', 'workshop']:
@@ -132,7 +132,7 @@ def summon(message, client, *args, **kwargs):
 
         yield from client.send_message(message.channel, msg)
 
-    elif message.content.strip() == '.summon list':
+    elif message.content.strip()[1:] == 'summon list':
         if message.channel.is_private or message.channel.name not in ['torielshome', 'fanworks', 'workshop']:
             monsters.update(spoilers)
 
@@ -281,7 +281,7 @@ def determinate(message, client, *args, **kwargs):
     # *Example: .determinate color=#FF0000 Where are the knives.*
     # Then the spoiler rules got more strict so I had to change it.
 
-    if message.content.strip() == '.say' or message.content.strip() == '.determinate':
+    if message.content.strip()[1:] == 'say' or message.content.strip() == 'determinate':
         yield from client.send_message(message.channel, 'If you do not know how to use this command, call `.help determinate`!')
     else:
         color = '#FFFFFF'
@@ -495,7 +495,7 @@ def forebode(message, client, *args, **kwargs):
             if foreboden != None:
                 for ment in message.mentions:
                     yield from client.replace_roles(ment, foreboden)
-                    yield from client.send_message(message.channel, '{}: That person has been foreboden.'.format(message.author.mention))
+                    yield from client.send_message(message.channel, '{}: {} has been foreboden.'.format(message.author.mention, ment.name))
             else:
                 yield from client.send_message(message.channel, '{}: You must create a role named \'Foreboden\' before you can use this command.'.format(message.author.mention))
         except:
