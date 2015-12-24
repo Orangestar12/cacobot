@@ -103,7 +103,16 @@ def summon(message, client, *args, **kwargs):
         'GladDummy' : 'Glad Dummy lets you go.',
         'MettatonNEO' : 'Mettaton NEO blocks the way!',
         'Sans' : 'You feel like you\'re gonna have a bad time.',
-        'Asriel' : 'It\'s the end.'
+        'Asriel' : 'It\'s the end.',
+        'LemonBread' : 'Smells like sweet lemons.',
+        'ReaperBird' : ',',
+        'Amalgamate' : 'It\'s so cold.',
+        'Memoryhead' : 'drew near!',
+        'Endogeny' : 'It\'s the Amalgamate.',
+        'MonsterKid' : 'In my way.',
+        'LostSoul' : 'The Lost Soul appeared.',
+        'LostSouls' : 'The Lost Souls appeared.',
+        'TestFroggit' : 'TestMonster and its cohorts drew near!'
     }
     hidden = {
         'Glyde' : 'Glyde swooped in!',
