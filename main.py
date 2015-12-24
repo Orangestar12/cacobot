@@ -190,7 +190,7 @@ def on_error(event, *args, **kwargs):
     print('An error has been caught.')
     print(traceback.format_exc())
     if args and type(args[0]) == discord.Message:
-        print('This error was caused by a message.\nServer: {}. Channel: #{}.'.format(message.server.name, message.channel.name))
+        print('This error was caused by a message.\nServer: {}. Channel: #{}.'.format(args[0].server.name, args[0].channel.name))
         yield from client.send_message(args[0].channel, 'Niiiice work, {}, you just caused {} **{}**!'.format(args[0].author.mention, aan(sys.exc_info()[0].__name__), sys.exc_info()[0].__name__))
         yield from client.send_message(args[0].channel, '```\n{}\n```'.format(traceback.format_exc()))
 
