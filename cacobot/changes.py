@@ -5,12 +5,14 @@ import random # To print random emojis.
 # the list is a server name: Use 'all' to send to all servers, or type a server
 # name to make that server the only one that can see that change.
 change_list = [
-    ['all', 'This is basically "The Plugs Update"'],
-    ['all', 'Plugs are now server-based. You\'re probably gonna want to go ahead and re-plug all the bots in your server.'],
-    ['all', 'Existing plugs are now cleared.'],
-    ['all', 'Orangestar can globally plug bots.'],
-    ['all', 'Please stop abusing plugs.'],
-    ['all', 'Further prevented errors from being thrown with .determinate']
+    ['all', '`.quote` no longer exposes an error when the index is out of range.'],
+    ['all', '`.addquote` no longer allows you to add duplicates.'],
+    ['all', '`.myid` can give you your ID, in case another bot with a more verbose info command is offline.'],
+    ['all', 'CacoBot plays more 90s shooters, thanks to the death of `game_id`!'],
+    ['all', '`.choice` is now based on semicolons, not commas. I.E. `.choice One; Two`'],
+    ['all', 'Docstrings should now display commands in `code blocks.` Try it out by calling `.help` with your favorite command.'],
+    ['all', '`.yt` Now only returns *one video* unless you set `.results`. No more searching playlists or channels with it: It was unused.'],
+    ['Undertale', 'More monsters for `.summon`, thanks to ToransuShojo!']
 ]
 
 # There's a few more emojis I could use for bullets, but these stuck out the most to me.
@@ -21,7 +23,7 @@ def changes(message, client, *args, **kwargs):
     '''
     **.changes**
     Displays the most recent CacoBot changes.
-    *Example: .changes*
+    *Example: `.changes`*
     '''
 
     printChanges = '{}: **Latest Changes**\n'.format(message.author.mention)

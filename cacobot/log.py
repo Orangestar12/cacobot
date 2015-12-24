@@ -6,9 +6,9 @@ with open('configs/config.json') as data:
     config = json.load(data)
 
 def date_format(timestamp):
-    """Format a timestamp as Month DD, YYYY"""
+    '''Format a timestamp as Month DD, YYYY'''
     months = [
-      'ERRMONTH',
+      'MISSINGMO', # :^)
       'January',
       'February',
       'March',
@@ -30,14 +30,14 @@ def date_format(timestamp):
 
 @base.cacofunc
 def log(message, client, *args, **kwargs):
-    """
+    '''
     **.log** [*req*]
     Sends the last 20 messages in a channel to you in a direct message in a nice, copy-pastable format. You can specify [*req*] to get a specific number of messages. (This is subject to limitations emposed by the API and the bot maintainer's preference.)
-    *Example: .log 25*
-    """
+    *Example: `.log 25`*
+    '''
 
     # Check to see how many messages we should grab.
-    params = message.content.split(" ")
+    params = message.content.split(' ')
     if len(params) > 1:
         req = int(params[1])
     else:
@@ -47,13 +47,13 @@ def log(message, client, *args, **kwargs):
     if req > config['log_request_limit']:
         yield from client.send_message(
           message.channel,
-          "{}: That's way too many messages to send, as decreed by my creator. Acceptable amounts end at {}.".format(
+          '{}: That\'s way too many messages to send, as decreed by my creator. Acceptable amounts end at {}.'.format(
              message.author.mention,
              str(config['log_request_limit'])
           )
         )
     elif req < 1:
-        yield from client.send_message(message.channel, "{}: Very clever, smart ass. Type a whole number next time.".format(message.author.mention))
+        yield from client.send_message(message.channel, '{}: Very clever, smart ass. Type a whole number next time.'.format(message.author.mention))
     else:
         requests = int(req) + 1 #Because logs_from will get the last message (which will, invariably, be ".logs x"), we anticipate that here.
 
@@ -94,4 +94,4 @@ def log(message, client, *args, **kwargs):
                       x.author.name,
                       x.content))
 
-                yield from asyncio.sleep(3)
+                yield from asyncio.sleep(5)

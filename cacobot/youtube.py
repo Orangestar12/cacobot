@@ -9,18 +9,18 @@ with open('configs/config.json') as data:
 
 @base.cacofunc
 def yt(message, client, *args, **kwargs):
-    """
+    '''
     **.yt** <*query*> [.results *int*]
-    Searches YouTube and returns the first 2 queries. This can be a video, a playlist, or a channel. If you provide .results with an integer afterwards, returns the first *int* results.
-    *Example: .yt Doom E1M1 100% .results 3*
-    """
+    Searches YouTube and returns the first query. If you provide `.results` with an integer afterwards, returns the first *int* results.
+    *Example: `.yt Doom E1M1 100% .results 3`*
+    '''
 
-    if message.content.split(" ")[-2] == ".results":
-        query = message.content[4:message.content.find(".results") - 2]
-        results = int(message.content.split(" ")[-1]) #The number of results to spew.
+    if message.content.split(' ')[-2] == '.results':
+        query = message.content[4:message.content.find('.results') - 2]
+        results = int(message.content.split(' ')[-1]) #The number of results to spew.
     else:
         query = message.content[4:]
-        results = 2
+        results = 1
 
     youtube = build(config['youtube']['API_SERVICE_NAME'], config['youtube']['API_VERSION'], developerKey=config['youtube']['DEVELOPER_KEY'])
 
@@ -36,21 +36,17 @@ def yt(message, client, *args, **kwargs):
 
     search_response = youtube.search().list(
       q = query,
-      part = "id,snippet",
-      maxResults = results
+      part = 'id,snippet',
+      maxResults = results,
+      type = 'video'
     ).execute()
 
     vids = []
 
-    for search_result in search_response.get("items", []):
-        if search_result["id"]["kind"] == "youtube#video":
-            vids.append('**' + search_result["snippet"]["title"] + "** | http://youtu.be/" + search_result["id"]["videoId"])
-        elif search_result["id"]["kind"] == "youtube#channel":
-            vids.append('_Channel -_ **' + search_result["snippet"]["title"] + "** | http://www.youtube.com/channel/" + search_result['id']['channelId'])
-        elif search_result["id"]["kind"] == "youtube#playlist":
-            vids.append('_Playlist -_ **' + search_result["snippet"]["title"] + "** | https://www.youtube.com/playlist?list=" + search_result['id']['playlistId'])
+    for search_result in search_response.get('items', []):
+        vids.append('**' + search_result['snippet']['title'] + '** | http://youtu.be/' + search_result['id']['videoId'])
 
     for video in range(0, len(vids)):
-        all_videos += vids[video] + " (Result " + str(video + 1) + " of " + str(len(vids)) + " from YouTube) \n\n"
+        all_videos += vids[video] + ' (Result ' + str(video + 1) + ' of ' + str(len(vids)) + ' from YouTube) \n\n'
 
     yield from client.send_message(message.channel, all_videos)

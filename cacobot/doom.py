@@ -6,15 +6,15 @@ import urllib.request
 
 # @base.cacofunc # Uncomment to reenable.
 def wadidea(message, client, *args, **kwargs):
-    """
+    '''
     **.wadidea**
     *This command was created for the /vr/ Doom server.
     Generates a wad idea from boris.slipgate.org.
-    *Example: .wadidea*
-    """
+    *Example: `.wadidea`*
+    '''
 
     #Download the file.
-    result = urllib.request.urlopen("http://boris.slipgate.org/?a=mapgen").read().decode("ISO-8859-1")
+    result = urllib.request.urlopen('http://boris.slipgate.org/?a=mapgen').read().decode('ISO-8859-1')
 
     #The webpage will always have this line where the idea begins:
     start = int(result.find('<table align="center" width="400"><tr><td>'))
@@ -26,7 +26,7 @@ def wadidea(message, client, *args, **kwargs):
     result = result[start:end].strip()
 
     #Next, we remove all <br>s and line breaks.
-    result = result.replace("<br>\n", " ")
+    result = result.replace('<br>\n', ' ')
 
     yield from client.send_message(message.channel,  '{}: {}\n\n*Provided by boris.slipgate.org/?a=mapgen*'.format(author.mention, result))
     return

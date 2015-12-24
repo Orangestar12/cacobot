@@ -9,7 +9,7 @@ def goatnick(message, client, *args, **kwargs):
     **.goatnick**
     *This command was created for the Undertale server.*
     Generates a politically incorrect name for Asgore from a list.
-    *Example: .goatnick*
+    *Example: `.goatnick`*
     '''
     asgore_nicks = [
         'King Kindergarten Killer',
@@ -284,7 +284,7 @@ def determinate(message, client, *args, **kwargs):
     *This command was created for the Undertale server.*
     Generates an image with text of your choice using the font Determination Mono. [color\=*color*] can be provided as a CSS color, like hexadecimal (#FF7700), rgb (rgb(255,128,0)), or color code (orange). [font=*font*] can be *sans*, *papyrus*, *wd*, or *ut*. Omit to leave it as DTM.
     You can also use colons instead of equals signs. If you specify a font not in our keys using underscores in place of spaces, you
-    *Example: .determinate color=#0000FF font=Papyrus YOU'RE BLUE NOW! THAT'S MY ATTACK.*
+    *Example: `.determinate color=#0000FF font=Papyrus YOU'RE BLUE NOW! THAT'S MY ATTACK.`*
     '''
     # The example used to be this:
     # *Example: .determinate color=#FF0000 Where are the knives.*
@@ -496,7 +496,7 @@ def forebode(message, client, *args, **kwargs):
     *This command was created for the Undertale server. Just for Felarine. ;)*
     This is a shortcut to add the "Foreboden" role to a user. If your server has no
     "Foreboden" role, this will fail.
-    *Example: .forbode @CacoBot*
+    *Example: `.forbode @CacoBot`*
     '''
     if message.channel.permissions_for(message.author).can_manage_roles:
         try:
@@ -517,7 +517,7 @@ forebode.server = 'Undertale'
 def say(message, client, *args, **kwargs):
     '''
     **.say** [*params*]
-    A shorcut to .determinate.
+    A shorcut to `.determinate`.
     '''
     yield from determinate(message, client, args, kwargs)
 

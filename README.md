@@ -29,6 +29,8 @@ Create a folder called `configs` with these two files, filling in any necessary 
         "API_VERSION" : "v3",
         "request_limit" : 5
     },
+    "owner_id" : "Place your Discord ID here. Use .myid to get it with the bot.",
+    "invoker" : "Place the character or line you want to invoke CB commands. Base CacoBot's is '.'",
     "log_request_limit" : 50
 }
 ```

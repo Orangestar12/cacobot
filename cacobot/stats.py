@@ -51,7 +51,7 @@ def stats(message, client, *args, **kwargs):
     '''
     **.stats**
     Generates a pie chart, representing the last 1000 messages in this channel. Each wedge represents how many messages were sent by the person as a percentage.
-    *Example: .stats*
+    *Example: `.stats`*
     '''
 
     #Get the most recent logs
@@ -125,5 +125,5 @@ def stats(message, client, *args, **kwargs):
     If you want to output directly to the channel as messages, use this:
 
     for usr in users:
-        client.send_message(c, '**' + str(usr) + '**: ' + str(users[usr]['percent']) + '% (' + str(users[usr]['msgcount']) + 'of' + str(users['totalmsgcount']) + '))
+        client.send_message(c, '**{}**: {}% ({} of {})'.format(usr, users[usr]['percent'], users[usr]['msgcount'], users['totalmsgcount']))
     '''

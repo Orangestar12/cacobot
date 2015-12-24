@@ -7,14 +7,13 @@ def help(message, client, *args, **kwargs):
     *Cheeky, ain't ya?*
     **.help** [*cmd*]
     Displays a list of commands. If [*cmd*] is supplied, provides help about a specific command.
-    *Example: .help help*
+    *Example: `.help help`*
     """
     params = message.content.split(" ")
-    if len(params) == 1: #Just '.help'
+    if message.content.strip()[1:] == 'help':
         msg = 'These are my commands:\n'
 
         dect = {} # Oh god here we go
-        # arr = []
 
         for x in base.functions: # in with dictionaries gives keys, which are strings.
             # If a function is based upon a specific server (defined by a function's "server" attribute, which it may or may not have)
@@ -31,17 +30,17 @@ def help(message, client, *args, **kwargs):
                 except KeyError:
                     dect['all'] = []
                     dect['all'].append(x)
-            # arr.append(x)
+
         msg += '__**Global Commands**__\n'
         msg += ' '.join(sorted(dect['all']))
-        msg += '\n'
+        msg += '\n\n'
         for x in sorted(dect):
             if x != 'all':
                 msg += '__**{}**__\n'.format(x)
                 msg += ' '.join(sorted(dect[x]))
-                msg += '\n'
-        # msg += ' '.join(arr)
-        msg += 'Use .help [*command*] to get more information about a command.'
+                msg += '\n\n'
+
+        msg += 'Use `.help [`*`command`*`]` to get more information about a command.\nUse `.help all` to get a verbose image listing CacoBot\'s functions.'
         yield from client.send_message(message.channel, msg)
     else:
         if params[1] in base.functions:

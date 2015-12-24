@@ -4,7 +4,7 @@ import json, urllib.request, urllib.parse, traceback, re
 # The re module already has a find_all, but it works slightly differently from
 # the one we've defined here.
 def find_all(a_str, sub, start=0, end=0):
-    """Find every instance of a substring."""
+    '''Find every instance of a substring.'''
     if end == 0:
         end = len(a_str)
     while True:
@@ -15,17 +15,17 @@ def find_all(a_str, sub, start=0, end=0):
 
 @base.cacofunc
 def define(message, client, *args, **kwargs):
-    """
+    '''
     **.define** <*phrase*>
     Scrapes Wiktionary for the dictionary definition of <*phrase*> and formats the first 1-5 results.
-    *Example: .define demon*
-    """
+    *Example: `.define demon`*
+    '''
     definition = message.content.split(' ', 1)[1].lower() # I'm pretty sure all Wiktionary pages are lowercase.
     encoded = urllib.parse.quote(definition, safe='')
 
     try:
         # Download the page
-        result = urllib.request.urlopen("https://en.wiktionary.org/wiki/{}".format(encoded)).read().decode("UTF-8")
+        result = urllib.request.urlopen('https://en.wiktionary.org/wiki/{}'.format(encoded)).read().decode('UTF-8')
 
         # This could be done easier with some XML parsing shit but fuck it
         # I rarely back down from challenges
@@ -41,9 +41,9 @@ def define(message, client, *args, **kwargs):
         speech = {}
 
         # and this list will store each definition.
-        definitions = ["{}: **{}**".format(message.author.mention, title)]
+        definitions = ['{}: **{}**'.format(message.author.mention, title)]
 
-        # Find the first instance of 'id="Noun"'.
+        # Find the first instance of 'id='Noun''.
         if result.find('id="Noun"') != -1:
             speech['Noun'] = result.find('id="Noun"')
 
@@ -69,7 +69,7 @@ def define(message, client, *args, **kwargs):
         # Determine which key is smallest
         try:
             lowest = min(speech, key=speech.get) # This will return the part of speech that appears highest on the page.
-            definitions.append("*" + str(lowest) + "*")
+            definitions.append('*' + str(lowest) + '*')
 
             # Now that we have the index of the part of speech, we must find the
             # first ordered list after it.
@@ -96,43 +96,43 @@ def define(message, client, *args, **kwargs):
                     y = ordered_list.find('\n', x) # The list items on Wiktionary include lots of things, so we check for newline instead of </li>
                     d = re.sub('<[^<]+?>', '', ordered_list[x:y]) # Strip out html elements.
                     if d != '':
-                        definitions.append("  {}: {}".format(str(index), d))
+                        definitions.append('  {}: {}'.format(str(index), d))
                     else:
                         index -= 1
 
             # And finish it off with the link.
-            definitions.append("*Read more at https://en.wiktionary.org/wiki/{}*".format(encoded))
+            definitions.append('*Read more at https://en.wiktionary.org/wiki/{}*'.format(encoded))
 
             # Join and send.
-            msg = "\n".join(definitions)
+            msg = '\n'.join(definitions)
             yield from client.send_message(message.channel, msg)
 
         except ValueError: # If no part of speech was found, then just send this:
-            yield from client.send_message(message.channel, message.author.mention + ": I can't get the definition of that word, but it exists. Go here: https://en.wiktionary.org/wiki/{}".format(encoded))
+            yield from client.send_message(message.channel, message.author.mention + ': I can\'t get the definition of that word, but it exists. Go here: https://en.wiktionary.org/wiki/{}'.format(encoded))
             print(traceback.format_exc())
 
     except urllib.error.HTTPError: # 404 errors mean the word doesn't exist.
-        yield from client.send_message(message.channel, "{}: That's not a word, or Wiktionary doesn't have an entry on it.".format(message.author.mention))
+        yield from client.send_message(message.channel, '{}: That\'s not a word, or Wiktionary doesn\'t have an entry on it.'.format(message.author.mention))
         print(traceback.format_exc())
 
 @base.cacofunc
 def urbdef(message, client, *args, **kwargs):
-    """
+    '''
     **.urbdef** <*phrase*>
     Same as .define, only searches Urban Dictionary instead of Wiktionary.
-    *Example: .urbdef doom*
-    """
+    *Example: `.urbdef doom`*
+    '''
     definition = message.content.split(' ', 1)[1].lower()
     encoded = urllib.parse.quote(definition, safe='')
 
     try:
         # Urban Dictionary provides a beautiful JSON file in its API. This code is really self-explanatory.
-        result = json.loads(urllib.request.urlopen("http://api.urbandictionary.com/v0/define?term={}".format(encoded)).read().decode("UTF-8"))
-        definitions = ["**{}**".format(result['list'][0]['word'])]
+        result = json.loads(urllib.request.urlopen('http://api.urbandictionary.com/v0/define?term={}'.format(encoded)).read().decode('UTF-8'))
+        definitions = ['**{}**'.format(result['list'][0]['word'])]
         definitions.append(result['list'][0]['definition'])
-        definitions.append("*Read more at {}*".format(result['list'][0]['permalink']))
-        msg = "\n".join(definitions)
-        yield from client.send_message(message.channel, "{}: {}".format(message.author.mention,msg))
+        definitions.append('*Read more at {}*'.format(result['list'][0]['permalink']))
+        msg = '\n'.join(definitions)
+        yield from client.send_message(message.channel, '{}: {}'.format(message.author.mention,msg))
     except: # I shouldn't be doing a general except, but I forgot what this throws. I think urllib.error.HTTPError?
-        yield from client.send_message(message.channel, "{}: Urban Dictionary doesn't have that word.".format(message.author.mention))
+        yield from client.send_message(message.channel, '{}: Urban Dictionary doesn\'t have that word.'.format(message.author.mention))
         print(traceback.format_exc())

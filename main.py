@@ -25,12 +25,50 @@ def aan(string):
     else:
         return 'a'
 
+new_games_list = [
+    discord.Game(name='The Ultimate DOOM'),
+    discord.Game(name='DOOM II: Hell On Earth'),
+    discord.Game(name='TNT: Evilution'),
+    discord.Game(name='The Plutonia Experiment'),
+    discord.Game(name='Strife: Veteran Edition'),
+    discord.Game(name='Heretic'),
+    discord.Game(name='Hexen'),
+    discord.Game(name='Hexen II'),
+    discord.Game(name='Heretic 2'),
+    discord.Game(name='Duke Nukem 3D'),
+    discord.Game(name='Shadow Warrior'),
+    discord.Game(name='Marathon'),
+    discord.Game(name='Marathon: Durandal'),
+    discord.Game(name='Marathon Infinity'),
+    discord.Game(name='Blood'),
+    discord.Game(name='Quake'),
+    discord.Game(name='Quake II'),
+    discord.Game(name='Quake III Arena')
+]
+
+old_games_list = [
+    discord.Game(name='Doom 3'),
+    discord.Game(name='Quake Live'),
+    discord.Game(name='Quake'),
+    discord.Game(name='Quake II'),
+    discord.Game(name='Q3A'),
+    discord.Game(name='Warsow'),
+    discord.Game(name='Xonotic'),
+    discord.Game(name='System Shock'),
+    discord.Game(name='System Shock 2'),
+    discord.Game(name='Strife: Veteran Edition'),
+    discord.Game(name='Star Wars Jedi Knight'),
+    discord.Game(name='Wolfenstein - Enemy Territory'),
+    discord.Game(name='Unreal'),
+    discord.Game(name='Alien Vs Predator, Thief')
+]
+
 # random game status
 @asyncio.coroutine
 def random_retro_game():
     while True:
         # Change currently-playing game to Doom 3, Quake Live, Quake, Quake II, Q3A, Warsow, Xonotic, System Shock, System Shock 2, Strife: Veteran Edition, Star Wars Jedi Knight, Star Wars Jedi Knight II, Wolfenstein - ET, Unreal, Alien Vs Predator, Thief (choices in that order)
-        yield from client.change_status(game_id=choice([712, 385, 482, 483, 484, 738, 815, 701, 534, 600, 601, 613, 635, 714, 822]), idle=False)
+        yield from client.change_status(game=choice(new_games_list), idle=False)
         yield from asyncio.sleep(3600)
 
 @client.async_event
@@ -39,6 +77,7 @@ def on_ready():
     print(client.user.name)
     print(client.user.id)
     print('------')
+    #cacobot.radio.init()
     yield from random_retro_game()
     # No ioquake or ZDoom or PrBoom+, but S:VE more than makes up for that.
 
@@ -55,14 +94,14 @@ def on_message(message):
 
     # In retrospect this next bit could probably be a seperate function.
     if message.channel.is_private == False and message.server.id in hushed and hushed[message.server.id] == 'server':
-        if message.content.startswith('.listen'):
+        if message.content.startswith(config['invoker'] + 'listen'):
             hushed.pop(message.server.id)
             yield from client.send_message(message.channel, ':loud_sound: **Now listening!** :loud_sound:\n{}: I will now respond to commands in this channel.'.format(message.author.mention))
             with open('configs/hush.json', 'w') as data:
                 json.dump(hushed, data, indent=4)
 
     elif message.channel.is_private == False and message.channel.id in hushed and hushed[message.channel.id] == 'channel':
-        if message.content.startswith('.listen'):
+        if message.content.startswith(config['invoker'] + 'listen'):
             hushed.pop(message.channel.id)
             yield from client.send_message(message.channel, ':loud_sound: **Now listening!** :loud_sound:\n{}: I will now respond to commands in this server.'.format(message.author.mention))
             with open('configs/hush.json', 'w') as data:
@@ -80,7 +119,7 @@ def on_message(message):
             with open('configs/plugs.json', 'w') as data:
                 json.dump(plugs, data, indent=4)
 
-        if message.content.startswith('.') and message.author.id != client.user.id: # ignore our own commands
+        if message.content.startswith(config['invoker']) and message.author.id != client.user.id: # ignore our own commands
             command = message.content[1:].split(' ')[0].lower() # So basically if the message was ".Repeat Butt talker!!!" this would be "repeat"
             if command in cacobot.base.functions:
                 if message.author.id in plugs and (plugs[message.author.id] == 'GLOBAL' or plugs[message.author.id] == message.server.id):
