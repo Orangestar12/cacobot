@@ -23,8 +23,11 @@ def quote(message, client, *args, **kwargs):
 
     if cont:
         if r == 0:
-            yield from client.send_message(message.channel, quotes[random.randint(0, len(quotes)-1)])
-        if r > len(quotes) or r < 1:
+            qindex = random.randint(0, len(quotes))
+            yield from client.send_message(message.channel, '*This is quote {} {}:*\n{}'.format(random.choice(['number', 'nombre', 'numero']), qindex, quotes[qindex-1]))
+        elif r < 1:
+            yield from client.send_message(message.channel, 'You probably think you\'re really clever. Specify a *positive* quote index next time. Better yet: specify none at all for a random quote.')
+        elif r > len(quotes):
             yield from client.send_message(message.channel, ':no_entry_sign: You have specified a quote index that is too high. I only have {} quotes to puke.'.format(len(quotes)))
         else:
             yield from client.send_message(message.channel, quotes[r-1])

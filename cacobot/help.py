@@ -3,12 +3,12 @@ import inspect # To pretty-print docstrings
 
 @base.cacofunc
 def help(message, client, *args, **kwargs):
-    """
+    '''
     *Cheeky, ain't ya?*
     **.help** [*cmd*]
     Displays a list of commands. If [*cmd*] is supplied, provides help about a specific command.
     *Example: `.help help`*
-    """
+    '''
     params = message.content.split(" ")
     if message.content.strip()[1:] == 'help':
         msg = 'These are my commands:\n'
@@ -49,7 +49,7 @@ def help(message, client, *args, **kwargs):
                 # Use inspect.getdoc() to clean the docstring up.
                 yield from client.send_message(message.channel, inspect.getdoc(base.functions[params[1]]))
             else:
-                yield from client.send_message(message.channel, ":heavy_exclamation_mark: This command has no docstring! Go tell Orangestar that it's broken.")
+                yield from client.send_message(message.channel, ':heavy_exclamation_mark: This command has no docstring! Go tell Orangestar that it\'s broken.')
         else:
             yield from client.send_message(message.channel, ':no_entry_sign: That command does not exist.')
 

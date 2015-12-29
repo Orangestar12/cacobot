@@ -129,7 +129,7 @@ def on_message(message):
                     yield from cacobot.base.functions[command](message, client)
 
         # Print tag count.
-        if message.content.startswith('Retrieving tags owned by'):
+        if message.content.startswith('Retrieving tags owned by') or message.content.startswith('I found these tags for the user:'):
             msglist = message.content[message.content.index('\n')+1:].split(', ')
             yield from client.send_message(message.channel, message.author.mention + ': I calculated **{}** tags from that list.'.format(len(msglist)))
 
@@ -229,7 +229,10 @@ def on_error(event, *args, **kwargs):
     print('An error has been caught.')
     print(traceback.format_exc())
     if args and type(args[0]) == discord.Message:
-        print('This error was caused by a message.\nServer: {}. Channel: #{}.'.format(args[0].server.name, args[0].channel.name))
+        if args[0].is_private:
+            print('This error was caused by a DM with {}.'.format(args[0].author))
+        else:
+            print('This error was caused by a message.\nServer: {}. Channel: #{}.'.format(args[0].server.name, args[0].channel.name))
         yield from client.send_message(args[0].channel, 'Niiiice work, {}, you just caused {} **{}**!'.format(args[0].author.mention, aan(sys.exc_info()[0].__name__), sys.exc_info()[0].__name__))
         yield from client.send_message(args[0].channel, '```\n{}\n```'.format(traceback.format_exc()))
 

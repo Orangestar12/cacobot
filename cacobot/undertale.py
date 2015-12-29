@@ -1,4 +1,4 @@
-import cacobot.base as base
+﻿import cacobot.base as base
 import discord, random, traceback, subprocess
 
 # No comments. Fuck you.
@@ -283,7 +283,7 @@ def determinate(message, client, *args, **kwargs):
     **.determinate** [color\=*color*] [font\=*font*] <*text*>
     *This command was created for the Undertale server.*
     Generates an image with text of your choice using the font Determination Mono. [color\=*color*] can be provided as a CSS color, like hexadecimal (#FF7700), rgb (rgb(255,128,0)), or color code (orange). [font=*font*] can be *sans*, *papyrus*, *wd*, or *ut*. Omit to leave it as DTM.
-    You can also use colons instead of equals signs. If you specify a font not in our keys using underscores in place of spaces, you
+    You can also use colons instead of equals signs. If you specify a font not in our keys using underscores in place of spaces, you can specify other fonts, like `font=Roboto_Condensed`.
     *Example: `.determinate color=#0000FF font=Papyrus YOU'RE BLUE NOW! THAT'S MY ATTACK.`*
     '''
     # The example used to be this:
@@ -297,7 +297,7 @@ def determinate(message, client, *args, **kwargs):
         font = 'Determination Mono'
         strokewidth = '0'
         lineheight = 36 #This is actually slightly big for the height of lines but *Shrug*
-        fontwidth = '28px'
+        fontwidth = 28
         precedent = 32
         width = '640'
 
@@ -305,11 +305,19 @@ def determinate(message, client, *args, **kwargs):
         TextToSay = message.content.split(' ', 1)[1]
 
         # find color
-        if 'color=' in TextToSay.lower() or 'color:' in TextToSay.lower():
-            index = TextToSay.find('color=') + 6
+        if 'color=' in TextToSay.lower() or 'color:' in TextToSay.lower() or 'colour=' in TextToSay.lower() or 'colour:' in TextToSay.lower():
+            if 'color=' in TextToSay.lower():
+                findme = 'color='
+            elif 'color:' in TextToSay.lower():
+                findme = 'color:'
+            elif 'colour=' in TextToSay.lower():
+                findme = 'colour='
+            elif 'colour:' in TextToSay.lower():
+                findme = 'colour:'
+            index = TextToSay.find(findme) + len(findme)
             end = TextToSay.find(' ', index)
             color = TextToSay[index:end]
-            index = index - 6
+            index = index - len(findme)
             end = end + 1
             TextToSay = TextToSay[:index] + TextToSay[end:]
 
@@ -329,15 +337,21 @@ def determinate(message, client, *args, **kwargs):
             'Was it something I did? Did *I* do something to make you do this?'
             ]))
         else:
+            rainbow = False
             if color == 'RAINBOW':
                 clr = ['#']
                 for x in range(0, 6):
                     clr.append(random.choice('0123456789ABCDEF'))
                 color = ''.join(clr)
+                rainbow = True
 
             #find font
             if 'font=' in TextToSay.lower() or 'font:' in TextToSay.lower():
-                index = TextToSay.find('font=') + 5
+                if 'font=' in TextToSay.lower():
+                    findme = 'font='
+                else:
+                    findme = 'font:'
+                index = TextToSay.find(findme) + len(findme)
                 end = TextToSay.find(' ', index)
                 newfnt = TextToSay[index:end].lower()
 
@@ -347,11 +361,11 @@ def determinate(message, client, *args, **kwargs):
                 elif newfnt == 'papyrus':
                     font = 'Papyrus'
                     strokewidth = '1'
-                    fontwidth = '20px'
+                    fontwidth = 20
                 elif newfnt == 'wd':
                     font = 'Wingdings'
                     strokewidth = '1'
-                    fontwidth = '18px'
+                    fontwidth = 18
                     lineheight = 24
                 elif newfnt == 'ut':
                     font = 'Monster Friend Fore'
@@ -364,8 +378,10 @@ def determinate(message, client, *args, **kwargs):
                 TextToSay = TextToSay[:index] + TextToSay[end:]
 
             TextToSay = TextToSay.strip()
-            if font == 'Wingdings':
+            if font in ['Wingdings','Papyrus']:
                 TextToSay = TextToSay.upper()
+            if font == 'Comic Sans MS':
+                TextToSay = TextToSay.lower()
 
             if TextToSay.startswith('* '):
                 indent = True
@@ -395,7 +411,7 @@ def determinate(message, client, *args, **kwargs):
                     TextToSay = TextToSay[index+1:]
 
                 else: # line break was not found
-                    try:
+                    try: # char 32 is a space
                         if TextToSay[prec] == ' ':
                             TextList.append(TextToSay[:prec])
                             TextToSay = TextToSay[fore:]
@@ -434,18 +450,14 @@ def determinate(message, client, *args, **kwargs):
             # end while TextToSay:
 
             if indent:
-                #indent mode: detect "* "s
-                for x in TextList:
-                    if x.startswith('* '):
-                        TextToSay += x + '\n'
-                    else:
-                        TextToSay += '  ' + x + '\n'
-            else:
-                # Not in indent mode: just join list
-                TextToSay = '\n'.join(TextList)
+                #indent mode: indent messages
+                for i, x in enumerate(TextList):
+                    if not x.startswith('* '):
+                        TextList[i] = '  ' + x
 
-            save = TextToSay
-            TextToSay = htmlEntities(TextToSay)
+            save = '\n'.join(TextList)
+            for i,x in enumerate(TextList):
+                TextList[i] = htmlEntities(x)
             lines = len(TextList)
             height = (lines * lineheight) + 94
 
@@ -455,16 +467,31 @@ def determinate(message, client, *args, **kwargs):
             if font != 'Monster Friend Fore':
                 svgString += '<rect width="576" height="' + str(height - 64) + '" x="33" y="33" stroke-width="6" stroke="white"/>'
             else:
-                svgString += '<text fill="' + color + '" stroke="' + color + '" stroke-width="' + strokewidth + '" x="50" y="50" dy="' + fontwidth + '" font-size="' + fontwidth + '" font-family="Monster Friend Back" xml:space="preserve" opacity="0.65">' + TextToSay + '</text>'
+                y = 50
+                svgString += '<text style="fill: white; fill:' + color + '; stroke: white; stroke:' + color + '" stroke-width="' + strokewidth + '" x="50" y="50" font-size="' + str(fontwidth) + 'px" font-family="Monster Friend Back" xml:space="preserve" opacity="0.65">'
 
-            svgString += '<text fill="' + color + '" stroke="' + color + '" stroke-width="' + strokewidth + '" x="50" y="50" dy="' + fontwidth + '" font-size="' + fontwidth + '" font-family="' + font + '" xml:space="preserve">' + TextToSay + '</text></svg>'
+                y = 50 + fontwidth
+                for x in TextList:
+                    svgString += '<tspan x="50" y="' + str(y) + '">'+ x + '</tspan>'
+                    y += lineheight
+
+                svgString += '</text>'
+
+            svgString += '<text style="fill: white; fill:' + color + '; stroke: white; stroke:' + color + '" stroke-width="' + strokewidth + '" x="50" y="50" font-size="' + str(fontwidth) + 'px" font-family="' + font + '" xml:space="preserve">'
+
+            y = 50 + fontwidth
+            for x in TextList:
+                svgString += '<tspan x="50" y="' + str(y) + '">'+ x + '</tspan>'
+                y += lineheight
+
+            svgString += '</text></svg>'
 
             # write svg
             with open('tmp.svg', 'w') as data:
                 data.write(svgString)
 
-            # requires imagemagick
-            subprocess.check_call(['convert', 'tmp.svg', 'tmp.png'])
+            # requires inkscape
+            subprocess.check_call(['inkscape', '-z', 'tmp.svg', '-e', 'tmp.png'])
 
             yield from client.send_file(message.channel, 'tmp.png')
 
@@ -480,7 +507,10 @@ def determinate(message, client, *args, **kwargs):
                 yield from client.send_message(message.channel, '*{}*'.format(save))
 
             # send author
-            yield from client.send_message(message.channel, '*Sent by {}.*'.format(message.author.mention))
+            if rainbow:
+                yield from client.send_message(message.channel, '*Color: {}*. \n*Sent by {}.*'.format(color, message.author.mention))
+            else:
+                yield from client.send_message(message.channel, '*Sent by {}.*'.format(message.author.mention))
 determinate.server = 'Undertale'
 
 # You know, while I'm here, here's the StackOverflow post that has the function.

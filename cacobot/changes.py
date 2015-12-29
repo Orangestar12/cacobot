@@ -5,14 +5,17 @@ import random # To print random emojis.
 # the list is a server name: Use 'all' to send to all servers, or type a server
 # name to make that server the only one that can see that change.
 change_list = [
-    ['all', '`.quote` no longer exposes an error when the index is out of range.'],
-    ['all', '`.addquote` no longer allows you to add duplicates.'],
-    ['all', '`.myid` can give you your ID, in case another bot with a more verbose info command is offline.'],
-    ['all', 'CacoBot plays more 90s shooters, thanks to the death of `game_id`!'],
-    ['all', '`.choice` is now based on semicolons, not commas. I.E. `.choice One; Two`'],
-    ['all', 'Docstrings should now display commands in `code blocks.` Try it out by calling `.help` with your favorite command.'],
-    ['all', '`.yt` Now only returns *one video* unless you set `.results`. No more searching playlists or channels with it: It was unused.'],
-    ['Undertale', 'More monsters for `.summon`, thanks to ToransuShojo!']
+    ['Undertale', 'Big `.determinate` update!'],
+    ['Undertale', 'We now use Inkscape for clearer quality and better portability.'],
+    ['Undertale', 'The message will fall back to white if an invalid color is specified.'],
+    ['Undertale', '`font=sans` is now forced lowercase. `font=papyrus` is forced uppercase.'],
+    ['Undertale', 'RAINBOW easter egg now prints the color used.'],
+    ['Undertale', 'The docstring was fixed.'],
+    ['Undertale', 'You can now type `colour` instead of `color`!'],
+    ['Undertale', 'More syntax! Use `color=`, `color:`, `colour=`, or even `colour:`! `font:` works too.'],
+    ['all', 'Added syntax for printing tag amounts from the bot `42`.'],
+    ['all', '`.quote` doesn\'t send an error message after sending a random quote anymore.'],
+    ['all', 'Some funny, inconsequential stuff for `.quote`.']
 ]
 
 # There's a few more emojis I could use for bullets, but these stuck out the most to me.
