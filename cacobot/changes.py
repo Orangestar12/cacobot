@@ -5,17 +5,22 @@ import random # To print random emojis.
 # the list is a server name: Use 'all' to send to all servers, or type a server
 # name to make that server the only one that can see that change.
 change_list = [
-    ['Undertale', 'Big `.determinate` update!'],
-    ['Undertale', 'We now use Inkscape for clearer quality and better portability.'],
-    ['Undertale', 'The message will fall back to white if an invalid color is specified.'],
-    ['Undertale', '`font=sans` is now forced lowercase. `font=papyrus` is forced uppercase.'],
-    ['Undertale', 'RAINBOW easter egg now prints the color used.'],
-    ['Undertale', 'The docstring was fixed.'],
-    ['Undertale', 'You can now type `colour` instead of `color`!'],
-    ['Undertale', 'More syntax! Use `color=`, `color:`, `colour=`, or even `colour:`! `font:` works too.'],
-    ['all', 'Added syntax for printing tag amounts from the bot `42`.'],
-    ['all', '`.quote` doesn\'t send an error message after sending a random quote anymore.'],
-    ['all', 'Some funny, inconsequential stuff for `.quote`.']
+    ['all', '**CacoBot now has a Terms of Service.** You should check it out here: https://github.com/Orangestar12/cacobot/blob/master/tos.md'],
+    ['all', 'CacoBot is now versioned! I don\'t know how many revisions we\'ve had so let\'s just say we\'re on r20 now.'],
+    ['all', '`.connect` and `.choice` now print properly-formatted error messages on incorrect input.'],
+    ['all', 'Memos are no longer sent to you if you\'re mentioned in a channel you cannot read.'],
+    ['all', '`.delquote` now prints the correct deleted quote index.'],
+    ['all', 'Check out `.welcome` if you\'re completely in the dark about CacoBot!'],
+    ['all', 'I\'ve done a little more catagorization of commands for `.help`.'],
+    ['Vocaloid/UTAU', 'Administrators can now call `.limbo` to quickly roleban users, or to roleban on mobile.'],
+    ['all', '**Changes since r19 below:**'],
+    ['all', '`.log` now sends in <2000 character bursts.'],
+    ['all', 'Tag listing is now done through Pastebin.'],
+    ['all', '`.delquote` and `.parsequote` are live!'],
+    ['all', '`.stats` uses Inkscape too, now.'],
+    ['Undertale', '`.determinate`: `color=rainbow` is now a feature.'],
+    ['Undertale', '`.determinate`: We now use Inkscape for printing.'],
+    ['Undertale', '`.forebode`\'s docstring had typos. That was fixed.']
 ]
 
 # There's a few more emojis I could use for bullets, but these stuck out the most to me.

@@ -34,6 +34,7 @@ def d(message, client, *args, **kwargs):
     except IndexError:
         # user did not format command correctly
         yield from client.send_message(message.channel, '{}: You must specify the number of dice and the faces each dice has seperated with a d. For example: .d 1d6 rolls one six-sided die. .d 5d2 rolls 5 2-sided die.'.format(message.author.mention))
+d.server = 'Dice'
 
 @base.cacofunc
 def roll(message, client, *args, **kwargs):
@@ -60,5 +61,13 @@ def choice(message, client, *args, **kwargs):
     *Example: `.choice CacoBot is Life; CacoBot is Love`*
     '''
 
-    choices = message.content.split(' ', 1)[1].split(';')
-    yield from client.send_message(message.channel, '{}: {}'.format(message.author.mention, random.choice(choices).strip()))
+    choices = message.content.split(' ', 1)
+    if len(choices) > 1:
+        choices = choices[1].split(';')
+        if len(choices) > 1:
+            yield from client.send_message(message.channel, '{}: {}'.format(message.author.mention, random.choice(choices).strip()))
+        else:
+            yield from client.send_message(message.channel, ':no_entry_sign: {}: You have provided only one choice to select from.'.format(message.author.mention))
+    else:
+        yield from client.send_message(message.channel, ':no_entry_sign: {}: You have provided no choices'.format(message.author.mention))
+choice.server = 'Dice'

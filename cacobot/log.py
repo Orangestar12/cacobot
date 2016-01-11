@@ -55,22 +55,27 @@ def log(message, client, *args, **kwargs):
     elif req < 1:
         yield from client.send_message(message.channel, '{}: Very clever, smart ass. Type a whole number next time.'.format(message.author.mention))
     else:
-        requests = int(req) + 1 #Because logs_from will get the last message (which will, invariably, be ".logs x"), we anticipate that here.
+        requests = int(req) + 1 #Because logs_from will get the last message (which will be ".logs x"), we anticipate that here.
 
         #Yes you're reading that right. We get an iterator, convert it to a list, reverse it, and then convert THAT to a list so we can len() it.
         #This is because len() doesn't work on iterators, and logs_from returns messages starting from the newest one.
         msg_iter = yield from client.logs_from(message.channel, requests)
         messages = list(reversed(list(msg_iter)))
 
-        #send each message back with proper timestamp and username trailing
+        # This string will hold the log we are going to send in each message, and will be blanked after each message.
+        msgToSend = ''
+        # This string will hold the message we are adding to msgToSend, and will be used to test if the length of msgToSend will be >2000 characters if we add it.
+        msgToAdd = ''
+
+        # send each message back with proper timestamp and username trailing
         for iteration, x in enumerate(messages):
-            #Create long timestamp from first message.
+            # Create long timestamp from first message.
             if iteration == 0:
-                yield from client.send_message(message.author, date_format(x.timestamp))
+                msgToSend = date_format(x.timestamp) + '\n'
 
             if iteration != len(messages) - 1: # ensure the ".log" message doesn't send
 
-                #Timestamps don't have a trailing 0 on time objects, so this will give one to the minute time object.
+                # Timestamps don't have a trailing 0 on time objects, so this will give one to the minute time object.
                 minute = '00'
                 if len(str(x.timestamp.minute)) != 2:
                     minute = '0' + str(x.timestamp.minute)
@@ -80,18 +85,26 @@ def log(message, client, *args, **kwargs):
                 # Send attachments
                 if x.attachments:
                     for ach in x.attachments:
-                        yield from client.send_message(message.author, '{}:{} - {}: {}\n'.format(
-                          str(x.timestamp.hour),
+                        msgToAdd = '{}:{} - {}: {}\n'.format(
+                          x.timestamp.hour,
                           minute,
                           x.author.name,
-                          ach['url']))
+                          ach['url'])
 
                 # Send message
                 else:
-                    yield from client.send_message(message.author, '{}:{} - {}: {}\n'.format(
+                    msgToAdd = '{}:{} - {}: {}\n'.format(
                       str(x.timestamp.hour),
                       minute,
                       x.author.name,
-                      x.content))
+                      x.content)
 
-                yield from asyncio.sleep(5)
+                if len(msgToSend + msgToAdd) < 2000:
+                    msgToSend += msgToAdd
+                else:
+                    yield from client.send_message(message.author, msgToSend)
+                    msgToSend = msgToAdd
+                    yield from asyncio.sleep(5)
+
+                if iteration == len(messages) - 2:
+                    yield from client.send_message(message.author, msgToSend)

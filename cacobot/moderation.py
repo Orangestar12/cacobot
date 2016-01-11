@@ -1,5 +1,5 @@
 import cacobot.base as base
-import json, discord
+import json, discord, traceback
 from random import choice
 
 # Open the config to get owner id.
@@ -78,12 +78,15 @@ def hush(message, client, *args, **kwargs):
     else:
         yield from client.send_message(message.channel, ':no_entry_sign: {} You do not have permission to call this command.'.format(message.author.mention))
 
-@base.cacofunc
+# People be like "Hey why can't we mention specific roles like mods?" and I add
+# it to my bot and then it gets spammed as expected.
+# Boy howdy Discord, aren't you a good community.
+
+# @base.cacofunc # Uncomment this line to add it back.
 def call(message, client, *args, **kwargs):
     '''
     **.call** [*role*]
-    Mentions everyone in the role [*role*]. This is primarily for notifying mods
-    that are away.
+    Mentions everyone in the role [*role*]. This is primarily for notifying mods that are away.
     *Example: `.call Mods`*
     '''
 
@@ -110,10 +113,18 @@ def connect(message, client, *args, **kwargs):
     '''
     **.connect** [*invite*]
     Allows this bot to join your server.
-    *Example: `.connect http:\/\/discord\.gg/0iLJFytdVRBR1vgh`*
+    *Example: `.connect http://discord.gg/0iLJFytdVRBR1vgh`*
+    *Please consider reading the Terms of Service for CacoBot before call `.connect`.*
+    https://github.com/Orangestar12/cacobot/blob/master/tos.md
     '''
-    yield from client.accept_invite(message.content.split(' ')[1])
-    yield from client.send_message(message.author, ':heart: I have successfully joined your server.')
+    try:
+        yield from client.accept_invite(message.content.split(' ')[1])
+        yield from client.send_message(message.channel, ':heart: I have successfully joined your server.')
+    except discord.errors.NotFound:
+        yield from client.send_message(message.channel, ':no_entry_sign: That was not a valid channel invite or id.')
+    except:
+        yield from client.send_message(message.channel, ':no_entry_sign: Your input was invalid. I have saved the traceback to my log. Please notify the bot maintainer immediately.')
+        print(traceback.format_exc())
 
 @base.cacofunc
 def debug(message, client, *args, **kwargs):
@@ -121,9 +132,17 @@ def debug(message, client, *args, **kwargs):
     **.debug** [*command*]
     *This is a debug command. Only the bot owner can use it.*
     '''
+
     if message.author.id == config['owner_id']:
-        y = eval(message.content.split(' ', 1)[1])
-        yield from client.send_message(message.channel, '```\n{}\n```'.format(y))
+        cfgs = {}
+
+        for x in [['configs/config.json', 'config'], ['configs/hush.json', 'hush'], ['configs/memos.json', 'memos'], ['configs/plugs.json', 'plugs'], ['configs/quotes.json', 'quotes'], ['configs/tags.json', 'tags']]:
+            try:
+                with open(x[0]) as data:
+                    cfgs[x[1]] = json.load(data)
+            except:
+                pass
+        yield from client.send_message(message.channel, '```\n{}\n```'.format(eval(message.content.split(' ', 1)[1])))
     else:
         yield from client.send_message(message.channel, ':no_entry_sign: You are not authorized to perform that command.')
 

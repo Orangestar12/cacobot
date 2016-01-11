@@ -321,196 +321,180 @@ def determinate(message, client, *args, **kwargs):
             end = end + 1
             TextToSay = TextToSay[:index] + TextToSay[end:]
 
-        if color == 'rainbow':
-            # MEME STOPPER CODE #STOPMEMESNOW
-            yield from client.send_message(message.channel, random.choice([
-            'See, this is why we can\'t have nice things.',
-            'It was Jerry, wasn\'t it. *He* put you up to this.',
-            'Why don\'t you call your mother or something? It\'d be more productive than exhausting my list of snarky comments for when you post memes.',
-            'Seriously, keep this up and nobody will love you.',
-            'I think this counts as spam at this point.',
-            '`* CacoBot is sparing you.`',
-            'Can you just stop for a little while? That\'ll at least give me a second to wipe the tears from my eyes.',
-            'You know what\'s going on here, don\'t you? You just wanted to see me suffer.',
-            'You don\'t understand how it works down here, do you?',
-            'You IDIOT.',
-            'Was it something I did? Did *I* do something to make you do this?'
-            ]))
+        rainbow = False
+        if color.lower() == 'rainbow':
+            clr = ['#']
+            for x in range(0, 6):
+                clr.append(random.choice('0123456789ABCDEF'))
+            color = ''.join(clr)
+            rainbow = True
+
+        #find font
+        if 'font=' in TextToSay.lower() or 'font:' in TextToSay.lower():
+            if 'font=' in TextToSay.lower():
+                findme = 'font='
+            else:
+                findme = 'font:'
+            index = TextToSay.find(findme) + len(findme)
+            end = TextToSay.find(' ', index)
+            newfnt = TextToSay[index:end].lower()
+
+            if newfnt == 'sans':
+                font = 'Comic Sans MS'
+                lineheight = 40
+            elif newfnt == 'papyrus':
+                font = 'Papyrus'
+                strokewidth = '1'
+                fontwidth = 20
+            elif newfnt == 'wd':
+                font = 'Wingdings'
+                strokewidth = '1'
+                fontwidth = 18
+                lineheight = 24
+            elif newfnt == 'ut':
+                font = 'Monster Friend Fore'
+                width = '700'
+                precedent = 22
+            else:
+                font = newfnt.replace('_', ' ')
+
+            index = index - 5
+            TextToSay = TextToSay[:index] + TextToSay[end:]
+
+        TextToSay = TextToSay.strip()
+        if font in ['Wingdings','Papyrus']:
+            TextToSay = TextToSay.upper()
+        if font == 'Comic Sans MS':
+            TextToSay = TextToSay.lower()
+
+        if TextToSay.startswith('* '):
+            indent = True
         else:
-            rainbow = False
-            if color == 'RAINBOW':
-                clr = ['#']
-                for x in range(0, 6):
-                    clr.append(random.choice('0123456789ABCDEF'))
-                color = ''.join(clr)
-                rainbow = True
+            indent = False
 
-            #find font
-            if 'font=' in TextToSay.lower() or 'font:' in TextToSay.lower():
-                if 'font=' in TextToSay.lower():
-                    findme = 'font='
-                else:
-                    findme = 'font:'
-                index = TextToSay.find(findme) + len(findme)
-                end = TextToSay.find(' ', index)
-                newfnt = TextToSay[index:end].lower()
+        TextList = []
 
-                if newfnt == 'sans':
-                    font = 'Comic Sans MS'
-                    lineheight = 40
-                elif newfnt == 'papyrus':
-                    font = 'Papyrus'
-                    strokewidth = '1'
-                    fontwidth = 20
-                elif newfnt == 'wd':
-                    font = 'Wingdings'
-                    strokewidth = '1'
-                    fontwidth = 18
-                    lineheight = 24
-                elif newfnt == 'ut':
-                    font = 'Monster Friend Fore'
-                    width = '700'
-                    precedent = 22
-                else:
-                    font = newfnt.replace('_', ' ')
-
-                index = index - 5
-                TextToSay = TextToSay[:index] + TextToSay[end:]
-
-            TextToSay = TextToSay.strip()
-            if font in ['Wingdings','Papyrus']:
-                TextToSay = TextToSay.upper()
-            if font == 'Comic Sans MS':
-                TextToSay = TextToSay.lower()
-
-            if TextToSay.startswith('* '):
-                indent = True
-            else:
-                indent = False
-
-            TextList = []
-
-            while TextToSay:
-                if indent == True:
-                    # Indent mode must determine whether the next string starts with
-                    # '* ' or not.
-                    # 'prec' is a variable I made to determine how many characters can
-                    # be on each line
-                    if TextToSay.startswith('* '):
-                        prec = precedent
-                    else:
-                        prec = precedent - 2
-                else:
+        while TextToSay:
+            if indent == True:
+                # Indent mode must determine whether the next string starts with
+                # '* ' or not.
+                # 'prec' is a variable I made to determine how many characters can
+                # be on each line
+                if TextToSay.startswith('* '):
                     prec = precedent
-
-                fore = prec + 1
-
-                if '\n' in TextToSay[:prec]:
-                    index = TextToSay.find('\n')
-                    TextList.append(TextToSay[:index])
-                    TextToSay = TextToSay[index+1:]
-
-                else: # line break was not found
-                    try: # char 32 is a space
-                        if TextToSay[prec] == ' ':
-                            TextList.append(TextToSay[:prec])
-                            TextToSay = TextToSay[fore:]
-                        else:
-                            # I could do this with a for loop, but the way I wanted it
-                            # to be done worked much better with a While loop, so I used
-                            # it instead.
-                            x = prec-1
-                            while True:
-                                if x == -1:
-                                    TextList.append(TextToSay[:prec])
-                                    TextToSay = TextToSay[fore:]
-                                    break
-
-                                elif TextToSay[x] in r' -\/':
-                                    # I include the line break so we can break things
-                                    # like "Democratic-Republican."" and keep the -.
-
-                                    # ...Sorry, that was a shitty example.
-
-                                    TextList.append(TextToSay[:x+1])
-                                    TextToSay = TextToSay[x+1:]
-                                    break
-
-                                # After the loop, if we haven't broken, subtract x by 1
-                                # so we can check the next character down in the next
-                                # loop.
-                                x = x-1
-
-                    # IndexError occurs when TextToSay is less than 32 characters
-                    # This means we can just shove the rest onto it wholesale
-                    except IndexError:
-                        TextList.append(TextToSay)
-                        TextToSay = '' # blank the var. This kills the loop.
-
-            # end while TextToSay:
-
-            if indent:
-                #indent mode: indent messages
-                for i, x in enumerate(TextList):
-                    if not x.startswith('* '):
-                        TextList[i] = '  ' + x
-
-            save = '\n'.join(TextList)
-            for i,x in enumerate(TextList):
-                TextList[i] = htmlEntities(x)
-            lines = len(TextList)
-            height = (lines * lineheight) + 94
-
-            svgString = r'<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="' + width + '" height ="' + str(height) + '" viewBox="0 0 ' + width + ' ' + str(height) + '" xmlns="http://www.w3.org/2000/svg" version="1.1" shape-rendering="optimizeSpeed"><rect width="100%" height="100%" fill="black"/>'
-
-            # MFF requires no rect and a back layer.
-            if font != 'Monster Friend Fore':
-                svgString += '<rect width="576" height="' + str(height - 64) + '" x="33" y="33" stroke-width="6" stroke="white"/>'
+                else:
+                    prec = precedent - 2
             else:
-                y = 50
-                svgString += '<text style="fill: white; fill:' + color + '; stroke: white; stroke:' + color + '" stroke-width="' + strokewidth + '" x="50" y="50" font-size="' + str(fontwidth) + 'px" font-family="Monster Friend Back" xml:space="preserve" opacity="0.65">'
+                prec = precedent
 
-                y = 50 + fontwidth
-                for x in TextList:
-                    svgString += '<tspan x="50" y="' + str(y) + '">'+ x + '</tspan>'
-                    y += lineheight
+            fore = prec + 1
 
-                svgString += '</text>'
+            if '\n' in TextToSay[:prec]:
+                index = TextToSay.find('\n')
+                TextList.append(TextToSay[:index])
+                TextToSay = TextToSay[index+1:]
 
-            svgString += '<text style="fill: white; fill:' + color + '; stroke: white; stroke:' + color + '" stroke-width="' + strokewidth + '" x="50" y="50" font-size="' + str(fontwidth) + 'px" font-family="' + font + '" xml:space="preserve">'
+            else: # line break was not found
+                try: # char 32 is a space
+                    if TextToSay[prec] == ' ':
+                        TextList.append(TextToSay[:prec])
+                        TextToSay = TextToSay[fore:]
+                    else:
+                        # I could do this with a for loop, but the way I wanted it
+                        # to be done worked much better with a While loop, so I used
+                        # it instead.
+                        x = prec-1
+                        while True:
+                            if x == -1:
+                                TextList.append(TextToSay[:prec])
+                                TextToSay = TextToSay[fore:]
+                                break
+
+                            elif TextToSay[x] in r' -\/':
+                                # I include the line break so we can break things
+                                # like "Democratic-Republican."" and keep the -.
+
+                                # ...Sorry, that was a shitty example.
+
+                                TextList.append(TextToSay[:x+1])
+                                TextToSay = TextToSay[x+1:]
+                                break
+
+                            # After the loop, if we haven't broken, subtract x by 1
+                            # so we can check the next character down in the next
+                            # loop.
+                            x = x-1
+
+                # IndexError occurs when TextToSay is less than 32 characters
+                # This means we can just shove the rest onto it wholesale
+                except IndexError:
+                    TextList.append(TextToSay)
+                    TextToSay = '' # blank the var. This kills the loop.
+
+        # end while TextToSay:
+
+        if indent:
+            #indent mode: indent messages
+            for i, x in enumerate(TextList):
+                if not x.startswith('* '):
+                    TextList[i] = '  ' + x
+
+        save = '\n'.join(TextList)
+        for i,x in enumerate(TextList):
+            TextList[i] = htmlEntities(x)
+        lines = len(TextList)
+        height = (lines * lineheight) + 94
+
+        svgString = r'<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="' + width + '" height ="' + str(height) + '" viewBox="0 0 ' + width + ' ' + str(height) + '" xmlns="http://www.w3.org/2000/svg" version="1.1" shape-rendering="optimizeSpeed"><rect width="100%" height="100%" fill="black"/>'
+
+        # MFF requires no rect and a back layer.
+        if font != 'Monster Friend Fore':
+            svgString += '<rect width="576" height="' + str(height - 64) + '" x="33" y="33" stroke-width="6" stroke="white"/>'
+        else:
+            y = 50
+            svgString += '<text style="fill: white; fill:' + color + '; stroke: white; stroke:' + color + '" stroke-width="' + strokewidth + '" x="50" y="50" font-size="' + str(fontwidth) + 'px" font-family="Monster Friend Back" xml:space="preserve" opacity="0.65">'
 
             y = 50 + fontwidth
             for x in TextList:
                 svgString += '<tspan x="50" y="' + str(y) + '">'+ x + '</tspan>'
                 y += lineheight
 
-            svgString += '</text></svg>'
+            svgString += '</text>'
 
-            # write svg
-            with open('tmp.svg', 'w') as data:
-                data.write(svgString)
+        svgString += '<text style="fill: white; fill:' + color + '; stroke: white; stroke:' + color + '" stroke-width="' + strokewidth + '" x="50" y="50" font-size="' + str(fontwidth) + 'px" font-family="' + font + '" xml:space="preserve">'
 
-            # requires inkscape
-            subprocess.check_call(['inkscape', '-z', 'tmp.svg', '-e', 'tmp.png'])
+        y = 50 + fontwidth
+        for x in TextList:
+            svgString += '<tspan x="50" y="' + str(y) + '">'+ x + '</tspan>'
+            y += lineheight
 
-            yield from client.send_file(message.channel, 'tmp.png')
+        svgString += '</text></svg>'
 
-            # Try to delete the message.
-            try:
-                yield from client.delete_message(message)
-            except (discord.Forbidden, discord.HTTPException):
-                # do nothing if no permission or message
-                pass
+        # write svg
+        with open('tmp.svg', 'w') as data:
+            data.write(svgString)
 
-            # send msg if wingdings
-            if font == 'Wingdings':
-                yield from client.send_message(message.channel, '*{}*'.format(save))
+        # requires inkscape
+        subprocess.check_call(['inkscape', '-z', 'tmp.svg', '-e', 'tmp.png'])
 
-            # send author
-            if rainbow:
-                yield from client.send_message(message.channel, '*Color: {}*. \n*Sent by {}.*'.format(color, message.author.mention))
-            else:
-                yield from client.send_message(message.channel, '*Sent by {}.*'.format(message.author.mention))
+        yield from client.send_file(message.channel, 'tmp.png')
+
+        # Try to delete the message.
+        try:
+            yield from client.delete_message(message)
+        except (discord.Forbidden, discord.HTTPException):
+            # do nothing if no permission or message
+            pass
+
+        # send msg if wingdings
+        if font == 'Wingdings':
+            yield from client.send_message(message.channel, '*{}*'.format(save))
+
+        # send author
+        if rainbow:
+            yield from client.send_message(message.channel, '*Color: {}*. \n*Sent by {}.*'.format(color, message.author.mention))
+        else:
+            yield from client.send_message(message.channel, '*Sent by {}.*'.format(message.author.mention))
 determinate.server = 'Undertale'
 
 # You know, while I'm here, here's the StackOverflow post that has the function.
@@ -524,9 +508,8 @@ def forebode(message, client, *args, **kwargs):
     '''
     **.forebode** [*mention*]
     *This command was created for the Undertale server. Just for Felarine. ;)*
-    This is a shortcut to add the "Foreboden" role to a user. If your server has no
-    "Foreboden" role, this will fail.
-    *Example: `.forbode @CacoBot`*
+    This is a shortcut to add the "Foreboden" role to a user. If your server has no "Foreboden" role, this will fail.
+    *Example: `.forebode @CacoBot`*
     '''
     if message.channel.permissions_for(message.author).can_manage_roles:
         try:
@@ -564,3 +547,4 @@ def issublist(sl, ml):
                     return True
                 break
     return False
+say.server = 'Undertale'

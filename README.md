@@ -2,6 +2,8 @@
 
 If you don't want to install CB yourself, you can ask the existing one to join your server. This way you get automatic updates and instant access to it's creator and what have you. Just join here: https://discord.gg/0iLJFytdVRBR1vgh
 
+**[Please read the terms of service before adding CacoBot to your server.](https://github.com/Orangestar12/cacobot/blob/master/tos.md)**
+
 #Prerequisites
 
 [Install Python 3.](https://www.python.org)
@@ -31,7 +33,8 @@ Create a folder called `configs` with these two files, filling in any necessary 
     },
     "owner_id" : "Place your Discord ID here. Use .myid to get it with the bot.",
     "invoker" : "Place the character or line you want to invoke CB commands. Base CacoBot's is '.'",
-    "log_request_limit" : 50
+    "log_request_limit" : 50,
+    "pastebin_key" : "Get a Pastebin key from http://pastebin.com/api and put it here. We use it to post the tag list to Pastebin."
 }
 ```
 

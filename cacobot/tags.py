@@ -1,8 +1,12 @@
 import cacobot.base as base
-import json, random
+import json, random, urllib.request, urllib.parse
 
-# json to load tags
+# json to load tags and config
 # random to generate random emojis for orphan
+# urllibs to post configs to pastebin
+
+with open('configs/config.json') as data:
+    config = json.load(data)
 
 @base.cacofunc
 def tag(message, client, *args, **kwargs):
@@ -97,20 +101,68 @@ def tag(message, client, *args, **kwargs):
                             if tags[x]['owner'] == message.author.id:
                                 lst += x + ', '
                         lst = lst[:-2]
-                        yield from client.send_message(message.author, 'Retrieving tags owned by {}:\n{}'.format(message.author.name, lst))
+
+                        values = {
+                          'api_dev_key' : config['pastebin_key'],
+                          'api_option' : 'paste',
+                          'api_paste_code' : 'Retrieving tags owned by {}:\n{}'.format(message.author.name, lst),
+                          'api_paste_private' : '1',
+                          'api_paste_expire_date' : '10M'
+                        }
+
+                        data = urllib.parse.urlencode(values)
+                        data = data.encode('utf-8') # data should be bytes
+                        req = urllib.request.Request('http://pastebin.com/api/api_post.php', data)
+
+                        with urllib.request.urlopen(req) as response:
+                            api_response = response.read().decode("utf-8")
+
+                        yield from client.send_message(message.author, api_response)
                     elif params[1] == 'orphaned':
                         lst = ''
                         for x in tags:
                             if tags[x]['owner'] == 'None':
                                 lst += x + ', '
                         lst = lst[:-2]
-                        yield from client.send_message(message.author, 'These tags have no owner and can be claimed:\n{}'.format(lst))
+
+                        values = {
+                          'api_dev_key' : config['pastebin_key'],
+                          'api_option' : 'paste',
+                          'api_paste_code' : 'These tags have no owner and can be claimed:\n{}'.format(lst),
+                          'api_paste_private' : '1',
+                          'api_paste_expire_date' : '10M'
+                        }
+
+                        data = urllib.parse.urlencode(values)
+                        data = data.encode('utf-8') # data should be bytes
+                        req = urllib.request.Request('http://pastebin.com/api/api_post.php', data)
+
+                        with urllib.request.urlopen(req) as response:
+                            api_response = response.read().decode("utf-8")
+
+                        yield from client.send_message(message.author, api_response)
                     elif params[1] == 'all':
                         lst = ''
                         for x in tags:
                             lst += x + ', '
                         lst = lst[:-2]
-                        yield from client.send_message(message.author, 'Here\'s a list of all the tags I know. You should also check the orphaned tags with `.tag list orphaned`.\n{}'.format(lst))
+
+                        values = {
+                          'api_dev_key' : config['pastebin_key'],
+                          'api_option' : 'paste',
+                          'api_paste_code' : 'Here\'s a list of all the tags I know. You should also check the orphaned tags with `.tag list orphaned`.\n{}'.format(lst),
+                          'api_paste_private' : '1',
+                          'api_paste_expire_date' : '10M'
+                        }
+
+                        data = urllib.parse.urlencode(values)
+                        data = data.encode('utf-8') # data should be bytes
+                        req = urllib.request.Request('http://pastebin.com/api/api_post.php', data)
+
+                        with urllib.request.urlopen(req) as response:
+                            api_response = response.read().decode("utf-8")
+
+                        yield from client.send_message(message.author, api_response)
                 else:
                     lst = ''
                     for x in tags:
@@ -121,7 +173,23 @@ def tag(message, client, *args, **kwargs):
                             if tags[x]['server'] == 'None':
                                 lst += x + ', '
                     lst = lst[:-2]
-                    yield from client.send_message(message.author, 'Here\'s a list of all the tags created in this server.\n{}'.format(lst))
+
+                    values = {
+                      'api_dev_key' : config['pastebin_key'],
+                      'api_option' : 'paste',
+                      'api_paste_code' : 'Here\'s a list of all the tags created in this server.\n{}'.format(lst),
+                      'api_paste_private' : '1',
+                      'api_paste_expire_date' : '10M'
+                    }
+
+                    data = urllib.parse.urlencode(values)
+                    data = data.encode('utf-8') # data should be bytes
+                    req = urllib.request.Request('http://pastebin.com/api/api_post.php', data)
+
+                    with urllib.request.urlopen(req) as response:
+                        api_response = response.read().decode("utf-8")
+
+                    yield from client.send_message(message.author, api_response)
 
             elif cmd == 'edit':
                 if params[1] in tags:

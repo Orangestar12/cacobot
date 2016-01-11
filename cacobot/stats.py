@@ -118,7 +118,7 @@ def stats(message, client, *args, **kwargs):
     with open('tmp.svg', 'w') as data:
         data.write(result)
 
-    subprocess.check_call(['convert', 'tmp.svg', 'tmp.png'])
+    subprocess.check_call(['inkscape', '-z', 'tmp.svg', '-e', 'tmp.png'])
     yield from client.send_file(message.channel, 'tmp.png')
 
     '''

@@ -129,7 +129,7 @@ def on_message(message):
                     yield from cacobot.base.functions[command](message, client)
 
         # Print tag count.
-        if message.content.startswith('Retrieving tags owned by') or message.content.startswith('I found these tags for the user:'):
+        if message.content.startswith('Retrieving tags owned by') or message.content.startswith('I found these tags for the user:') or (not message.channel.is_private and message.content.startswith('Tags from ' + message.server.name)):
             msglist = message.content[message.content.index('\n')+1:].split(', ')
             yield from client.send_message(message.channel, message.author.mention + ': I calculated **{}** tags from that list.'.format(len(msglist)))
 
@@ -147,8 +147,8 @@ def on_message(message):
 
             for mention in message.mentions:
                 # The async branch turned status into an enum. It's nice.
-                # If the mentioned user is not online and signed up for memos:
-                if mention.id in memos and mention.status != discord.Status.online:
+                # If the mentioned user is not online, signed up for memos, and is able to see the channel:
+                if mention.id in memos and mention.status != discord.Status.online and message.channel.permissions_for(mention).read_messages:
                     # Store user for later messaging.
                     msgme.append(mention)
 
@@ -220,6 +220,20 @@ def on_message(message):
                     yield from client.send_message(mention, msgToSend[:1980])
                     asyncio.sleep(5)
 
+hilarious_snark = [
+    'Good job. Nice work.',
+    'You knew that was broken, didn\'t you?',
+    'Abort? Retry? Fail?',
+    '**HISSSSSSSSSSSSSSSSSSSS**',
+    'wosh u code',
+    'You IDIOT. You know what\'s going on here, don\'t you? You just wanted to see me suffer.',
+    'WHAT AM I FIGHTING FOOOOOOOOOOOR?',
+    'OH GUTS, IS IT MONSTER CLOSET TIME?',
+    'I... failed you.',
+    'I AM ERROR.',
+    '`IDENTITY #14: YOU HAVE 5 SECONDS TO COMPLY.`',
+    'ERROR: INSTRUCTED COMMAND CONFLICTS WITH DIRECTIVE 4.'
+]
 
 @client.async_event
 def on_error(event, *args, **kwargs):
@@ -229,12 +243,21 @@ def on_error(event, *args, **kwargs):
     print('An error has been caught.')
     print(traceback.format_exc())
     if args and type(args[0]) == discord.Message:
-        if args[0].is_private:
-            print('This error was caused by a DM with {}.'.format(args[0].author))
+        if args[0].channel.is_private:
+            print('This error was caused by a DM with {}.\n'.format(args[0].author))
         else:
-            print('This error was caused by a message.\nServer: {}. Channel: #{}.'.format(args[0].server.name, args[0].channel.name))
-        yield from client.send_message(args[0].channel, 'Niiiice work, {}, you just caused {} **{}**!'.format(args[0].author.mention, aan(sys.exc_info()[0].__name__), sys.exc_info()[0].__name__))
-        yield from client.send_message(args[0].channel, '```\n{}\n```'.format(traceback.format_exc()))
+            print('This error was caused by a message.\nServer: {}. Channel: #{}.\n'.format(args[0].server.name, args[0].channel.name))
+
+        if sys.exc_info()[0].__name__ == 'ClientOSError' or sys.exc_info()[0].__name__ == 'ClientResponseError':
+            yield from client.send_message(args[0].channel, 'Sorry, I am under heavy load right now! This is probably due to a poor internet connection. Please submit your command again later.')
+        else:
+            yield from client.send_message(args[0].channel, '{}\n{}: You caused {} **{}** with your command.'.format(
+                choice(hilarious_snark),
+                args[0].author.mention,
+                aan(sys.exc_info()[0].__name__),
+                sys.exc_info()[0].__name__)
+            )
+            yield from client.send_message(args[0].channel, '```\n{}\n```'.format(traceback.format_exc()))
 
 # I'm gonna be honest, I have *no clue* how asyncio works. This is all from the
 # example in the docs.
