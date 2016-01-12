@@ -55,7 +55,7 @@ def hush(message, client, *args, **kwargs):
     '''
 
     # Do not continue if user does not have kick permissions.
-    if message.channel.permissions_for(message.author).can_kick_members:
+    if message.channel.permissions_for(message.author).kick_members:
 
         # Load hush list. This is created automatically on the first message
         # received.
@@ -154,7 +154,7 @@ def plug(message, client, *args, **kwargs):
     *Example: `.plug @BooBot`*
     '''
 
-    if message.author.id == config['owner_id'] or message.channel.permissions_for(message.author).can_kick_members:
+    if message.author.id == config['owner_id'] or message.channel.permissions_for(message.author).kick_members:
         if message.author.id == config['owner_id'] and message.content.split(' ')[1] == 'GLOBAL':
             srv = 'GLOBAL'
         else:
@@ -177,7 +177,7 @@ def unplug(message, client, *args, **kwargs):
     *Example: `.unplug @Orangestar`*
     '''
 
-    if message.author.id == config['owner_id'] or message.channel.permissions_for(message.author).can_kick_members:
+    if message.author.id == config['owner_id'] or message.channel.permissions_for(message.author).kick_members:
         with open('configs/plugs.json') as data:
             plugs = json.load(data)
         for mention in message.mentions:

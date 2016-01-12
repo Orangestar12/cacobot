@@ -22,11 +22,11 @@ As a user of CacoBot, you may use any and all commands made available to you. An
 
 In short, **You are given full permission to utilize every CacoBot command as per the terms of this agreement.** Server restrictions may apply.
 
-**You are also given full permission to store as much data as you request on CacoBot.** Be this tags, quotes, or whatever. There is a caevat to this, and I urge you to continue reading.
+**You are also given full permission to store as much data as you request on CacoBot.** Be this tags, quotes, or whatever. There is a caveat to this, and I urge you to continue reading.
 
 ## What *I* can do.
 
-As the owner and maintainer of CacoBot, I retain some rights about what I can do about the data recieved by CacoBot.
+As the owner and maintainer of CacoBot, I retain some rights about what I can do about the data received by CacoBot.
 
 1. **I retain the right to sign in through CacoBot and view any server he is connected to.** This means that I will, occasionally (usually to perform maintenance) sign into the Discord client as CacoBot. Usually what I do with CacoBot isn't too intrusive, but I'm putting this here to cover my ass because people complained about this last time.
 
@@ -38,6 +38,6 @@ This is not in malice: I respect how tentative other users are of their privacy,
 
 4. **You will refrain from attempting to disable the bot in any way. You will refrain from purposefully causing errors. You will refrain from making CacoBot a nuisance to any server he is in or to any administration in any server he is in.** This includes causing errors purposefully, attempting to spam CacoBot in an area where spamming is prohibited, attempting to disable the server running CacoBot with (D)DOS attacks and other unregulated internet tomfoolery, causing "bot chains" with other bots consistently entering commands into each other, and other generally uncouth actions. In short, don't be a dick with the bot.
 
-5. **I maintain the ability to update or nullify any or every term in this agreement.** And, unless you refuse to use the bot, you implicity agree to these updates as they happen.
+5. **I maintain the ability to update or nullify any or every term in this agreement.** And, unless you refuse to use the bot, you implicitly agree to these updates as they happen.
 
 I'm sorry for sounding all scary about this, but thanks for reading the whole thing! Now go out there and do awesome things with CacoBot.

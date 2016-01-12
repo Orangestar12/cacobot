@@ -511,7 +511,7 @@ def forebode(message, client, *args, **kwargs):
     This is a shortcut to add the "Foreboden" role to a user. If your server has no "Foreboden" role, this will fail.
     *Example: `.forebode @CacoBot`*
     '''
-    if message.channel.permissions_for(message.author).can_manage_roles:
+    if message.channel.permissions_for(message.author).manage_roles:
         try:
             foreboden = discord.utils.find(lambda m: m.name == 'Foreboden', message.server.roles)
             if foreboden != None:

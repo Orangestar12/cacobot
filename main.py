@@ -60,7 +60,8 @@ old_games_list = [
     discord.Game(name='Star Wars Jedi Knight'),
     discord.Game(name='Wolfenstein - Enemy Territory'),
     discord.Game(name='Unreal'),
-    discord.Game(name='Alien Vs Predator, Thief')
+    discord.Game(name='Alien Vs Predator'),
+    discord.Game(name='Thief')
 ]
 
 # random game status
@@ -194,7 +195,7 @@ def on_message(message):
                 # Find member object based on id
                 usr = discord.utils.find(lambda x: x.id == mem, message.server.members)
                 # Prevent mentions in cannels people can't read from being sent
-                if usr != None and message.channel.permissions_for(usr).can_read_messages and usr.status != discord.Status.online:
+                if usr != None and message.channel.permissions_for(usr).read_messages and usr.status != discord.Status.online:
                     msgme.append(usr)
 
             if msgme:

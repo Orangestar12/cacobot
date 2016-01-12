@@ -9,7 +9,7 @@ def limbo(message, client, *args, **kwargs):
     This is a shortcut to add the "Limbo" role to a user. If your server has no "Limbo" role, this will fail.
     *Example: `.limbo @CacoBot`*
     '''
-    if message.channel.permissions_for(message.author).can_manage_roles:
+    if message.channel.permissions_for(message.author).manage_roles:
         try:
             foreboden = discord.utils.find(lambda m: m.name == 'Limbo', message.server.roles)
             if foreboden != None:
