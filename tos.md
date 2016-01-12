@@ -34,7 +34,7 @@ As the owner and maintainer of CacoBot, I retain some rights about what I can do
 
 3. **Any data you input into CacoBot at any time is stored on** ***my*** **hardware and** ***my*** **user account on** ***my*** **terms, and may be stored, saved, deleted, edited, or posted elsewhere, without your consent.** This includes quotes added to the `.quote/.addquote` command, tags added through the `.tag` command, your user ID (as posted via `.tag`, `.memo`, etc.), or any servers you ask CacoBot to connect to.
 
-This is not in malice: I respect how tentative other users are of their privacy, and am willing to remove content from CacoBot on request. Simply speak to me (Orangestar, id 88401933936640000) and let me know, or delete them yourself using any of the delete commands (`.tag delete, .delquote, etc.`)
+   This is not in malice: I respect how tentative other users are of their privacy, and am willing to remove content from CacoBot on request. Simply speak to me (Orangestar, id 88401933936640000) and let me know, or delete them yourself using any of the delete commands (`.tag delete, .delquote, etc.`)
 
 4. **You will refrain from attempting to disable the bot in any way. You will refrain from purposefully causing errors. You will refrain from making CacoBot a nuisance to any server he is in or to any administration in any server he is in.** This includes causing errors purposefully, attempting to spam CacoBot in an area where spamming is prohibited, attempting to disable the server running CacoBot with (D)DOS attacks and other unregulated internet tomfoolery, causing "bot chains" with other bots consistently entering commands into each other, and other generally uncouth actions. In short, don't be a dick with the bot.
 
