@@ -108,7 +108,7 @@ def delquote(message, client, *args, **kwargs):
             yield from client.send_message(message.channel, ':no_entry_sign: Please specify an integer next time.')
             cont = False
     else:
-        r = -1
+        r = 0
 
     try:
         with open('configs/quotes.json') as data:
@@ -119,11 +119,11 @@ def delquote(message, client, *args, **kwargs):
 
     if cont:
         if message.author.id == quotes[r][1] or message.author.id == config['owner_id']:
-            quotes.pop(r)
+            quotes.pop(r - 1)
             with open('configs/quotes.json', 'w') as data:
                 json.dump(quotes, data, indent=4)
 
-            if r == -1:
+            if r == 0:
                 r = len(quotes)+1
 
             yield from client.send_message(message.channel, ':heavy_check_mark: {}: Quote #{} has been removed.'.format(message.author.mention, r))

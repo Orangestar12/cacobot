@@ -314,11 +314,19 @@ def determinate(message, client, *args, **kwargs):
                 findme = 'colour='
             elif 'colour:' in TextToSay.lower():
                 findme = 'colour:'
+
             index = TextToSay.find(findme) + len(findme)
             end = TextToSay.find(' ', index)
+            if end == -1:
+                end = len(TextToSay)
+
             color = TextToSay[index:end]
+
             index = index - len(findme)
+
             end = end + 1
+            if end > len(TextToSay):
+                end = len(TextToSay)
             TextToSay = TextToSay[:index] + TextToSay[end:]
 
         rainbow = False
@@ -337,6 +345,8 @@ def determinate(message, client, *args, **kwargs):
                 findme = 'font:'
             index = TextToSay.find(findme) + len(findme)
             end = TextToSay.find(' ', index)
+            if end == -1:
+                end = len(TextToSay)
             newfnt = TextToSay[index:end].lower()
 
             if newfnt == 'sans':
@@ -359,13 +369,15 @@ def determinate(message, client, *args, **kwargs):
                 font = newfnt.replace('_', ' ')
 
             index = index - 5
+            end = end + 1
+
+            if end > len(TextToSay):
+                end = len(TextToSay)
             TextToSay = TextToSay[:index] + TextToSay[end:]
 
         TextToSay = TextToSay.strip()
-        if font in ['Wingdings','Papyrus']:
+        if font == 'Wingdings':
             TextToSay = TextToSay.upper()
-        if font == 'Comic Sans MS':
-            TextToSay = TextToSay.lower()
 
         if TextToSay.startswith('* '):
             indent = True

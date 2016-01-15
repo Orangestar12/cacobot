@@ -1,5 +1,5 @@
 import cacobot.base as base
-import json, random, urllib.request, urllib.parse
+import json, random, urllib.request, urllib.parse, discord
 
 # json to load tags and config
 # random to generate random emojis for orphan
@@ -96,16 +96,32 @@ def tag(message, client, *args, **kwargs):
             elif cmd == 'list':
                 if len(params) > 1:
                     if params[1] == 'mine':
-                        lst = ''
-                        for x in tags:
-                            if tags[x]['owner'] == message.author.id:
-                                lst += x + ', '
-                        lst = lst[:-2]
+                        lst = 'Retrieving tags owned by {}:\n\n'.format(message.author.name)
+
+                        dect = {}
+                        for x in [x for x in tags if tags[x]['owner'] == message.author.id]:
+                            serv = discord.utils.find(lambda y: y.id == tags[x]['server'], client.servers)
+                            if serv == None:
+                                if 'Direct Messages' in dect:
+                                    dect['Direct Messages'].append(x)
+                                else:
+                                    dect['Direct Messages'] = [x]
+                            else:
+                                if serv.name in dect:
+                                    dect[serv.name].append(x)
+                                else:
+                                    dect[serv.name] = [x]
+
+                        for x in dect:
+                            lst += '{}\n=======================\n'.format(x)
+                            for y in dect[x]:
+                                lst += y + ' '
+                            lst += '\n\n'
 
                         values = {
                           'api_dev_key' : config['pastebin_key'],
                           'api_option' : 'paste',
-                          'api_paste_code' : 'Retrieving tags owned by {}:\n{}'.format(message.author.name, lst),
+                          'api_paste_code' : lst,
                           'api_paste_private' : '1',
                           'api_paste_expire_date' : '10M'
                         }
@@ -119,16 +135,15 @@ def tag(message, client, *args, **kwargs):
 
                         yield from client.send_message(message.author, api_response)
                     elif params[1] == 'orphaned':
-                        lst = ''
-                        for x in tags:
-                            if tags[x]['owner'] == 'None':
-                                lst += x + ', '
-                        lst = lst[:-2]
+                        lst = 'These tags have no owner and can be claimed:\n\n'
+
+                        for x in [x for x in tags if tags[x]['owner'] == 'None']:
+                            lst += x + ' '
 
                         values = {
                           'api_dev_key' : config['pastebin_key'],
                           'api_option' : 'paste',
-                          'api_paste_code' : 'These tags have no owner and can be claimed:\n{}'.format(lst),
+                          'api_paste_code' : lst,
                           'api_paste_private' : '1',
                           'api_paste_expire_date' : '10M'
                         }
@@ -142,15 +157,37 @@ def tag(message, client, *args, **kwargs):
 
                         yield from client.send_message(message.author, api_response)
                     elif params[1] == 'all':
-                        lst = ''
+                        lst = 'Here\'s a list of all the tags I know.\n\n'
+
+                        dect = {}
                         for x in tags:
-                            lst += x + ', '
-                        lst = lst[:-2]
+                            if tags[x]['owner'] == 'None':
+                                if 'Orphaned' in dect:
+                                    dect['Orphaned'].append(x)
+                                else:
+                                    dect['Orphaned'] = [x]
+                            else:
+                                if tags[x]['server'] == 'None':
+                                    if 'Direct Messages' in dect:
+                                        dect['Direct Messages'].append(x)
+                                    else:
+                                        dect['Direct Messages'] = [x]
+                                else:
+                                    if discord.utils.find(lambda y: y.id == tags[x]['server'], client.servers).name in dect:
+                                        dect[discord.utils.find(lambda y: y.id == tags[x]['server'], client.servers).name].append(x)
+                                    else:
+                                        dect[discord.utils.find(lambda y: y.id == tags[x]['server'], client.servers).name] = [x]
+
+                        for x in dect:
+                            lst += '{}\n=======================\n'.format(x)
+                            for y in dect[x]:
+                                lst += y + ' '
+                            lst += '\n\n'
 
                         values = {
                           'api_dev_key' : config['pastebin_key'],
                           'api_option' : 'paste',
-                          'api_paste_code' : 'Here\'s a list of all the tags I know. You should also check the orphaned tags with `.tag list orphaned`.\n{}'.format(lst),
+                          'api_paste_code' : lst,
                           'api_paste_private' : '1',
                           'api_paste_expire_date' : '10M'
                         }
@@ -164,20 +201,22 @@ def tag(message, client, *args, **kwargs):
 
                         yield from client.send_message(message.author, api_response)
                 else:
-                    lst = ''
-                    for x in tags:
-                        if not message.channel.is_private:
-                            if tags[x]['server'] == message.server.id or tags[x]['server'] == 'None':
-                                lst += x + ', '
-                        else:
-                            if tags[x]['server'] == 'None':
-                                lst += x + ', '
+                    if message.channel.is_private:
+                        lst = 'Here\'s a list of all the tags created in direct messages with me.\n\n'
+                    else:
+                        lst = 'Here\'s a list of all the tags created in the {} server.\n\n'.format(message.server.name)
+                    if not message.channel.is_private:
+                        for x in [x for x in tags if tags[x]['server'] == message.server.id]:
+                            lst += x + ', '
+                    else:
+                        for x in [x for x in tags if tags[x]['server'] == 'None']:
+                            lst += x + ', '
                     lst = lst[:-2]
 
                     values = {
                       'api_dev_key' : config['pastebin_key'],
                       'api_option' : 'paste',
-                      'api_paste_code' : 'Here\'s a list of all the tags created in this server.\n{}'.format(lst),
+                      'api_paste_code' : lst,
                       'api_paste_private' : '1',
                       'api_paste_expire_date' : '10M'
                     }

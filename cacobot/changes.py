@@ -5,22 +5,14 @@ import random # To print random emojis.
 # the list is a server name: Use 'all' to send to all servers, or type a server
 # name to make that server the only one that can see that change.
 change_list = [
-    ['all', '**CacoBot now has a Terms of Service.** You should check it out here: https://github.com/Orangestar12/cacobot/blob/master/tos.md'],
-    ['all', 'CacoBot is now versioned! I don\'t know how many revisions we\'ve had so let\'s just say we\'re on r20 now.'],
-    ['all', '`.connect` and `.choice` now print properly-formatted error messages on incorrect input.'],
-    ['all', 'Memos are no longer sent to you if you\'re mentioned in a channel you cannot read.'],
-    ['all', '`.delquote` now prints the correct deleted quote index.'],
-    ['all', 'Check out `.welcome` if you\'re completely in the dark about CacoBot!'],
-    ['all', 'I\'ve done a little more catagorization of commands for `.help`.'],
-    ['Vocaloid/UTAU', 'Administrators can now call `.limbo` to quickly roleban users, or to roleban on mobile.'],
-    ['all', '**Changes since r19 below:**'],
-    ['all', '`.log` now sends in <2000 character bursts.'],
-    ['all', 'Tag listing is now done through Pastebin.'],
-    ['all', '`.delquote` and `.parsequote` are live!'],
-    ['all', '`.stats` uses Inkscape too, now.'],
-    ['Undertale', '`.determinate`: `color=rainbow` is now a feature.'],
-    ['Undertale', '`.determinate`: We now use Inkscape for printing.'],
-    ['Undertale', '`.forebode`\'s docstring had typos. That was fixed.']
+    ['all', '**This bot is running CacoBot, Revision 21!**'],
+    ['all', '`.urbdef` and `.define` now give proper error messages instead of general ones when you provide nothing to search for.'],
+    ['all', '`.tag list`ing goes through Pastebin now. **LIST ALL THE TAGS!**'],
+    ['all', '`.determinate` no longer forcibly uppercases or lowercases your words, unless you use Wingdings, because I got a lot of flack for that.'],
+    ['all', 'You should now be able to put `font=XXX` and `color=XXX` at the *END* of your `.determinate` messages!'],
+    ['all', 'Moderators: Include `.nuke` and `.cleanup` into your repertoire. `.nuke` deletes a numeric amount of messages, while `.cleanup` removes just bot commands! **These commands are extremely dangerous. Consider reforming your moderation team if they are spammed.**'],
+    ['all', 'Fixed some typos in `.welcome`.'],
+    ['all', 'I think I finally, *actually* fixed `.delquote` this time. Ugh.']
 ]
 
 # There's a few more emojis I could use for bullets, but these stuck out the most to me.

@@ -209,10 +209,69 @@ def git(message, client, *args, **kwargs):
         yield from client.send_message(message.channel, '{}\nhttps://github.com/Orangestar12/cacobot/blob/master/{}'.format(choice(snark), message.content.split(' ')[1]))
 
 @base.cacofunc
-def myid(message,client, *args, **kwargs):
+def myid(message, client, *args, **kwargs):
     '''
     **.myid**
     Returns your Discord ID for when another bot can't for some reason.
     *Example: `.myid`*
     '''
     yield from client.send_message(message.channel, '{}: Your ID is `{}`.'.format(message.author.mention, message.author.id))
+
+
+@base.cacofunc
+def nuke(message, client, *args, **kwargs):
+    '''
+    **.nuke** [*number*]
+    Removes *number* amount of posts from the channel. If no number is specified, removes 20. This does not include your `.nuke` command.
+    You can only call this command if you can remove posts yourself.
+    *Example: `.nuke 20`*
+    '''
+
+    # r = number of requested deletions
+
+    try:
+        r = int(message.content.split(" ", 1)[1]) + 1
+    except (ValueError, IndexError):
+        r = 21
+
+    if message.channel.permissions_for(message.author).manage_messages:
+        if message.channel.permissions_for(discord.utils.get(message.server.members, id=client.user.id)).manage_messages:
+            messages = yield from client.logs_from(message.channel, r)
+            for msg in messages:
+                yield from client.delete_message(msg)
+        else:
+            yield from client.send_message(message.channel, ':no_entry_sign: I do not have permissions to delete messages yet, so I cannot perform this command.')
+    else:
+        yield from client.send_message(message.channel, ':no_entry_sign: Sorry, but I can\'t let you delete messages if you don\'t have the permission to.')
+
+@base.cacofunc
+def cleanup(message, client, *args, **kwargs):
+    '''
+    **.cleanup** [*number*]
+    Removes *number* amount of posts by CacoBot from the channel, plus the invokers, for up to the last 40 messages. If no number is specified, removes 5.
+    You can only call this command if you can remove posts yourself.
+    *Example: `.cleanup 20`*
+    '''
+
+    # c = number of commands
+    # r = number of requested deletions
+
+    c = 0
+
+    try:
+        r = int(message.content.split(" ", 1)[1]) + 1
+    except (ValueError, IndexError):
+        r = 6
+
+    if message.channel.permissions_for(message.author).manage_messages:
+        if message.channel.permissions_for(discord.utils.get(message.server.members, id=client.user.id)).manage_messages:
+            messages = yield from client.logs_from(message.channel, 100)
+            for msg in messages:
+                if (msg.author.id == client.user.id or (msg.content.startswith(config['invoker']) and msg.content[1:].split(" ", 1)[0] in base.functions)) and c < r:
+                    yield from client.delete_message(msg)
+                    if msg.content.startswith(config['invoker']) and msg.content[1:].split(" ", 1)[0] in base.functions:
+                        c = c + 1
+        else:
+            yield from client.send_message(message.channel, ':no_entry_sign: I do not have permissions to delete messages yet, so I cannot perform this command..')
+    else:
+        yield from client.send_message(message.channel, ':no_entry_sign: Sorry, but I can\'t let you delete messages if you don\'t have the permission to.')
