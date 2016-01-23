@@ -1,5 +1,5 @@
 import cacobot.base as base
-import random, time
+import random, os
 
 @base.cacofunc
 def d(message, client, *args, **kwargs):
@@ -34,24 +34,6 @@ def d(message, client, *args, **kwargs):
     except IndexError:
         # user did not format command correctly
         yield from client.send_message(message.channel, '{}: You must specify the number of dice and the faces each dice has seperated with a d. For example: .d 1d6 rolls one six-sided die. .d 5d2 rolls 5 2-sided die.'.format(message.author.mention))
-d.server = 'Dice'
-
-@base.cacofunc
-def roll(message, client, *args, **kwargs):
-    '''
-    **.roll**
-    *This command was created for the /g/ server.*
-    Generates an integer based on the current time. If the last two digits are equivalent, appends the message with 'check 'em!'
-    *Example: `.roll`*
-    '''
-
-    # This was written by @NoKeksGiven. Give that guy a shout-out!
-    num = str(round(int(round(time.time() * 100) % 100000000)))
-    if num[-1] == num[-2]:
-        yield from client.send_message(message.channel, '{}: {}, check \'em!'.format(message.author.mention, num))
-    else:
-        yield from client.send_message(message.channel, '{}: {}'.format(message.author.mention, num))
-roll.server = '/g/'
 
 @base.cacofunc
 def choice(message, client, *args, **kwargs):
@@ -70,4 +52,13 @@ def choice(message, client, *args, **kwargs):
             yield from client.send_message(message.channel, ':no_entry_sign: {}: You have provided only one choice to select from.'.format(message.author.mention))
     else:
         yield from client.send_message(message.channel, ':no_entry_sign: {}: You have provided no choices'.format(message.author.mention))
-choice.server = 'Dice'
+
+@base.cacofunc
+def later(message, client, *args, **kwargs):
+    '''
+    **.later**
+    Posts a Spongebob title card referring to a later time.
+    *Example: `.later`*
+    '''
+    pics = os.listdir('later')
+    yield from client.send_file(message.channel, 'later/' + random.choice(pics))

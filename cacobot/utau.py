@@ -4,7 +4,7 @@ import discord
 @base.cacofunc
 def limbo(message, client, *args, **kwargs):
     '''
-    **.forebode** [*mention*]
+    **.limbo** [*mention*]
     *This command was created for the Vocaloid server. Just for Rodea. ;)*
     This is a shortcut to add the "Limbo" role to a user. If your server has no "Limbo" role, this will fail.
     *Example: `.limbo @CacoBot`*

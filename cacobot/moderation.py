@@ -7,45 +7,6 @@ with open('configs/config.json') as data:
     config = json.load(data)
 
 @base.cacofunc
-def memo(message, client, *args, **kwargs):
-    '''
-    **.memo** [add|remove]
-    Allows you to add or remove yourself from the memoing system.
-    If you are on the memoing system and you are mentioned in a channel that this bot is in, and you are not online, this bot will DM you where the mention was recieved (server and channel) plus the last 5 messages in that channel for context.
-    *Example: `.memo add`*
-    '''
-
-    try:
-        cmd = message.content.split(' ')[1]
-
-        # Load memo list. This is created automatically when a mention is
-        # in a message.
-        with open('configs/memos.json') as data:
-            memos = json.load(data)
-
-        if cmd == 'add':
-            if message.author.id not in memos:
-                memos.append(message.author.id)
-                yield from client.send_message(message.author,':notebook_with_decorative_cover: You are now on the memo list and will recieve direct messages with context when you are mentioned.')
-            else:
-                yield from client.send_message(message.author,':no_entry_sign: You are already on the memo list.')
-        elif cmd == 'remove':
-            if message.author.id in memos:
-                memos.remove(message.author.id)
-                yield from client.send_message(message.author,':no_bell: You have been removed from the memo list.')
-            else:
-                yield from client.send_message(message.author,':no_entry_sign: You are not on the memo list.')
-        else:
-            raise(IndexError('User did not specify a valid command.')) # Boy howdy am I lazy.
-
-        # Save memo list.
-        with open('configs/memos.json', 'w') as data:
-            json.dump(memos, data, indent=4)
-
-    except IndexError:
-        yield from client.send_message(message.channel, ':no_entry_sign: You must specify wether I should **add** or **remove** you from the memo list.')
-
-@base.cacofunc
 def hush(message, client, *args, **kwargs):
     '''
     **.hush** [server]
@@ -77,6 +38,53 @@ def hush(message, client, *args, **kwargs):
             json.dump(hushed, data, indent=4)
     else:
         yield from client.send_message(message.channel, ':no_entry_sign: {} You do not have permission to call this command.'.format(message.author.mention))
+
+@base.precommand
+def checkForHush(message, client, *args, **kwargs):
+    '''
+    Checks 'hush.json' to see if this server/channel shouldn't let the bot respond to commands.
+    '''
+
+    hushed = {}
+    try:
+        with open('configs/hush.json') as data:
+            hushed = json.load(data)
+    except FileNotFoundError: # Create hushed.json if it doesn't exist
+        with open('configs/hush.json', 'w') as data:
+            json.dump(hushed, data, indent=4)
+
+    # In retrospect this next bit could probably be a seperate function.
+    if message.channel.is_private == False and message.server.id in hushed and hushed[message.server.id] == 'server':
+        if message.content.startswith(config['invoker'] + 'listen'):
+            hushed.pop(message.server.id)
+            yield from client.send_message(message.channel, ':loud_sound: **Now listening!** :loud_sound:\n{}: I will now respond to commands in this channel.'.format(message.author.mention))
+            with open('configs/hush.json', 'w') as data:
+                json.dump(hushed, data, indent=4)
+        return False
+
+    elif message.channel.is_private == False and message.channel.id in hushed and hushed[message.channel.id] == 'channel':
+        if message.content.startswith(config['invoker'] + 'listen'):
+            hushed.pop(message.channel.id)
+            yield from client.send_message(message.channel, ':loud_sound: **Now listening!** :loud_sound:\n{}: I will now respond to commands in this channel.'.format(message.author.mention))
+            with open('configs/hush.json', 'w') as data:
+                json.dump(hushed, data, indent=4)
+        return False
+
+    else:
+        # Continue on to the command if we're not hushed.
+        return True
+
+@base.cacofunc
+def listen(message, client, *args, **kwargs):
+    '''
+    **.listen**
+    Cancels a hush. Applies to a channel, server, or both, depending on where it's called. This is the only command that works even if CacoBot is hushed.
+    '''
+
+    # This command doesn't actually do anything: It's a dummy to trigger
+    # the actual .listen magic that's coded into inlinehush above.
+
+    yield from client.send_message(message.channel, ':no_entry_sign: I am not hushed in this channel.')
 
 # People be like "Hey why can't we mention specific roles like mods?" and I add
 # it to my bot and then it gets spammed as expected.
@@ -142,7 +150,18 @@ def debug(message, client, *args, **kwargs):
                     cfgs[x[1]] = json.load(data)
             except:
                 pass
-        yield from client.send_message(message.channel, '```\n{}\n```'.format(eval(message.content.split(' ', 1)[1])))
+
+        cmd = message.content.split(' ', 1)[1].strip()
+        if cmd.startswith('yield from'):
+            response = yield from eval(message.content.split(' ', 3)[3])
+        elif cmd.startswith('exec'):
+            exec(message.content.split(' ', 2)[2])
+            response = False;
+        else:
+            response = eval(message.content.split(' ', 1)[1])
+
+        if response:
+            yield from client.send_message(message.channel, '```\n{}\n```'.format(response))
     else:
         yield from client.send_message(message.channel, ':no_entry_sign: You are not authorized to perform that command.')
 
@@ -187,6 +206,22 @@ def unplug(message, client, *args, **kwargs):
             json.dump(plugs, data, indent=4)
     else:
         yield from client.send_message(message.channel, ':no_entry_sign: You are not authorized to perform that command.')
+
+@base.precommand
+def checkForPlug(message, client, *args, **kwargs):
+    if message.content.startswith(config['invoker']) and message.author.id != client.user.id:
+        plugs = {}
+        try:
+            with open('configs/plugs.json') as data:
+                plugs = json.load(data)
+        except FileNotFoundError: # Create plugs.json if it doesn't exist
+            with open('configs/plugs.json', 'w') as data:
+                json.dump(plugs, data, indent=4)
+
+        if message.author.id in plugs and (plugs[message.author.id] == 'GLOBAL' or plugs[message.author.id] == message.server.id):
+            yield from client.send_message(message.channel, '{}: Sorry, but you have been plugged.'.format(message.author.mention))
+            return False
+    return True
 
 @base.cacofunc
 def git(message, client, *args, **kwargs):
@@ -237,8 +272,11 @@ def nuke(message, client, *args, **kwargs):
     if message.channel.permissions_for(message.author).manage_messages:
         if message.channel.permissions_for(discord.utils.get(message.server.members, id=client.user.id)).manage_messages:
             messages = yield from client.logs_from(message.channel, r)
-            for msg in messages:
-                yield from client.delete_message(msg)
+            try:
+                for msg in messages:
+                    yield from client.delete_message(msg)
+            except discord.errors.NotFound:
+                pass
         else:
             yield from client.send_message(message.channel, ':no_entry_sign: I do not have permissions to delete messages yet, so I cannot perform this command.')
     else:
@@ -248,7 +286,7 @@ def nuke(message, client, *args, **kwargs):
 def cleanup(message, client, *args, **kwargs):
     '''
     **.cleanup** [*number*]
-    Removes *number* amount of posts by CacoBot from the channel, plus the invokers, for up to the last 40 messages. If no number is specified, removes 5.
+    Removes *number* amount of posts by CacoBot from the channel, plus the invokers, for up to the last 100 messages. If no number is specified, removes 5.
     You can only call this command if you can remove posts yourself.
     *Example: `.cleanup 20`*
     '''
@@ -266,12 +304,25 @@ def cleanup(message, client, *args, **kwargs):
     if message.channel.permissions_for(message.author).manage_messages:
         if message.channel.permissions_for(discord.utils.get(message.server.members, id=client.user.id)).manage_messages:
             messages = yield from client.logs_from(message.channel, 100)
-            for msg in messages:
-                if (msg.author.id == client.user.id or (msg.content.startswith(config['invoker']) and msg.content[1:].split(" ", 1)[0] in base.functions)) and c < r:
-                    yield from client.delete_message(msg)
-                    if msg.content.startswith(config['invoker']) and msg.content[1:].split(" ", 1)[0] in base.functions:
-                        c = c + 1
+            try:
+                for msg in messages:
+                    if (msg.author.id == client.user.id or (msg.content.lower().startswith(config['invoker']) and msg.content[1:].split(" ", 1)[0] in base.functions)) and c < r:
+                        yield from client.delete_message(msg)
+                        if msg.content.startswith(config['invoker']) and msg.content[1:].split(" ", 1)[0] in base.functions:
+                            c = c + 1
+            except discord.errors.NotFound:
+                pass
         else:
-            yield from client.send_message(message.channel, ':no_entry_sign: I do not have permissions to delete messages yet, so I cannot perform this command..')
+            yield from client.send_message(message.channel, ':no_entry_sign: I do not have permissions to delete messages yet, so I cannot perform this command.')
     else:
         yield from client.send_message(message.channel, ':no_entry_sign: Sorry, but I can\'t let you delete messages if you don\'t have the permission to.')
+
+# @base.cacofunc
+def chanuke(message, client, *args, **kwargs):
+    if message.channel.permissions_for(message.author).manage_channels:
+        chsTodel = [channel for channel in message.server.channels if channel.name == message.content.split(" ", 1)[1]]
+        for x in chsTodel:
+            yield from client.delete_channel(x)
+    else:
+        yield from client.send_message(message.channel, ":no_entry_sign: You do not have the proper permissions to manage channels in this server.")
+chanuke.server = 'hidden'

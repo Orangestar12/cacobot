@@ -5,14 +5,19 @@ import random # To print random emojis.
 # the list is a server name: Use 'all' to send to all servers, or type a server
 # name to make that server the only one that can see that change.
 change_list = [
-    ['all', '**This bot is running CacoBot, Revision 21!**'],
-    ['all', '`.urbdef` and `.define` now give proper error messages instead of general ones when you provide nothing to search for.'],
-    ['all', '`.tag list`ing goes through Pastebin now. **LIST ALL THE TAGS!**'],
-    ['all', '`.determinate` no longer forcibly uppercases or lowercases your words, unless you use Wingdings, because I got a lot of flack for that.'],
-    ['all', 'You should now be able to put `font=XXX` and `color=XXX` at the *END* of your `.determinate` messages!'],
-    ['all', 'Moderators: Include `.nuke` and `.cleanup` into your repertoire. `.nuke` deletes a numeric amount of messages, while `.cleanup` removes just bot commands! **These commands are extremely dangerous. Consider reforming your moderation team if they are spammed.**'],
-    ['all', 'Fixed some typos in `.welcome`.'],
-    ['all', 'I think I finally, *actually* fixed `.delquote` this time. Ugh.']
+    ['all', '**This bot is running CacoBot, revision 22.**'],
+    ['all', 'Less errors with `.tag` and `.determinate`.'],
+    ['all', '`.log` now sends markdown unparsed! This means that "Uncle Phil you got to kick that man\'s __***BUTT***__" will come out as "Uncle Phil you got to kick that man\'s \_\_\*\*\*BUTT\*\*\*\_\_"'],
+    ['Dream Journals', 'Introducing the `.journal` command! Creates a public channel that only you can post in!'],
+    ['Vocaloid/UTAU', 'Fixed a typo where `.limbo` was referred to as `.forebode` in its docstring.'],
+    ['Undertale', 'Check out `.ship`. ( ͡° ͜ʖ ͡°)'],
+    ['all', 'Tag listing has become confusing and verbose for most bots. Hence, automatic tag listing has been removed. Sorry if you still used it.'],
+    ['Undertale', '`.What was his name again?` You know, the firey guy from Hotland?'],
+    ['all', 'CacoBot now posts 4chan posts that you link! (This doesn\'t work with semantic URLs, yet.)'],
+    ['all', 'In case you haven\'t noticed, CacoBot can shitpost, now. It\'s a 1/9001 chance to happen.'],
+    ['all', '`.quote` *should* strip out mentions now!'],
+    ['all', 'Generate fortune cookies with `.fortune`!'],
+    ['all', 'Snuck in `.later`. ( ͡° ͜ʖ ͡°)']
 ]
 
 # There's a few more emojis I could use for bullets, but these stuck out the most to me.

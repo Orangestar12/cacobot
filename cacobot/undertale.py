@@ -46,7 +46,7 @@ def goatnick(message, client, *args, **kwargs):
         'No Longer Married Cause Some Kids Got Buried',
         'My Hobbies Include Child Murder',
         'Big Sad Goat Dad'
-    ];
+    ]
     yield from client.send_message(message.channel, '{}: Asgore "{}" Dreemurr'.format(message.author.mention, random.choice(asgore_nicks)))
 goatnick.server = 'Undertale'
 
@@ -290,9 +290,7 @@ def determinate(message, client, *args, **kwargs):
     # *Example: .determinate color=#FF0000 Where are the knives.*
     # Then the spoiler rules got more strict so I had to change it.
 
-    if message.content.strip()[1:] == 'say' or message.content.strip() == 'determinate':
-        yield from client.send_message(message.channel, 'If you do not know how to use this command, call `.help determinate`!')
-    else:
+    try:
         color = '#FFFFFF'
         font = 'Determination Mono'
         strokewidth = '0'
@@ -507,6 +505,8 @@ def determinate(message, client, *args, **kwargs):
             yield from client.send_message(message.channel, '*Color: {}*. \n*Sent by {}.*'.format(color, message.author.mention))
         else:
             yield from client.send_message(message.channel, '*Sent by {}.*'.format(message.author.mention))
+    except IndexError:
+        yield from client.send_message(message.channel, 'If you do not know how to use this command, call `.help determinate`!')
 determinate.server = 'Undertale'
 
 # You know, while I'm here, here's the StackOverflow post that has the function.
@@ -560,3 +560,351 @@ def issublist(sl, ml):
                 break
     return False
 say.server = 'Undertale'
+
+@base.cacofunc
+def ship(message, client, *args, **kwargs):
+    '''
+    **.ship** [ list | main | sub | kids | questionable | ausans | encounters | fun | all ]
+    Generates a random Undertale-based ship. Provide any amount of lists from above, or use *all* to mix them all together! Use list [list] to get pm'd a list of all the monsters in that list.
+    *Example: ship main ausanses*
+    '''
+    ships = {
+        'main' : [
+            'Toriel',
+            'Asgore',
+            'Sans',
+            'Papyrus',
+            'Undyne',
+            'Alphys',
+            'Mettaton'
+        ],
+        'sub' : [
+            'Muffet',
+            'Napstablook',
+            'Dogamy',
+            'Dogaressa',
+            'Temmie',
+            'Grillby',
+            'Burgerpants',
+            'Catty',
+            'Bratty',
+            'Nice Cream Guy',
+            'RG 01',
+            'RG 02',
+            'Doggo',
+            'Snowdin Shopkeeper'
+        ],
+        'kids' : [
+            'Frisk',
+            'Chara',
+            'Asriel',
+            'Monster Kid'
+        ],
+        'questionable' : [
+            'Gaster',
+            'Flowey',
+            'All7Souls!Asriel (Edgy Asriel)',
+            'Gerson'
+        ],
+        'fun' : [
+            'The "Thaaaaaat\'s Politics!" Bear',
+            'The Crazy Bun in Grillby\'s',
+            'THE GOD OF HYPERDEATH',
+            'Lesser Dog',
+            'Greater Dog',
+            'River Person',
+            'Ruins Dummy',
+            'Mad Dummy',
+            'Annoying Dog',
+            'Teeth Monster in Grillby\'s',
+            'Snowdin Snowman',
+            'Ferry',
+            'Onionsan',
+            'Bird that carries you across a disproportionately small gap',
+            'Ragel, the "Mushroom Dance" mushroom',
+            'Heats Flamesman',
+            'Flames Heatsman',
+            'Firey Hotguy',
+            'Hot Firedude'
+        ],
+        'ausans' : [
+            'Outertale!Sans',
+            'Scientist!Sans',
+            'Aftertale!Sans',
+            'Core!Sans',
+            'Error!Sans',
+            'Underfell!Sans',
+            'Underswap!Sans',
+        ],
+        'encounters' : [
+            'Froggit',
+            'Whimsun',
+            'Loox',
+            'Vegetoid',
+            'Migosp',
+            'Moldsmal',
+            'Snowdrake',
+            'Ice Cap',
+            'Gyftrot',
+            '*Jerry*',
+            'Aaron',
+            'Woshua',
+            'Moldbygg',
+            'Shyren',
+            'Vulkin',
+            'Tsunderplane',
+            'Pyrope',
+            'So Sorry',
+            'Final Froggit',
+            'Whimsalot',
+            'Astigmatism',
+            'Madjick',
+            'Knight Knight',
+            'Glyde'
+        ]
+    }
+    listToChooseFrom = []
+    try:
+        lists = message.content.strip().split(' ')[1:]
+        if lists[0] == 'list':
+            if lists[1] in ships:
+                yield from client.send_message(message.author, ', '.join(ships[lists[1]]))
+            else:
+                yield from client.send_message(message.channel, ':no_entry_sign: Please provide a valid list id to list. You can get the lists with `.help ship`')
+        elif lists[0] == 'all':
+            for x in ships:
+                listToChooseFrom += ships[x]
+            yield from client.send_message(message.channel, '**{}** x **{}**'.format(random.choice(listToChooseFrom), random.choice(listToChooseFrom)))
+        else:
+            for x in lists:
+                if x in ships:
+                    listToChooseFrom += ships[x]
+            if listToChooseFrom:
+                yield from client.send_message(message.channel, '**{}** x **{}**'.format(random.choice(listToChooseFrom), random.choice(listToChooseFrom)))
+            else:
+                yield from client.send_message(':no_entry_sign: You did not provide enough valid lists to choose from.')
+
+    except IndexError:
+        yield from client.send_message(message.channel, ':no_entry_sign: {} You did not provide enough valid lists to choose from.'.format(message.author))
+
+@base.cacofunc
+def what(message, client, *args, **kwargs):
+    '''
+    **.What** <was his name again?>
+    Generates a name for uh... Fire... Hotsbro... You know, the guy from Hotland who was fire-based.
+    *Example: `.What was his name again?`*
+    '''
+    if message.content.strip()[1:].lower() == 'what was his name again?':
+        heatsflames = [
+            'Heats',
+            'Flames',
+            'Firey',
+            'Hot',
+            'Fire',
+            'Hots',
+            'Fires',
+            'Flame',
+            'Flamey',
+            'Heaty',
+            'Burning',
+            'Char',
+            'Charred',
+            'Charry',
+            'Burns',
+            'Burn',
+            'Blazes',
+            'Blaze',
+            'Blazing',
+            'Ember',
+            'Embers',
+            'Arson',
+            'Sparky',
+            'Sparks',
+            'Infernal',
+            'Inferno',
+            'Melt',
+            'Melts',
+            'Melty',
+            'Melting',
+            'Seary',
+            'Searing',
+            'Sear',
+            'Swelter',
+            'Sweltering',
+            'Thermal',
+            'Warm',
+            'Roast',
+            'Roasty',
+            'Combustion',
+            'Combustiony',
+            'Broil',
+            'Broils',
+            'Broily',
+            'Broiling',
+            'Boil',
+            'Boils',
+            'Boily',
+            'Boiling',
+            'Warms',
+            'Flaming',
+            'Heating',
+            'Warming',
+            'Roasting',
+            'Flameo',
+            'Toast',
+            'Toasts',
+            'Toasting',
+            'Toasty',
+            'Lava',
+            'Lavas',
+            'Magma',
+            'Magmas',
+            'Stars',
+            'Star',
+            'Starry',
+            'Grill',
+            'Grilly',
+            'Grilling',
+            'Steam',
+            'Steamy',
+            'Steamer',
+            'Steams',
+            'Redhot',
+            'Redhots',
+            'Spicy',
+            'Spice',
+            'Spicing',
+            'Fuming',
+            'Fumes',
+            'Blast',
+            'Blasts',
+            'Blasting',
+            'Blaster',
+            'Cinder',
+            'Cinders',
+            'Pyro',
+            'Sizzling',
+            'Sizzle',
+            'Sizzler',
+            'Sizzles',
+            '~Wang Fire',
+            '~That guy whose name I can\'t remember',
+            '~That guy whose name I forgot',
+            '~Firey Whatsisface',
+            '~That guy who\'s made of fire, you know the one.',
+            '~Mr. Burns',
+            '~Steve',
+            '~Red Hot Chibi Pepper',
+            '~Mr. Hotpants McGee',
+            '~SO EASILY DEFEATED',
+            '~Grillby',
+            '~JOHN CENA'
+        ]
+        person = [
+            'man',
+            'guy',
+            'dude',
+            'face',
+            'head',
+            'waffle',
+            'bro',
+            'bud',
+            'bub',
+            'smith',
+            'runt',
+            'pip',
+            'ton',
+            'sir',
+            'ster',
+            'boy',
+            'ius',
+            'master',
+            'kid'
+        ]
+
+        guesses = [
+            ['Yeah, that was... uh... ', '?'],
+            ['I\'m pretty sure his name was ', '.'],
+            ['Oh yeah, that guy! That guy! ', '!'],
+            ['Wasn\'t he called ', '?'],
+            ['Yeah, I actually *remembered it*. It was ', '.'],
+            ['You caught me at a bad time. Uh... ', '?'],
+            ['It\'s on the tip of my tongue... Oh! ', '?'],
+            ['Got it. Bam. ', '.'],
+            ['Wait, lemme start Undertale really quickly to check- Oh man, I already passed him! Uh... Was it ', '?'],
+            ['He\'ll never forget that I forgot it was ', '. I think.'],
+            ['He\'ll always remember that I remembered it was ', '. I think.'],
+            ['It\'s gotta be ', '. Definitely.'],
+            ['', ', probably.'],
+            ['', ', most likely.'],
+            ['', '...'],
+            ['Hmm, is iiiit... ', '?'],
+            ['I\'m pretty sure that it was ', ', right?'],
+            ['Who, the firey guy? ', '. I think.'],
+            ['Grillby? Wait, no, ', '!'],
+            ['That guy who\'s on fire with a star on him, right? Ah, that\'s ', '. I\'m sure of it!'],
+            ['It has to be ', '. No doubt about it!'],
+            ['Heats Flamesman? More like ', '!'],
+            ['Everybody keeps getting his name wrong. We should all remember how it\'s ', '.'],
+            ['Uh... ', '.'],
+            ['That guy who asks you to remember his name? I forgot. My best guess is ', ', though.'],
+            ['As *if* I\'d forget who ', ' was!'],
+            ['$10 says it\'s ', '.'],
+            ['$11 says it\'s ', '.'],
+            ['$12 says it\'s ', '.'],
+            ['$13 says it\'s ', '.'],
+            ['$14 says it\'s ', '.'],
+            ['$15 says it\'s ', '.'],
+            ['$9 says it\'s ', '.'],
+            ['$8 says it\'s ', '.'],
+            ['$20 says it\'s ', '!'],
+            ['$50 says it\'s ', '!'],
+            ['I\'ll bet $100 that his name is ', '.'],
+            ['$1 says it\'s ', '.'],
+            ['I\'ll give you my entire life savings if it isn\'t ', '.'],
+            ['You know what? I bet it\'s something stupid, like ', ' or something.'],
+            ['It *could* be ', ', but you never know.'],
+            ['', ', or I\'ll eat my hat.'],
+            ['Jerry? No, wait, ', '.'],
+            ['It can\'t be ', ', surely!'],
+            ['It has to be ', ', surely!'],
+            ['I\'d check, but I\'m at the core now. It\'s ', ' though, right?'],
+            ['I\'ll always remember that name! He\'s ', '!'],
+            ['Thankfully I got Undertale on my android, so I can check right now... Ah, ', '.'],
+            ['Firey Ho- no, Toasty Sizzlewa- no, Mr. Poopybuttho- no... Ah, I give up. Just put his name down as ', ' and forget about it.'],
+            ['What do you mean it isn\'t ', '!?'],
+            ['Surely, his name is ', '?'],
+            ['I give up, his name could be ', ' for all I care.'],
+            ['I\'m never gonna give him up, let him down, or run around and forget that his name is actually ', '.'],
+            ['**His name is** ', '​**!!!!!** 🎺🎺🎺🎺🎺'],
+            ['Is this a joke? Are you having a giggle? Everyone knows that his name is ', '.'],
+            ['Are you kidding, I even wrote a song about him! ♫ He is the best, who baffles all the rest, ', ' is his name, and being surprised is his game! ♫ You like it?'],
+            ['Nope, sorry, I forgot his name. All I can remember is how he kept shouting ', ' over and over.'],
+            ['When I told him his name was ', ', he asked how he could have been so easily defeated!'],
+            ['Wanna hear a joke? Why did ', ' cross the road? …I don\'t know, really.']
+        ]
+
+        guess = random.choice(guesses)
+        heats = random.choice(heatsflames)
+        if heats[0] == '~':
+            yield from client.send_message(message.channel, '{}**{}**{}'.format(
+                guess[0],
+                heats[1:],
+                guess[1]
+            ))
+        else:
+            flames = '~'
+            while flames[0] == '~':
+                flames = random.choice(heatsflames)
+            man = random.choice(person)
+            if '{} {}{}'.format(heats, flames, man) == 'Heats Flamesman':
+                yield from client.send_message(message.channel, 'Wait, I actually know it! His name was *most definitely* **Heats Flamesman**!')
+            else:
+                yield from client.send_message(message.channel, '{}**{} {}{}**{}'.format(
+                    guess[0],
+                    heats,
+                    flames,
+                    man,
+                    guess[1]
+                ))
+what.server = 'Undertale'

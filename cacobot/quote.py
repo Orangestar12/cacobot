@@ -1,8 +1,10 @@
 import cacobot.base as base
-import json, random
+import json, random, re, discord
 
 with open('configs/config.json') as data:
     config = json.load(data)
+
+mention_syntax = re.compile('(<@([0-9]*?)>)')
 
 @base.cacofunc
 def quote(message, client, *args, **kwargs):
@@ -36,7 +38,7 @@ def quote(message, client, *args, **kwargs):
     if cont:
         if r == 0:
             qindex = random.randint(0, len(quotes))
-            yield from client.send_message(message.channel, '*This is quote {}{}:*\n{}'.format(random.choice(['number ', 'nombre ', 'numero ', 'numbuh ', '#', 'integer ']), qindex, quotes[qindex-1][0]))
+            yield from client.send_message(message.channel, '*This is quote {}{}:*\n{}'.format(random.choice(['number ', 'numero ', 'numbuh ', '#', 'integer ', '№ ']), qindex, quotes[qindex-1][0]))
         elif r < 1:
             yield from client.send_message(message.channel, 'You probably think you\'re really clever. Specify a *positive* quote index next time. Better yet: specify none at all for a random quote.')
         elif r > len(quotes):
@@ -73,10 +75,14 @@ def addquote(message, client, *args, **kwargs):
                 quotes = json.load(data)
         except FileNotFoundError:
             with open('configs/quotes.json', 'w') as data:
-                json.dump(quotes, data, indent=4)
+                data.write('[]')
 
         if not [x[0] for x in quotes if x[0] == cmd]:
-        # Add quote to list
+            # Add quote to list
+            #replace mentions
+            if mention_syntax.search(cmd):
+                cmd = cmd.replace(mention_syntax.search(cmd).group(1), '@' + discord.utils.get(message.server.members, id=mention_syntax.search(cmd).group(2)).name)
+
             quotes.append([cmd, message.author.id])
 
             # Save file.
@@ -118,7 +124,7 @@ def delquote(message, client, *args, **kwargs):
         cont = False
 
     if cont:
-        if message.author.id == quotes[r][1] or message.author.id == config['owner_id']:
+        if message.author.id == quotes[r - 1][1] or message.author.id == config['owner_id']:
             quotes.pop(r - 1)
             with open('configs/quotes.json', 'w') as data:
                 json.dump(quotes, data, indent=4)
@@ -213,9 +219,14 @@ def parsequote(message, client, *args, **kwargs):
                     quotes = json.load(data)
             except FileNotFoundError:
                 with open('configs/quotes.json', 'w') as data:
-                    json.dump(quotes, data, indent=4)
+                    data.write('[]')
 
-            quotes.append(['\n'.join(qToAdd), message.author.id])
+            cmd = '\n'.join(qToAdd)
+
+            if mention_syntax.search(cmd):
+                cmd = cmd.replace(mention_syntax.search(cmd).group(1), '@' + discord.utils.get(message.server.members, id=mention_syntax.search(cmd).group(2)).name)
+
+            quotes.append([cmd, message.author.id])
 
             with open('configs/quotes.json', 'w') as data:
                 json.dump(quotes, data, indent=4)

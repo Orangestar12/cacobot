@@ -1,9 +1,12 @@
 import cacobot.base as base
-import json, random, urllib.request, urllib.parse, discord
+import json, random, urllib.request, urllib.parse, discord, re
 
 # json to load tags and config
 # random to generate random emojis for orphan
 # urllibs to post configs to pastebin
+# re to find mentions
+
+mention_syntax = re.compile('(<@([0-9]*?)>)')
 
 with open('configs/config.json') as data:
     config = json.load(data)
@@ -37,9 +40,7 @@ def tag(message, client, *args, **kwargs):
     # string) if nobody owns it.
 
     # I think Discord strips server-side already, but you can never be too careful.
-    if message.content.strip() == '.tag':
-        yield from client.send_message(message.channel, 'If you need help on using .tag, call .help tag!')
-    else:
+    try:
         # Load tags
         with open('configs/tags.json') as data:
             tags = json.load(data)
@@ -49,6 +50,12 @@ def tag(message, client, *args, **kwargs):
         # These commands all use the same params
         if cmd in ['create', 'delete', 'gift', 'list', 'edit', 'orphan', 'claim']:
             params = message.content.split(' ', 3)[1:]
+            for x in params:
+
+                if mention_syntax.search(x):
+                    x = x.replace(mention_syntax.search(x).group(1), '@' + discord.utils.get(message.server.members, id=mention_syntax.search(x).group(2)).name)
+
+            print (params)
 
             if cmd == 'create':
                 if params[1] in tags:
@@ -173,10 +180,23 @@ def tag(message, client, *args, **kwargs):
                                     else:
                                         dect['Direct Messages'] = [x]
                                 else:
-                                    if discord.utils.find(lambda y: y.id == tags[x]['server'], client.servers).name in dect:
-                                        dect[discord.utils.find(lambda y: y.id == tags[x]['server'], client.servers).name].append(x)
+                                    if discord.utils.find(lambda y: y.id == tags[x]['server'], client.servers):
+                                        if discord.utils.find(lambda y: y.id == tags[x]['server'], client.servers).name in dect:
+                                            dect[discord.utils.find(lambda y: y.id == tags[x]['server'], client.servers).name].append(x)
+                                        else:
+                                            dect[discord.utils.find(lambda y: y.id == tags[x]['server'], client.servers).name] = [x]
                                     else:
-                                        dect[discord.utils.find(lambda y: y.id == tags[x]['server'], client.servers).name] = [x]
+                                        ownerAround = False
+                                        for z in client.servers:
+                                            if [y for y in x.members if y.id == tags[z]['owner']]:
+                                                ownerAround = True
+                                        if not ownerAround:
+                                            tags[x]['owner'] = 'None'
+                                        tags[x]['server'] = 'None'
+                                        if 'Orphaned' in dect:
+                                            dect['Orphaned'].append(x)
+                                        else:
+                                            dect['Orphaned'] = [x]
 
                         for x in dect:
                             lst += '{}\n=======================\n'.format(x)
@@ -273,6 +293,11 @@ def tag(message, client, *args, **kwargs):
 
         elif cmd == 'rename':
             params = message.content.split(' ')[1:]
+
+            for x in params:
+                if mention_syntax.search(x):
+                    x = x.replace(mention_syntax.search(x).group(1), '@' + discord.utils.get(message.server.members, id=mention_syntax.search(x).group(2)).name)
+
             if params[1] in tags:
                 if tags[params[1]]['owner'] == message.author.id:
                     tags[params[2]] = tags.pop(params[1])
@@ -287,6 +312,11 @@ def tag(message, client, *args, **kwargs):
 
         else:
             params = message.content.split(' ', 2)[1:]
+
+            for x in params:
+                if mention_syntax.search(x):
+                    x = x.replace(mention_syntax.search(x).group(1), '@' + discord.utils.get(message.server.members, id=mention_syntax.search(x).group(2)).name)
+
             if cmd in tags:
                 yield from client.send_message(message.channel, tags[cmd]['tag'])
             else:
@@ -307,3 +337,5 @@ def tag(message, client, *args, **kwargs):
         #re-save tags.json
         with open('configs/tags.json', 'w') as file:
             json.dump(tags, file, indent=4)
+    except IndexError:
+        yield from client.send_message(message.channel, "If you need help on using this command, call `.help tag`!")
