@@ -1,5 +1,5 @@
 import cacobot.base as base
-import discord, re, json
+import discord, re, json, random
 
 # discord for channel management
 # re for content stripping
@@ -43,11 +43,11 @@ def journal(message, client, *args, **kwargs):
     else:
         if message.server.id in journals:
             weird = False
-            channel_name = re.sub('[^A-Za-z0-9_ -]', '-', message.author.name.lower()).strip('-_')
+            channel_name = re.sub('[^A-Za-z0-9_-]', '-', message.author.name.lower()).strip('-_')
             if not channel_name:
                 channel_name = []
                 for x in range(10):
-                    channel_name.append(random.choice('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'))
+                    channel_name.append(random.choice('0123456789abcdefghijklmnopqrstuvwxyz'))
                 channel_name = ''.join(channel_name)
                 weird = True
 
