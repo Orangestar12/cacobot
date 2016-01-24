@@ -27,13 +27,16 @@ def parseFor4chThread(message, client, *args, **kwargs):
     # parse string as regex, capture the following:
     # 1. Whole URL
     # 2. thread ID
-    # 3. either string "#p" or nothing (practically unused)
-    # 4. linked post ID
-    p = re.search('(https{0,1}://boards\.4chan\.org/.*/thread/([0-9]*)(#p){0,1}([0-9]*))', message.content)
+    # 3. The semantic thread URL, if available (unused)
+    # 4. either string "#p and post ID" or nothing (practically unused)
+    # 5. linked post ID
+    restring = '(https?:\/\/boards\.4chan\.org\/.*?\/thread\/([0-9]*)(\/[a-z0-9-]*)?\/?(#p([0-9]*))?)'
+
+    p = re.search(restring, message.content)
+    q = re.search('\.' + restring, message.content)
 
     # continue if 4chan thread found
-    if p:
-
+    if p and not q:
         # download thread html as string
         thread = urllib.request.urlopen(p.group(1)).read().decode('UTF-8')
 
@@ -43,11 +46,11 @@ def parseFor4chThread(message, client, *args, **kwargs):
         # get thread subject via title tag
         threadtitle = re.search('<title>/.*/ - (.*) - .* - 4chan</title>', thread).group(1)
 
-        # if group 3 doesn't have "#p", then no post was linked. Just grab OP.
-        if p.group(3):
-            pindex = thread.find('id="p{}"'.format(p.group(4)))
-            pmsg = thread.find('id="m{}"'.format(p.group(4)), pindex)
-            pfile = thread.find('id="f{}"'.format(p.group(4)), pindex)
+        # if group 5 doesnt exist, then no post was linked. Just grab OP.
+        if p.group(5):
+            pindex = thread.find('id="p{}"'.format(p.group(5)))
+            pmsg = thread.find('id="m{}"'.format(p.group(5)), pindex)
+            pfile = thread.find('id="f{}"'.format(p.group(5)), pindex)
         else:
             pindex = thread.find('id="p{}"'.format(p.group(2)))
             pmsg = thread.find('id="m{}"'.format(p.group(2)), pindex)
@@ -62,19 +65,21 @@ def parseFor4chThread(message, client, *args, **kwargs):
         msg = msg.replace('<br>', '\n')
         msg = html.unescape(re.sub('<[^<]+?>', '', msg))
 
-        # do not continue if more than 6 line breaks exist
-        if len(re.findall('\n', msg)) <= 6:
+        # determine if post or thread again: add relevant text.
+        if p.group(3):
+            msg = '__**Linked post from 4chan thread "{}":**__\n{}'.format(threadtitle, msg)
+        else:
+            msg = '__**Linked thread from 4chan: "{}":**__\n{}'.format(threadtitle, msg)
 
-            # determine if post or thread again: add relevant text.
-            if p.group(3):
-                msg = '__**Linked post from 4chan thread "{}":**__\n{}'.format(threadtitle, msg)
-            else:
-                msg = '__**Linked thread from 4chan: "{}":**__\n{}'.format(threadtitle, msg)
+        # do not post more than 6 lines unless preceded with "+"
+        if not re.search('\+' + restring, message.content):
+            if len(msg.split('\n')) > 7:
+                msg = '\n'.join(msg.split('\n')[:7]) + '...'
 
-            # if file: append it
-            if fname:
-                msg += '\n\n{}'.format(fname)
+        # if file: append it
+        if fname:
+            msg += '\n\n{}'.format(fname)
 
-            # send
-            yield from client.send_message(message.channel, msg)
+        # send
+        yield from client.send_message(message.channel, msg)
     return
