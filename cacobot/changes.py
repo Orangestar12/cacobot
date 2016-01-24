@@ -5,7 +5,10 @@ import random # To print random emojis.
 # the list is a server name: Use 'all' to send to all servers, or type a server
 # name to make that server the only one that can see that change.
 change_list = [
-    ['all', '**This bot is running CacoBot, revision 22.**'],
+    ['all', '`.journal` has been fixed.'],
+    ['all', 'You can suppress automatic post creation from 4chan posts by preceding the link with a period.'],
+    ['all', '4chan posting is slightly better now: Posts truncate to 6 newlines and support all links. Get an untruncated post by preceding the link with `+`. Disable this functionality by preceding the link with `.`'],
+    ['all', '**__Changes since revision 22.__**'],
     ['all', 'Less errors with `.tag` and `.determinate`.'],
     ['all', '`.log` now sends markdown unparsed! This means that "Uncle Phil you got to kick that man\'s __***BUTT***__" will come out as "Uncle Phil you got to kick that man\'s \_\_\*\*\*BUTT\*\*\*\_\_"'],
     ['Dream Journals', 'Introducing the `.journal` command! Creates a public channel that only you can post in!'],
