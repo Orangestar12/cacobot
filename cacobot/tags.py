@@ -166,6 +166,9 @@ def tag(message, client, *args, **kwargs):
                     elif params[1] == 'all':
                         lst = 'Here\'s a list of all the tags I know.\n\n'
 
+                        mv = 0
+                        orph = 0
+
                         dect = {}
                         for x in tags:
                             if tags[x]['owner'] == 'None':
@@ -186,17 +189,19 @@ def tag(message, client, *args, **kwargs):
                                         else:
                                             dect[discord.utils.find(lambda y: y.id == tags[x]['server'], client.servers).name] = [x]
                                     else:
+                                        mv += 1
                                         ownerAround = False
                                         for z in client.servers:
-                                            if [y for y in x.members if y.id == tags[z]['owner']]:
+                                            if [y for y in z.members if y.id == tags[x]['owner']]:
                                                 ownerAround = True
+                                        tags[x]['server'] = 'None'
                                         if not ownerAround:
                                             tags[x]['owner'] = 'None'
-                                        tags[x]['server'] = 'None'
-                                        if 'Orphaned' in dect:
-                                            dect['Orphaned'].append(x)
-                                        else:
-                                            dect['Orphaned'] = [x]
+                                            orph += 1
+                                            if 'Orphaned' in dect:
+                                                dect['Orphaned'].append(x)
+                                            else:
+                                                dect['Orphaned'] = [x]
 
                         for x in dect:
                             lst += '{}\n=======================\n'.format(x)
@@ -219,6 +224,11 @@ def tag(message, client, *args, **kwargs):
                         with urllib.request.urlopen(req) as response:
                             api_response = response.read().decode("utf-8")
 
+                        if mv:
+                            if orph:
+                                yield from client.send_message(message.channel, 'I automatically moved {} tags into DMs. Of them, {} were orphaned.'.format(mv, orph))
+                            else:
+                                yield from client.send_message(message.channel, 'I automatically moved {} tags into DMs.'.format(mv))
                         yield from client.send_message(message.author, api_response)
                 else:
                     if message.channel.is_private:
