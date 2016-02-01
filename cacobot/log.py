@@ -115,8 +115,11 @@ def log(message, client, *args, **kwargs):
 @base.cacofunc
 def memo(message, client, *args, **kwargs):
     '''
-    **.memo** [add|remove]
-    Allows you to add or remove yourself from the memoing system.
+    **.memo** [ all | mentions | none ]
+    Manages your inclusion into the memoing system.
+    `all` will DM you both mentions, and everyone mentions.
+    `mentions` will only DM you if someone mentions you specifically.
+    `none` removes you from the memoing system.
     If you are on the memoing system and you are mentioned in a channel that this bot is in, and you are not online, this bot will DM you where the mention was recieved (server and channel) plus the last 5 messages in that channel for context.
     *Example: `.memo add`*
     '''
@@ -129,20 +132,34 @@ def memo(message, client, *args, **kwargs):
         with open('configs/memos.json') as data:
             memos = json.load(data)
 
-        if cmd == 'add':
-            if message.author.id not in memos:
-                memos.append(message.author.id)
+        if cmd == 'all':
+            if not [x for x in memos if message.author.id == x[0]]:
+                memos.append([message.author.id, 'all'])
+                yield from client.send_message(message.author,':notebook_with_decorative_cover: You are now on the memo list and will recieve direct messages with context when you are, or everyone is, mentioned.')
+            elif [x for x in memos if message.author.id == x[0] and 'all' != x[1]]:
+                memos.remove([x for x in memos if message.author.id == x[0] and 'all' != x[1]][0])
+                memos.append([message.author.id, 'all'])
+                yield from client.send_message(message.author,':notebook_with_decorative_cover: You are now on the memo list and will recieve direct messages with context when you are, or everyone is, mentioned.')
+            else:
+                yield from client.send_message(message.author,':no_entry_sign: You are already on the memo list.')
+        elif cmd == 'mentions':
+            if not [x for x in memos if message.author.id == x[0]]:
+                memos.append([message.author.id, 'mentions'])
                 yield from client.send_message(message.author,':notebook_with_decorative_cover: You are now on the memo list and will recieve direct messages with context when you are mentioned.')
+            elif [x for x in memos if message.author.id == x[0] and 'mentions' != x[1]]:
+                memos.remove([x for x in memos if message.author.id == x[0] and 'mentions' != x[1]][0])
+                memos.append([message.author.id, 'mentions'])
+                yield from client.send_message(message.author,':notebook_with_decorative_cover: You are now on the memo list and will recieve direct messages with context when specifically you are mentioned.')
             else:
                 yield from client.send_message(message.author,':no_entry_sign: You are already on the memo list.')
         elif cmd == 'remove':
-            if message.author.id in memos:
-                memos.remove(message.author.id)
+            if [x for x in memos if message.author.id == x[0]]:
+                memos.remove([x for x in memos if message.author.id == x[0]][0])
                 yield from client.send_message(message.author,':no_bell: You have been removed from the memo list.')
             else:
                 yield from client.send_message(message.author,':no_entry_sign: You are not on the memo list.')
         else:
-            raise(IndexError('User did not specify a valid command.')) # Boy howdy am I lazy.
+            raise IndexError('User did not specify a valid command.') # Boy howdy am I lazy.
 
         # Save memo list.
         with open('configs/memos.json', 'w') as data:
@@ -168,7 +185,7 @@ def sendmemo(message, client, *args, **kwargs):
         for mention in message.mentions:
             # The async branch turned status into an enum. It's nice.
             # If the mentioned user is not online, signed up for memos, and is able to see the channel:
-            if mention.id in memos and mention.status != discord.Status.online and message.channel.permissions_for(mention).read_messages:
+            if mention.id in [x[0] for x in memos] and mention.status != discord.Status.online and message.channel.permissions_for(mention).read_messages:
                 # Store user for later messaging.
                 msgme.append(mention)
 
@@ -192,7 +209,8 @@ def sendmemo(message, client, *args, **kwargs):
                   str(x.timestamp.hour),
                   minute,
                   x.author.name,
-                  x.content)
+                  x.content
+                )
 
             for mention in msgme:
                 yield from client.send_message(mention, msgToSend[:1980]) # Really shitty way of making sure it's beneath 2k characters but IT WORKS, SO CAN IT
@@ -210,7 +228,7 @@ def sendmemo(message, client, *args, **kwargs):
                 json.dump(memos, data, indent=4)
 
         msgme = []
-        for mem in memos:
+        for mem in [x[0] for x in memos if x[1] == 'all']:
             # Find member object based on id
             usr = discord.utils.find(lambda x: x.id == mem, message.server.members)
             # Prevent mentions in cannels people can't read from being sent

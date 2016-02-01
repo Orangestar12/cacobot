@@ -5,6 +5,7 @@ import random # To print random emojis.
 # the list is a server name: Use 'all' to send to all servers, or type a server
 # name to make that server the only one that can see that change.
 change_list = [
+    ['all', 'You may now opt out of recieving memos on everyone mentions by doing `.memo mentions`.'],
     ['all', 'Limitations have been added to `.d` to ease up on Cacobot\'s memory usage.'],
     ['all', '`.tag list all` has been fixed, and will now auto-orphan tags if Caco isn\'t in a server anymore.'],
     ['all', '`.journal` has been fixed.'],
