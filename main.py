@@ -77,7 +77,7 @@ def on_message(message):
         if message.content.startswith(config['invoker']) and message.author.id != client.user.id: # ignore our own commands
             command = message.content[1:].split(' ')[0].lower() # So basically if the message was ".Repeat Butt talker!!!" this would be "repeat"
             if command in cacobot.base.functions:
-                if message.channel.permissions_for(message.server.me).send_messages:
+                if message.channel.is_private or message.channel.permissions_for(message.server.me).send_messages:
                     yield from client.send_typing(message.channel)
                     yield from cacobot.base.functions[command](message, client)
                 else:
