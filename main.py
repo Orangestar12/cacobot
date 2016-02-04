@@ -77,8 +77,11 @@ def on_message(message):
         if message.content.startswith(config['invoker']) and message.author.id != client.user.id: # ignore our own commands
             command = message.content[1:].split(' ')[0].lower() # So basically if the message was ".Repeat Butt talker!!!" this would be "repeat"
             if command in cacobot.base.functions:
-                yield from client.send_typing(message.channel)
-                yield from cacobot.base.functions[command](message, client)
+                if message.channel.permissions_for(message.server.me).send_messages:
+                    yield from client.send_typing(message.channel)
+                    yield from cacobot.base.functions[command](message, client)
+                else:
+                    print('\n===========\nThe bot cannot send messages to #{} in the server "{}"!\n===========\n\nThis message is only showing up because I *tried* to send a message but it didn\'t go through. This probably means the mod team has tried to disable this bot, but someone is still trying to use it!\n\nHere is the command in question:\n\n{}\n\nThis was sent by {}.\n\nIf this message shows up a lot, the bot might be disabled in that server. You should just make it leave if the mod team isn\'t going to just kick it!'.format(message.channel.name, message.server.name, message.content, message.author.name))
 
         for func in cacobot.base.posts:
             yield from cacobot.base.posts[func](message, client)
@@ -106,22 +109,25 @@ def on_error(event, *args, **kwargs):
     print('An error has been caught.')
     print(traceback.format_exc())
     if args and type(args[0]) == discord.Message:
-        if args[0].channel.is_private:
-            print('This error was caused by a DM with {}.\n'.format(args[0].author))
-        else:
-            print('This error was caused by a message.\nServer: {}. Channel: #{}.\n'.format(args[0].server.name, args[0].channel.name))
+        if args[0].author.id != client.user.id:
+            if args[0].channel.is_private:
+                print('This error was caused by a DM with {}.\n'.format(args[0].author))
+            else:
+                print('This error was caused by a message.\nServer: {}. Channel: #{}.\n'.format(args[0].server.name, args[0].channel.name))
 
-        if sys.exc_info()[0].__name__ == 'ClientOSError' or sys.exc_info()[0].__name__ == 'ClientResponseError' or sys.exc_info()[0].__name__ == 'HTTPException':
-            yield from client.send_message(args[0].channel, 'Sorry, I am under heavy load right now! This is probably due to a poor internet connection. Please submit your command again later.')
-        elif sys.exc_info()[0].__name__ == 'Forbidden':
-            yield from client.send_message(args[0].channel, 'You told me to do something that requires permissions I currently do not have. Ask an administrator to give me a proper role or something!')
+            if sys.exc_info()[0].__name__ == 'ClientOSError' or sys.exc_info()[0].__name__ == 'ClientResponseError' or sys.exc_info()[0].__name__ == 'HTTPException':
+                yield from client.send_message(args[0].channel, 'Sorry, I am under heavy load right now! This is probably due to a poor internet connection. Please submit your command again later.')
+            elif sys.exc_info()[0].__name__ == 'Forbidden':
+                yield from client.send_message(args[0].channel, 'You told me to do something that requires permissions I currently do not have. Ask an administrator to give me a proper role or something!')
+            else:
+                yield from client.send_message(args[0].channel, '{}\n{}: You caused {} **{}** with your command.'.format(
+                    choice(hilarious_snark),
+                    args[0].author.mention,
+                    aan(sys.exc_info()[0].__name__),
+                    sys.exc_info()[0].__name__)
+                )
         else:
-            yield from client.send_message(args[0].channel, '{}\n{}: You caused {} **{}** with your command.'.format(
-                choice(hilarious_snark),
-                args[0].author.mention,
-                aan(sys.exc_info()[0].__name__),
-                sys.exc_info()[0].__name__)
-            )
+            yield from client.send_message(args[0].channel, 'Whoops, sorry, I nearly recursed just then! Sorry about that!')
 
 # I'm gonna be honest, I have *no clue* how asyncio works. This is all from the
 # example in the docs.

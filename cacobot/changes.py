@@ -5,8 +5,10 @@ import random # To print random emojis.
 # the list is a server name: Use 'all' to send to all servers, or type a server
 # name to make that server the only one that can see that change.
 change_list = [
+    ['all', 'CacoBot now detects when he has caused an error and will try not to recurse.'],
+    ['all', 'CacoBot no longer complains when you type any message starting with a period and are plugged.'],
     ['neo/g/', 'The `.ytadd` command is like `.yt` but it automatically adds the video to Memebot Jones.'],
-    ['/g/entoo', 'The `.ytadd` command is like `.yt` but it automatically adds the video to Memebot Jones.'],
+    ['technol/g/y', 'The `.ytadd` command is like `.yt` but it automatically adds the video to Memebot Jones.'],
     ['all', 'You may now opt out of recieving memos on everyone mentions by doing `.memo mentions`.'],
     ['all', 'Limitations have been added to `.d` to ease up on Cacobot\'s memory usage.'],
     ['all', '`.tag list all` has been fixed, and will now auto-orphan tags if Caco isn\'t in a server anymore.'],
