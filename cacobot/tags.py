@@ -1,5 +1,12 @@
+import json
+import random
+import urllib.request
+import urllib.parse
+import re
+
+import discord
+
 import cacobot.base as base
-import json, random, urllib.request, urllib.parse, discord, re
 
 # json to load tags and config
 # random to generate random emojis for orphan
@@ -12,7 +19,7 @@ with open('configs/config.json') as data:
     config = json.load(data)
 
 @base.cacofunc
-def tag(message, client, *args, **kwargs):
+def tag(message, client):
     '''
     **.tag** <create | delete | edit | rename | gift | list | *tag id*> [mine | *content* | *tag id*] [*content* | *new id* | *new content* | *mention*]
     Allows you to manage tags.
@@ -42,20 +49,20 @@ def tag(message, client, *args, **kwargs):
     # I think Discord strips server-side already, but you can never be too careful.
     try:
         # Load tags
-        with open('configs/tags.json') as data:
-            tags = json.load(data)
+        with open('configs/tags.json') as z:
+            tags = json.load(z)
 
         cmd = message.content.split(' ')[1] #[0] is ".tag"
 
         # These commands all use the same params
         if cmd in ['create', 'delete', 'gift', 'list', 'edit', 'orphan', 'claim']:
-            params = message.content.split(' ', 3)[1:]
-            for x in params:
 
-                if mention_syntax.search(x):
-                    x = x.replace(mention_syntax.search(x).group(1), '@' + discord.utils.get(message.server.members, id=mention_syntax.search(x).group(2)).name)
+            p = message.content.split(' ', 1)[1]
 
-            print (params)
+            while mention_syntax.search(p):
+                p = p.replace(mention_syntax.search(p).group(1), '@' + discord.utils.get(message.server.members, id=mention_syntax.search(p).group(2)).name)
+
+            params = p.split(' ')
 
             if cmd == 'create':
                 if params[1] in tags:
@@ -73,7 +80,7 @@ def tag(message, client, *args, **kwargs):
 
             elif cmd == 'delete':
                 if params[1] in tags:
-                    if message.author.id == tags[params[1]]['owner'] or (not message.channel.is_private and message.channel.permissions_for(message.author).manage_roles):
+                    if message.author.id == tags[params[1]]['owner'] or (not message.channel.is_private and message.channel.permissions_for(message.author).manage_roles and message.server.id == tags[params[1]]['server']):
                         tags.pop(params[1])
                         yield from client.send_message(message.channel, ':heavy_check_mark: Successfully deleted the tag `{}`.'.format(params[1]))
                     else:
@@ -133,9 +140,9 @@ def tag(message, client, *args, **kwargs):
                           'api_paste_expire_date' : '10M'
                         }
 
-                        data = urllib.parse.urlencode(values)
-                        data = data.encode('utf-8') # data should be bytes
-                        req = urllib.request.Request('http://pastebin.com/api/api_post.php', data)
+                        z = urllib.parse.urlencode(values)
+                        z = z.encode('utf-8') # data should be bytes
+                        req = urllib.request.Request('http://pastebin.com/api/api_post.php', z)
 
                         with urllib.request.urlopen(req) as response:
                             api_response = response.read().decode("utf-8")
@@ -155,9 +162,9 @@ def tag(message, client, *args, **kwargs):
                           'api_paste_expire_date' : '10M'
                         }
 
-                        data = urllib.parse.urlencode(values)
-                        data = data.encode('utf-8') # data should be bytes
-                        req = urllib.request.Request('http://pastebin.com/api/api_post.php', data)
+                        z = urllib.parse.urlencode(values)
+                        z = z.encode('utf-8') # data should be bytes
+                        req = urllib.request.Request('http://pastebin.com/api/api_post.php', z)
 
                         with urllib.request.urlopen(req) as response:
                             api_response = response.read().decode("utf-8")
@@ -210,16 +217,16 @@ def tag(message, client, *args, **kwargs):
                             lst += '\n\n'
 
                         values = {
-                          'api_dev_key' : config['pastebin_key'],
-                          'api_option' : 'paste',
-                          'api_paste_code' : lst,
-                          'api_paste_private' : '1',
-                          'api_paste_expire_date' : '10M'
+                            'api_dev_key' : config['pastebin_key'],
+                            'api_option' : 'paste',
+                            'api_paste_code' : lst,
+                            'api_paste_private' : '1',
+                            'api_paste_expire_date' : '10M'
                         }
 
-                        data = urllib.parse.urlencode(values)
-                        data = data.encode('utf-8') # data should be bytes
-                        req = urllib.request.Request('http://pastebin.com/api/api_post.php', data)
+                        z = urllib.parse.urlencode(values)
+                        z = z.encode('utf-8') # data should be bytes
+                        req = urllib.request.Request('http://pastebin.com/api/api_post.php', z)
 
                         with urllib.request.urlopen(req) as response:
                             api_response = response.read().decode("utf-8")
@@ -244,16 +251,16 @@ def tag(message, client, *args, **kwargs):
                     lst = lst[:-2]
 
                     values = {
-                      'api_dev_key' : config['pastebin_key'],
-                      'api_option' : 'paste',
-                      'api_paste_code' : lst,
-                      'api_paste_private' : '1',
-                      'api_paste_expire_date' : '10M'
+                        'api_dev_key' : config['pastebin_key'],
+                        'api_option' : 'paste',
+                        'api_paste_code' : lst,
+                        'api_paste_private' : '1',
+                        'api_paste_expire_date' : '10M'
                     }
 
-                    data = urllib.parse.urlencode(values)
-                    data = data.encode('utf-8') # data should be bytes
-                    req = urllib.request.Request('http://pastebin.com/api/api_post.php', data)
+                    z = urllib.parse.urlencode(values)
+                    z = z.encode('utf-8') # data should be bytes
+                    req = urllib.request.Request('http://pastebin.com/api/api_post.php', z)
 
                     with urllib.request.urlopen(req) as response:
                         api_response = response.read().decode("utf-8")
@@ -302,11 +309,12 @@ def tag(message, client, *args, **kwargs):
                     yield from client.send_message(message.channel, ':no_entry_sign: The tag `{}` could not be found.'.format(params[1]))
 
         elif cmd == 'rename':
-            params = message.content.split(' ')[1:]
+            p = message.content.split(' ', 1)[1]
 
-            for x in params:
-                if mention_syntax.search(x):
-                    x = x.replace(mention_syntax.search(x).group(1), '@' + discord.utils.get(message.server.members, id=mention_syntax.search(x).group(2)).name)
+            while mention_syntax.search(p):
+                p = p.replace(mention_syntax.search(p).group(1), '@' + discord.utils.get(message.server.members, id=mention_syntax.search(p).group(2)).name)
+
+            params = p.split(' ')
 
             if params[1] in tags:
                 if tags[params[1]]['owner'] == message.author.id:
@@ -321,11 +329,13 @@ def tag(message, client, *args, **kwargs):
                 yield from client.send_message(message.channel, ':no_entry_sign: The tag `{}` could not be found.'.format(params[1]))
 
         else:
-            params = message.content.split(' ', 2)[1:]
+            p = message.content.split(' ', 1)[1]
 
-            for x in params:
-                if mention_syntax.search(x):
-                    x = x.replace(mention_syntax.search(x).group(1), '@' + discord.utils.get(message.server.members, id=mention_syntax.search(x).group(2)).name)
+            while mention_syntax.search(p):
+                p = p.replace(mention_syntax.search(p).group(1), '@' + discord.utils.get(message.server.members, id=mention_syntax.search(p).group(2)).name)
+
+            params = p.split(' ', 1)
+
 
             if cmd in tags:
                 yield from client.send_message(message.channel, tags[cmd]['tag'])
