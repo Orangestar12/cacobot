@@ -28,6 +28,7 @@ import cacobot.utau as utau
 import cacobot.dream as dream
 import cacobot.woah as woah
 import cacobot.chan as chan
+import cacobot.jontron as jontron
 
 # If you're taking the senic tour of the code, you should check out
 # cacobot/base.py next.
