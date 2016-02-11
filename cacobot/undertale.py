@@ -278,7 +278,7 @@ def summon(message, client, *args, **kwargs):
 summon.server = 'Undertale'
 
 @base.cacofunc
-def determinate(message, client, *args, **kwargs):
+def determinate(message, client):
     '''
     **.determinate** [color\=*color*] [font\=*font*] <*text*>
     *This command was created for the Undertale server.*
@@ -519,11 +519,10 @@ def htmlEntities( string ):
 def forebode(message, client, *args, **kwargs):
     '''
     **.forebode** [*mention*]
-    *This command was created for the Undertale server. Just for Felarine. ;)*
     This is a shortcut to add the "Foreboden" role to a user. If your server has no "Foreboden" role, this will fail.
     *Example: `.forebode @CacoBot`*
     '''
-    if message.channel.permissions_for(message.author).manage_roles:
+    if message.channel.permissions_for(message.author).ban_members:
         try:
             foreboden = discord.utils.find(lambda m: m.name == 'Foreboden', message.server.roles)
             if foreboden != None:
@@ -535,16 +534,16 @@ def forebode(message, client, *args, **kwargs):
         except:
             yield from client.send_message(message.channel, '{}: I do not have the permission to perform this command yet.'.format(message.author.mention))
     else:
-        yield from client.send_message(message.channel, '{}: You do not have the permission to manage roles.'.format(message.author.mention))
+        yield from client.send_message(message.channel, '{}: You do not have the permission to ban.'.format(message.author.mention))
 forebode.server = 'Undertale'
 
 @base.cacofunc
-def say(message, client, *args, **kwargs):
+def say(message, client):
     '''
     **.say** [*params*]
     A shorcut to `.determinate`.
     '''
-    yield from determinate(message, client, args, kwargs)
+    yield from determinate(message, client)
 
 def issublist(sl, ml):
     sublist = list(sl)
@@ -622,10 +621,7 @@ def ship(message, client, *args, **kwargs):
             'Onionsan',
             'Bird that carries you across a disproportionately small gap',
             'Ragel, the "Mushroom Dance" mushroom',
-            'Heats Flamesman',
-            'Flames Heatsman',
-            'Firey Hotguy',
-            'Hot Firedude'
+            'Heats Flamesman'
         ],
         'ausans' : [
             'Outertale!Sans',
@@ -635,6 +631,7 @@ def ship(message, client, *args, **kwargs):
             'Error!Sans',
             'Underfell!Sans',
             'Underswap!Sans',
+            'Sanzyfresh'
         ],
         'encounters' : [
             'Froggit',
