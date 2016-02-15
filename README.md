@@ -34,7 +34,16 @@ Create a folder called `configs` with these two files, filling in any necessary 
     "owner_id" : "Place your Discord ID here. Use .myid to get it with the bot.",
     "invoker" : "Place the character or line you want to invoke CB commands. Base CacoBot's is '.'",
     "log_request_limit" : 50,
-    "pastebin_key" : "Get a Pastebin key from http://pastebin.com/api and put it here. We use it to post the tag list to Pastebin."
+    "pastebin_key" : "Get a Pastebin key from http://pastebin.com/api and put it here. We use it to post the tag list to Pastebin.",
+    "games" : [
+        "The Ultimate DOOM",
+        "DOOM II: Hell On Earth"
+    ],
+    "error_messages": [
+        "Oh no!",
+        "How'd you do that?",
+        "Oops..."
+    ],
 }
 ```
 
