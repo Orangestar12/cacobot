@@ -1,10 +1,14 @@
-﻿import cacobot.base as base
-import discord, random, traceback, subprocess
+﻿import random
+import subprocess
+
+import discord
+
+import cacobot.base as base
 
 # No comments. Fuck you.
 
 @base.cacofunc
-def goatnick(message, client, *args, **kwargs):
+def goatnick(message, client):
     '''
     **.goatnick**
     *This command was created for the Undertale server.*
@@ -51,7 +55,7 @@ def goatnick(message, client, *args, **kwargs):
 goatnick.server = 'Undertale'
 
 @base.cacofunc
-def summon(message, client, *args, **kwargs):
+def summon(message, client):
     '''
     **.summon** [*monster 1*] [*monster 2*]...
     *This command was created for the Undertale server.*
@@ -133,7 +137,6 @@ def summon(message, client, *args, **kwargs):
         msg = '```\n' + monsters[random.choice(list(monsters))]
 
         # 1 in 1k chance to spawn Jerry
-        monster = random.choice(list(monsters))
         if random.randrange(0, 1000) == 300:
             msg += '\nJerry came, too.'
 
@@ -150,11 +153,8 @@ def summon(message, client, *args, **kwargs):
         yield from client.send_message(message.channel, 'List of Monster Codes:\n```\n{}\n```'.format(' '.join(sorted(list(monsters)))))
 
     else:
-        cmd = message.content.split(' ')[1:]
+        cmd = message.content.split()[1:]
         msg = []
-
-        if message.channel.is_private or message.channel.name not in ['torielshome', 'fanworks', 'workshop']:
-            monsters.update(spoilers)
 
         monsters.update(hidden)
 
@@ -162,93 +162,93 @@ def summon(message, client, *args, **kwargs):
             for y in monsters:
                 if x.lower() == y.lower():
                     msg.append(monsters[y])
-            else:
+                    break
                 if x.lower() == 'jerry':
                     msg.append('Jerry came, too.')
 
         # Detect special cases
 
         # KK & Madjick: Mercenaries
-        if issublist(['Madjick pops out of its hat!','Knight Knight blocks the way!'], msg):
-            save = [i for i,x in enumerate(msg) if x == 'Knight Knight blocks the way!'][0]
+        if issublist(['Madjick pops out of its hat!', 'Knight Knight blocks the way!'], msg):
+            save = [i for i, x in enumerate(msg) if x == 'Knight Knight blocks the way!'][0]
             msg.remove('Madjick pops out of its hat!')
             msg.remove('Knight Knight blocks the way!')
             msg.insert(save, 'Mercenaries emerge from the shadows.')
 
         # Pyrope & Pyrope: Double Davis
-        if issublist(['Pyrope bounds towards you!','Pyrope bounds towards you!'], msg):
-            save = [i for i,x in enumerate(msg) if x == 'Pyrope bounds towards you!'][0]
+        if issublist(['Pyrope bounds towards you!', 'Pyrope bounds towards you!'], msg):
+            save = [i for i, x in enumerate(msg) if x == 'Pyrope bounds towards you!'][0]
             msg.remove('Pyrope bounds towards you!')
             msg.remove('Pyrope bounds towards you!')
             msg.insert(save, 'The rare and threatening Double Davis.')
 
         # Vulkin + Tsun: Jealous
-        if issublist(['Tsunderplane gets in the way! Not on purpose or anything.','Vulkin strolls in.'], msg):
-            save = [i for i,x in enumerate(msg) if x == 'Tsunderplane gets in the way! Not on purpose or anything.'][0]
+        if issublist(['Tsunderplane gets in the way! Not on purpose or anything.', 'Vulkin strolls in.'], msg):
+            save = [i for i, x in enumerate(msg) if x == 'Tsunderplane gets in the way! Not on purpose or anything.'][0]
             msg.remove('Tsunderplane gets in the way! Not on purpose or anything.')
             msg.remove('Vulkin strolls in.')
             msg.insert(save, 'Tsunderplane attacks! Not because it\'s jealous Vulkin is paying attention to you.')
 
         # Vulkin + Vulkin: Strange Parade
-        if issublist(['Vulkin strolls in.','Vulkin strolls in.'], msg):
-            save = [i for i,x in enumerate(msg) if x == 'Vulkin strolls in.'][0]
+        if issublist(['Vulkin strolls in.', 'Vulkin strolls in.'], msg):
+            save = [i for i, x in enumerate(msg) if x == 'Vulkin strolls in.'][0]
             msg.remove('Vulkin strolls in.')
             msg.remove('Vulkin strolls in.')
             msg.insert(save, 'A strange parade blocks the path.')
 
         # Aaron + Woshua: Easter Egg
-        if issublist(['Aaron flexes in!','Woshua shuffles up.'], msg):
-            save = [i for i,x in enumerate(msg) if x == 'Aaron flexes in!'][0]
+        if issublist(['Aaron flexes in!', 'Woshua shuffles up.'], msg):
+            save = [i for i, x in enumerate(msg) if x == 'Aaron flexes in!'][0]
             msg.remove('Aaron flexes in!')
             msg.remove('Woshua shuffles up.')
             msg.insert(save, 'Woshua and Aaron appear.')
 
         # Snowdrake + Ice Cap: pose
-        if issublist(['Snowdrake flutters forth!','Ice Cap struts into view.'], msg):
-            save = [i for i,x in enumerate(msg) if x == 'Snowdrake flutters forth!'][0]
+        if issublist(['Snowdrake flutters forth!', 'Ice Cap struts into view.'], msg):
+            save = [i for i, x in enumerate(msg) if x == 'Snowdrake flutters forth!'][0]
             msg.remove('Snowdrake flutters forth!')
             msg.remove('Icecap struts into view.')
             msg.insert(save, 'Icecap and Snowdrake pose like bad guys.')
 
         # Loox + Veg/Migosp: loox & Co.
-        if issublist(['Loox drew near!','Vegetoid came out of the earth!', 'Migosp crawled up close!'], msg) or issublist(['Loox drew near!','Vegetoid came out of the earth!'], msg) or issublist(['Loox drew near!', 'Migosp crawled up close!'], msg):
-            save = [i for i,x in enumerate(msg) if x == 'Loox drew near!'][0]
+        if issublist(['Loox drew near!', 'Vegetoid came out of the earth!', 'Migosp crawled up close!'], msg) or issublist(['Loox drew near!', 'Vegetoid came out of the earth!'], msg) or issublist(['Loox drew near!', 'Migosp crawled up close!'], msg):
+            save = [i for i, x in enumerate(msg) if x == 'Loox drew near!'][0]
             msg.remove('Loox drew near!')
             try:
                 msg.remove('Migosp crawled up close!')
-            except:
+            except (IndexError, ValueError):
                 pass
             try:
                 msg.remove('Vegetoid came out of the earth!')
-            except:
+            except (IndexError, ValueError):
                 pass
             msg.insert(save, 'Loox and co. decided to pick on you!')
 
         # Two Moldsmal: Moldsmal and Moldsmal
-        if issublist(['You tripped into a line of Moldmals.','You tripped into a line of Moldmals.'], msg):
-            save = [i for i,x in enumerate(msg) if x == 'You tripped into a line of Moldmals.'][0]
+        if issublist(['You tripped into a line of Moldmals.', 'You tripped into a line of Moldmals.'], msg):
+            save = [i for i, x in enumerate(msg) if x == 'You tripped into a line of Moldmals.'][0]
             msg.remove('You tripped into a line of Moldmals.')
             msg.remove('You tripped into a line of Moldmals.')
             msg.insert(save, 'Moldsmal and Moldsmal block the way.')
 
         # Astig, FF, Whim: ULTRA-VIOLENCE
-        if issublist(['Whimsalot rushed in!', 'Final Froggit was already there, waiting for you.','Eyes appeared from the shadows.'], msg):
-            save = [i for i,x in enumerate(msg) if x == 'Final Froggit was already there, waiting for you.'][0]
+        if issublist(['Whimsalot rushed in!', 'Final Froggit was already there, waiting for you.', 'Eyes appeared from the shadows.'], msg):
+            save = [i for i, x in enumerate(msg) if x == 'Final Froggit was already there, waiting for you.'][0]
             msg.remove('Eyes appeared from the shadows.')
             msg.remove('Whimsalot rushed in!')
             msg.remove('Final Froggit was already there, waiting for you.')
             msg.insert(save, 'What a nightmare!')
 
         # Astig + FF: Not correct...
-        if issublist(['Final Froggit was already there, waiting for you.','Eyes appeared from the shadows.'], msg):
-            save = [i for i,x in enumerate(msg) if x == 'Final Froggit was already there, waiting for you.'][0]
+        if issublist(['Final Froggit was already there, waiting for you.', 'Eyes appeared from the shadows.'], msg):
+            save = [i for i, x in enumerate(msg) if x == 'Final Froggit was already there, waiting for you.'][0]
             msg.remove('Eyes appeared from the shadows.')
             msg.remove('Final Froggit was already there, waiting for you.')
             msg.insert(save, 'That doesn’t seem correct.')
 
         # Whimsalot + FF: Believe it?
-        if issublist(['Final Froggit was already there, waiting for you.','Whimsalot rushed in!'], msg):
-            save = [i for i,x in enumerate(msg) if x == 'Final Froggit was already there, waiting for you.'][0]
+        if issublist(['Final Froggit was already there, waiting for you.', 'Whimsalot rushed in!'], msg):
+            save = [i for i, x in enumerate(msg) if x == 'Final Froggit was already there, waiting for you.'][0]
             msg.remove('Whimsalot rushed in!')
             msg.remove('Final Froggit was already there, waiting for you.')
             msg.insert(save, 'Can you believe it?')
@@ -279,7 +279,7 @@ summon.server = 'Undertale'
 
 @base.cacofunc
 def determinate(message, client):
-    '''
+    r'''
     **.determinate** [color\=*color*] [font\=*font*] <*text*>
     *This command was created for the Undertale server.*
     Generates an image with text of your choice using the font Determination Mono. [color\=*color*] can be provided as a CSS color, like hexadecimal (#FF7700), rgb (rgb(255,128,0)), or color code (orange). [font=*font*] can be *sans*, *papyrus*, *wd*, or *ut*. Omit to leave it as DTM.
@@ -300,7 +300,7 @@ def determinate(message, client):
         width = '640'
 
         # I'm basically only using this to quickly strip ".determinate" from the message
-        TextToSay = message.content.split(' ', 1)[1]
+        TextToSay = message.content.split(None, 1)[1]
 
         # find color
         if 'color=' in TextToSay.lower() or 'color:' in TextToSay.lower() or 'colour=' in TextToSay.lower() or 'colour:' in TextToSay.lower():
@@ -377,15 +377,13 @@ def determinate(message, client):
         if font == 'Wingdings':
             TextToSay = TextToSay.upper()
 
-        if TextToSay.startswith('* '):
-            indent = True
-        else:
-            indent = False
+        # true if "* " exists, false if it doesn't.
+        indent = bool(TextToSay.startswith('* '))
 
         TextList = []
 
         while TextToSay:
-            if indent == True:
+            if indent:
                 # Indent mode must determine whether the next string starts with
                 # '* ' or not.
                 # 'prec' is a variable I made to determine how many characters can
@@ -450,7 +448,7 @@ def determinate(message, client):
                     TextList[i] = '  ' + x
 
         save = '\n'.join(TextList)
-        for i,x in enumerate(TextList):
+        for i, x in enumerate(TextList):
             TextList[i] = htmlEntities(x)
         lines = len(TextList)
         height = (lines * lineheight) + 94
@@ -512,11 +510,11 @@ determinate.server = 'Undertale'
 # You know, while I'm here, here's the StackOverflow post that has the function.
 # It's really useful. Credit where it's due.
 # http://stackoverflow.com/questions/18609778/solved-python3-convert-all-characters-to-html-entities
-def htmlEntities( string ):
+def htmlEntities(string):
     return ''.join(['&#{0};'.format(ord(char)) for char in string])
 
 @base.cacofunc
-def forebode(message, client, *args, **kwargs):
+def forebode(message, client):
     '''
     **.forebode** [*mention*]
     This is a shortcut to add the "Foreboden" role to a user. If your server has no "Foreboden" role, this will fail.
@@ -525,13 +523,13 @@ def forebode(message, client, *args, **kwargs):
     if message.channel.permissions_for(message.author).ban_members:
         try:
             foreboden = discord.utils.find(lambda m: m.name == 'Foreboden', message.server.roles)
-            if foreboden != None:
+            if foreboden:
                 for ment in message.mentions:
                     yield from client.replace_roles(ment, foreboden)
                     yield from client.send_message(message.channel, '{}: {} has been foreboden.'.format(message.author.mention, ment.name))
             else:
                 yield from client.send_message(message.channel, '{}: You must create a role named \'Foreboden\' before you can use this command.'.format(message.author.mention))
-        except:
+        except discord.Forbidden:
             yield from client.send_message(message.channel, '{}: I do not have the permission to perform this command yet.'.format(message.author.mention))
     else:
         yield from client.send_message(message.channel, '{}: You do not have the permission to ban.'.format(message.author.mention))
@@ -561,7 +559,7 @@ def issublist(sl, ml):
 say.server = 'Undertale'
 
 @base.cacofunc
-def ship(message, client, *args, **kwargs):
+def ship(message, client):
     '''
     **.ship** [ list | main | sub | kids | questionable | ausans | encounters | fun | all ]
     Generates a random Undertale-based ship. Provide any amount of lists from above, or use *all* to mix them all together! Use list [list] to get pm'd a list of all the monsters in that list.
@@ -662,7 +660,7 @@ def ship(message, client, *args, **kwargs):
     }
     listToChooseFrom = []
     try:
-        lists = message.content.strip().split(' ')[1:]
+        lists = message.content.strip().split()[1:]
         if lists[0] == 'list':
             if lists[1] in ships:
                 yield from client.send_message(message.author, ', '.join(ships[lists[1]]))
@@ -685,7 +683,7 @@ def ship(message, client, *args, **kwargs):
         yield from client.send_message(message.channel, ':no_entry_sign: {} You did not provide enough valid lists to choose from.'.format(message.author))
 
 @base.cacofunc
-def what(message, client, *args, **kwargs):
+def what(message, client):
     '''
     **.What** <was his name again?>
     Generates a name for uh... Fire... Hotsbro... You know, the guy from Hotland who was fire-based.
@@ -747,8 +745,10 @@ def what(message, client, *args, **kwargs):
             'Heating',
             'Warming',
             'Roasting',
+            'Ignis',
             'Flameo',
             'Toast',
+            'Potentia',
             'Toasts',
             'Toasting',
             'Toasty',
@@ -795,11 +795,14 @@ def what(message, client, *args, **kwargs):
             '~Mr. Hotpants McGee',
             '~SO EASILY DEFEATED',
             '~Grillby',
-            '~JOHN CENA'
+            '~JOHN CENA',
+            '~Burnie Sanders',
+            '~Mr. Explosion Man'
         ]
         person = [
             'man',
             'guy',
+            'humanus',
             'dude',
             'face',
             'head',

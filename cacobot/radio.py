@@ -9,7 +9,7 @@ def init():
 @base.cacofunc
 def radio(message, client, *args, **kwargs):
 
-    params = message.split(' ', 2)
+    params = message.split(None, 2)
     if message.content.strip()[1:] == 'radio':
         yield from client.send_message(message.channel, 'If you do not know how to use this command, call `.help radio`!')
     elif params[1] == 'connect':

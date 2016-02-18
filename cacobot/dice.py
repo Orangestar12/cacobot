@@ -9,7 +9,7 @@ def d(message, client, *args, **kwargs):
     *Example: `.d 2d6`*
     '''
     try:
-        params = message.content.split(' ')
+        params = message.content.split()
         dice = int(params[1][:params[1].find('d')])
         sides = int(params[1][params[1].find('d')+1:])
 
@@ -53,7 +53,7 @@ def choice(message, client, *args, **kwargs):
     *Example: `.choice CacoBot is Life; CacoBot is Love`*
     '''
 
-    choices = message.content.split(' ', 1)
+    choices = message.content.split(None, 1)
     if len(choices) > 1:
         choices = choices[1].split(';')
         if len(choices) > 1:

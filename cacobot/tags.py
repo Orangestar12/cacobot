@@ -52,17 +52,17 @@ def tag(message, client):
         with open('configs/tags.json') as z:
             tags = json.load(z)
 
-        cmd = message.content.split(' ')[1] #[0] is ".tag"
+        cmd = message.content.split()[1] #[0] is ".tag"
 
         # These commands all use the same params
         if cmd in ['create', 'delete', 'gift', 'list', 'edit', 'orphan', 'claim']:
 
-            p = message.content.split(' ', 1)[1]
+            p = message.content.split(None, 1)[1]
 
             while mention_syntax.search(p):
                 p = p.replace(mention_syntax.search(p).group(1), '@' + discord.utils.get(message.server.members, id=mention_syntax.search(p).group(2)).name)
 
-            params = p.split(' ')
+            params = p.split(None, 3)
 
             if cmd == 'create':
                 if params[1] in tags:
@@ -309,12 +309,12 @@ def tag(message, client):
                     yield from client.send_message(message.channel, ':no_entry_sign: The tag `{}` could not be found.'.format(params[1]))
 
         elif cmd == 'rename':
-            p = message.content.split(' ', 1)[1]
+            p = message.content.split(None, 1)[1]
 
             while mention_syntax.search(p):
                 p = p.replace(mention_syntax.search(p).group(1), '@' + discord.utils.get(message.server.members, id=mention_syntax.search(p).group(2)).name)
 
-            params = p.split(' ')
+            params = p.split()
 
             if params[1] in tags:
                 if tags[params[1]]['owner'] == message.author.id:
@@ -329,12 +329,12 @@ def tag(message, client):
                 yield from client.send_message(message.channel, ':no_entry_sign: The tag `{}` could not be found.'.format(params[1]))
 
         else:
-            p = message.content.split(' ', 1)[1]
+            p = message.content.split(None, 1)[1]
 
             while mention_syntax.search(p):
                 p = p.replace(mention_syntax.search(p).group(1), '@' + discord.utils.get(message.server.members, id=mention_syntax.search(p).group(2)).name)
 
-            params = p.split(' ', 1)
+            params = p.split(None, 1)
 
 
             if cmd in tags:

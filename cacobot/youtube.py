@@ -17,9 +17,9 @@ def yt(message, client, *args, **kwargs):
     *Example: `.yt Doom E1M1 100% .results 3`*
     '''
 
-    if message.content.split(' ')[-2] == '.results':
+    if message.content.split()[-2] == '.results':
         query = message.content[4:message.content.find('.results') - 2]
-        results = int(message.content.split(' ')[-1]) #The number of results to spew.
+        results = int(message.content.split()[-1]) #The number of results to spew.
     else:
         query = message.content[4:]
         results = 1
@@ -60,7 +60,7 @@ def ytadd(message, client, *args, **kwargs):
     *Example: `.ytadd meme machine`*
     '''
 
-    query = message.content.split(' ', 1)[1]
+    query = message.content.split(None, 1)[1]
 
     search_response = youtube.search().list(
       q = query,

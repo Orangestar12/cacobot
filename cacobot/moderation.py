@@ -141,7 +141,7 @@ def call(message, client):
     *Example: `.call Mods`*
     '''
 
-    roleToMention = message.content.split(' ', 1)[1].lower()
+    roleToMention = message.content.split(None, 1)[1].lower()
 
     if roleToMention != '@everyone':
         mentions = [] # holds mention strings
@@ -185,7 +185,7 @@ def connect(message, client):
     https://github.com/Orangestar12/cacobot/blob/master/tos.md
     '''
     try:
-        yield from client.accept_invite(message.content.split(' ')[1])
+        yield from client.accept_invite(message.content.split()[1])
         yield from client.send_message(
             message.channel,
             ':heart: I have successfully joined your server.'
@@ -227,14 +227,14 @@ def debug(message, client):
             except FileNotFoundError:
                 pass
 
-        cmd = message.content.split(' ', 1)[1].strip()
+        cmd = message.content.split(None, 1)[1].strip()
         if cmd.startswith('yield from'):
-            response = yield from eval(message.content.split(' ', 3)[3])
+            response = yield from eval(message.content.split(None, 3)[3])
         elif cmd.startswith('exec'):
-            exec(message.content.split(' ', 2)[2])
+            exec(message.content.split(None, 2)[2])
             response = False
         else:
-            response = eval(message.content.split(' ', 1)[1])
+            response = eval(message.content.split(None, 1)[1])
 
         if response:
             yield from client.send_message(
@@ -258,7 +258,7 @@ def plug(message, client):
     if message.author.id == config['owner_id'] or\
             message.channel.permissions_for(message.author).kick_members:
         if message.author.id == config['owner_id'] and\
-                message.content.split(' ')[1] == 'GLOBAL':
+                message.content.split()[1] == 'GLOBAL':
             srv = 'GLOBAL'
         else:
             srv = message.server.id
@@ -307,7 +307,7 @@ def unplug(message, client):
 @base.precommand
 def checkForPlug(message, client):
     if message.content.startswith(config['invoker']) and\
-            message.content.split(' ')[0][1:] in base.functions and\
+            message.content.split()[0][1:] in base.functions and\
             message.author.id != client.user.id:
         plugs = {}
         try:
@@ -357,7 +357,7 @@ def git(message, client):
             message.channel,
             '{}\nhttps://github.com/Orangestar12/cacobot/blob/master/{}'.format(
                 random.choice(snark),
-                message.content.split(' ')[1]
+                message.content.split()[1]
                 )
             )
 
@@ -496,5 +496,5 @@ def remove(message, client):
     msgs = yield from client.logs_from(message.channel, 2000)
     if message.author.id == config['owner_id']:
         for x in msgs:
-            if x.author.name == message.content.split(' ')[1]:
+            if x.author.name == message.content.split()[1]:
                 yield from client.delete_message(x)

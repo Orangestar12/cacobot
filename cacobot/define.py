@@ -23,7 +23,7 @@ def define(message, client, *args, **kwargs):
     if message.content.strip()[1:] == 'define':
         yield from client.send_message(message.channel, '{}: Please provide the word you would like to get the definition from Wiktionary from.'.format(message.author.mention))
     else:
-        definition = message.content.split(' ', 1)[1].lower() # I'm pretty sure all Wiktionary pages are lowercase.
+        definition = message.content.split(None, 1)[1].lower() # I'm pretty sure all Wiktionary pages are lowercase.
         encoded = urllib.parse.quote(definition, safe='')
 
         try:
@@ -128,7 +128,7 @@ def urbdef(message, client, *args, **kwargs):
     if message.content.strip()[1:] == 'urbdef':
         yield from client.send_message(message.channel, '{}: Please provide the word you would like to get the definition from Urban Dictionary from.'.format(message.author.mention))
     else:
-        definition = message.content.split(' ', 1)[1].lower()
+        definition = message.content.split(None, 1)[1].lower()
         encoded = urllib.parse.quote(definition, safe='')
 
         try:

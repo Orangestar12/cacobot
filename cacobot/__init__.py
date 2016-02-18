@@ -12,7 +12,6 @@ import cacobot.tags as tags
 import cacobot.changes as changes
 
 #useful funcs
-import cacobot.log as log
 import cacobot.define as define
 import cacobot.moderation as moderation
 import cacobot.youtube as youtube
