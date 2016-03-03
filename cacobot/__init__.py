@@ -9,7 +9,6 @@ import cacobot.help as dochelp # help is reserved.
 #recall/database
 import cacobot.quote as quote
 import cacobot.tags as tags
-import cacobot.changes as changes
 
 #useful funcs
 import cacobot.define as define
