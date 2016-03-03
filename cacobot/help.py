@@ -1,5 +1,6 @@
 import cacobot.base as base
 import inspect # To pretty-print docstrings
+from random import choice # for random emojis
 
 @base.cacofunc
 async def help(message, client, *args, **kwargs):
@@ -68,3 +69,35 @@ async def welcome(message, client, *args, **kwargs):
 
 # If you're taking the senic tour of the code, you're free to look around as you
 # please from this point on, though I recommend checking out configs/config.json
+
+# This list is at the top so you can easily change it. The first parameter of
+# the list is a server name: Use 'all' to send to all servers, or type a server
+# name to make that server the only one that can see that change.
+# change_list = [
+#     ['all', 'This command is deprecated.']
+# ]
+
+# There's a few more emojis I could use for bullets, but these stuck out the most to me.
+# emojis = [':black_small_square:', ':small_blue_diamond:', ':small_orange_diamond:', ':small_red_triangle:']
+
+@base.cacofunc
+async def changes(message, client, *args, **kwargs):
+    '''
+    **.changes**
+    Displays the most recent CacoBot changes.
+    *This command is deprecated.*
+    *Example: `.changes`*
+    '''
+    await client.send_message(message.channel, '{}: This command is deprecated. For most recent changes, check out the commits on the CacoBot GitHub.\nhttps://github.com/Orangestar12/cacobot/commits/master')
+
+    # printChanges = '{}: **Latest Changes**\n'.format(message.author.mention)
+    #
+    # for x in change_list:
+    #     if message.channel.is_private:
+    #         if x[0] == 'all':
+    #             printChanges += '{} {} \n'.format(random.choice(emojis), x[1])
+    #     else:
+    #         if x[0] == 'all' or message.server.name == x[0]:
+    #             printChanges += '{} {} \n'.format(random.choice(emojis), x[1])
+    #
+    # await client.send_message(message.channel, printChanges)
