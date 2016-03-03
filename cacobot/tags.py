@@ -19,7 +19,7 @@ with open('configs/config.json') as data:
     config = json.load(data)
 
 @base.cacofunc
-def tag(message, client):
+async def tag(message, client):
     '''
     **.tag** <create | delete | edit | rename | gift | list | *tag id*> [mine | *content* | *tag id*] [*content* | *new id* | *new content* | *mention*]
     Allows you to manage tags.
@@ -66,7 +66,7 @@ def tag(message, client):
 
             if cmd == 'create':
                 if params[1] in tags:
-                    yield from client.send_message(message.channel, ':no_entry_sign: The tag {} already exists. (It looks like this:)\n{}'.format(params[1], tags[params[1]]['tag']))
+                    await client.send_message(message.channel, ':no_entry_sign: The tag {} already exists. (It looks like this:)\n{}'.format(params[1], tags[params[1]]['tag']))
                 else:
                     tags[params[1]] = {
                         'tag': params[2],
@@ -76,36 +76,36 @@ def tag(message, client):
                         tags[params[1]]['server'] = message.server.id
                     else:
                         tags[params[1]]['server'] = 'None'
-                    yield from client.send_message(message.channel, ':heavy_check_mark: Successfully created the tag `{}`.'.format(params[1]))
+                    await client.send_message(message.channel, ':heavy_check_mark: Successfully created the tag `{}`.'.format(params[1]))
 
             elif cmd == 'delete':
                 if params[1] in tags:
                     if message.author.id == tags[params[1]]['owner'] or (not message.channel.is_private and message.channel.permissions_for(message.author).manage_roles and message.server.id == tags[params[1]]['server']):
                         tags.pop(params[1])
-                        yield from client.send_message(message.channel, ':heavy_check_mark: Successfully deleted the tag `{}`.'.format(params[1]))
+                        await client.send_message(message.channel, ':heavy_check_mark: Successfully deleted the tag `{}`.'.format(params[1]))
                     else:
                         if tags[params[1]]['owner'] == 'None':
-                            yield from client.send_message(message.channel, '{} This tag is **orphaned**. You can claim ownership with `.tag claim {}`'.format(random.choice([':boy:', ':girl:']), params[1]))
+                            await client.send_message(message.channel, '{} This tag is **orphaned**. You can claim ownership with `.tag claim {}`'.format(random.choice([':boy:', ':girl:']), params[1]))
                         else:
-                            yield from client.send_message(message.channel, ':no_entry_sign: You do not have permission to modify this tag.')
+                            await client.send_message(message.channel, ':no_entry_sign: You do not have permission to modify this tag.')
                 else:
-                    yield from client.send_message(message.channel, ':no_entry_sign: The tag `{}` could not be found.'.format(params[1]))
+                    await client.send_message(message.channel, ':no_entry_sign: The tag `{}` could not be found.'.format(params[1]))
 
             elif cmd == 'gift':
                 if params[1] in tags:
                     if tags[params[1]]['owner'] == message.author.id:
                         if message.mentions:
                             tags[params[1]]['owner'] = message.mentions[0].id
-                            yield from client.send_message(message.channel, ':heart: {}: {} has gifted you the tag `{}`.'.format(message.mentions[0].mention, message.author.mention, params[1]))
+                            await client.send_message(message.channel, ':heart: {}: {} has gifted you the tag `{}`.'.format(message.mentions[0].mention, message.author.mention, params[1]))
                         else:
-                            yield from client.send_message(message.channel, ':no_entry_sign: You did not specify a user to gift the tag to.')
+                            await client.send_message(message.channel, ':no_entry_sign: You did not specify a user to gift the tag to.')
                     else:
                         if tags[params[1]]['owner'] == 'None':
-                            yield from client.send_message(message.channel, '{} This tag is **orphaned**. You can claim ownership with `.tag claim {}`'.format(random.choice([':boy:', ':girl:']), params[1]))
+                            await client.send_message(message.channel, '{} This tag is **orphaned**. You can claim ownership with `.tag claim {}`'.format(random.choice([':boy:', ':girl:']), params[1]))
                         else:
-                            yield from client.send_message(message.channel, ':no_entry_sign: You do not have permission to modify this tag.')
+                            await client.send_message(message.channel, ':no_entry_sign: You do not have permission to modify this tag.')
                 else:
-                    yield from client.send_message(message.channel, ':no_entry_sign: The tag `{}` could not be found.'.format(params[1]))
+                    await client.send_message(message.channel, ':no_entry_sign: The tag `{}` could not be found.'.format(params[1]))
 
             elif cmd == 'list':
                 if len(params) > 1:
@@ -147,7 +147,7 @@ def tag(message, client):
                         with urllib.request.urlopen(req) as response:
                             api_response = response.read().decode("utf-8")
 
-                        yield from client.send_message(message.author, api_response)
+                        await client.send_message(message.author, api_response)
                     elif params[1] == 'orphaned':
                         lst = 'These tags have no owner and can be claimed:\n\n'
 
@@ -169,7 +169,7 @@ def tag(message, client):
                         with urllib.request.urlopen(req) as response:
                             api_response = response.read().decode("utf-8")
 
-                        yield from client.send_message(message.author, api_response)
+                        await client.send_message(message.author, api_response)
                     elif params[1] == 'all':
                         lst = 'Here\'s a list of all the tags I know.\n\n'
 
@@ -233,10 +233,10 @@ def tag(message, client):
 
                         if mv:
                             if orph:
-                                yield from client.send_message(message.channel, 'I automatically moved {} tags into DMs. Of them, {} were orphaned.'.format(mv, orph))
+                                await client.send_message(message.channel, 'I automatically moved {} tags into DMs. Of them, {} were orphaned.'.format(mv, orph))
                             else:
-                                yield from client.send_message(message.channel, 'I automatically moved {} tags into DMs.'.format(mv))
-                        yield from client.send_message(message.author, api_response)
+                                await client.send_message(message.channel, 'I automatically moved {} tags into DMs.'.format(mv))
+                        await client.send_message(message.author, api_response)
                 else:
                     if message.channel.is_private:
                         lst = 'Here\'s a list of all the tags created in direct messages with me.\n\n'
@@ -265,34 +265,34 @@ def tag(message, client):
                     with urllib.request.urlopen(req) as response:
                         api_response = response.read().decode("utf-8")
 
-                    yield from client.send_message(message.author, api_response)
+                    await client.send_message(message.author, api_response)
 
             elif cmd == 'edit':
                 if params[1] in tags:
                     if tags[params[1]]['owner'] == message.author.id:
                         tags[params[1]]['tag'] = params[2]
-                        yield from client.send_message(message.channel, ':heavy_check_mark: Successfully edited the tag `{}`.'.format(params[1]))
+                        await client.send_message(message.channel, ':heavy_check_mark: Successfully edited the tag `{}`.'.format(params[1]))
                     else:
                         if tags[params[1]]['owner'] == 'None':
-                            yield from client.send_message(message.channel, '{} This tag is **orphaned**. You can claim ownership with `.tag claim {}`'.format(random.choice([':boy:', ':girl:']), params[1]))
+                            await client.send_message(message.channel, '{} This tag is **orphaned**. You can claim ownership with `.tag claim {}`'.format(random.choice([':boy:', ':girl:']), params[1]))
                         else:
-                            yield from client.send_message(message.channel, ':no_entry_sign: You do not have permission to modify this tag.')
+                            await client.send_message(message.channel, ':no_entry_sign: You do not have permission to modify this tag.')
                 else:
-                    yield from client.send_message(message.channel, ':no_entry_sign: The tag `{}` could not be found.'.format(params[1]))
+                    await client.send_message(message.channel, ':no_entry_sign: The tag `{}` could not be found.'.format(params[1]))
 
             elif cmd == 'orphan':
                 if params[1] in tags:
                     if tags[params[1]]['owner'] == message.author.id:
                         tags[params[1]]['owner'] = 'None'
                         tags[params[1]]['server'] = 'None'
-                        yield from client.send_message(message.channel, '{} You have orphaned the tag `{}`.'.format(random.choice([':boy:', ':girl:']), params[1]))
+                        await client.send_message(message.channel, '{} You have orphaned the tag `{}`.'.format(random.choice([':boy:', ':girl:']), params[1]))
                     else:
                         if tags[params[1]]['owner'] == 'None':
-                            yield from client.send_message(message.channel, '{} This tag is **orphaned**. You can claim ownership with `.tag claim {}`'.format(random.choice([':boy:', ':girl:']), params[1]))
+                            await client.send_message(message.channel, '{} This tag is **orphaned**. You can claim ownership with `.tag claim {}`'.format(random.choice([':boy:', ':girl:']), params[1]))
                         else:
-                            yield from client.send_message(message.channel, ':no_entry_sign: You do not have permission to modify this tag.')
+                            await client.send_message(message.channel, ':no_entry_sign: You do not have permission to modify this tag.')
                 else:
-                    yield from client.send_message(message.channel, ':no_entry_sign: The tag `{}` could not be found.'.format(params[1]))
+                    await client.send_message(message.channel, ':no_entry_sign: The tag `{}` could not be found.'.format(params[1]))
 
             elif cmd == 'claim':
                 if params[1] in tags:
@@ -302,11 +302,11 @@ def tag(message, client):
                             tags[params[1]]['server'] = message.server.id
                         else:
                             tags[params[1]]['server'] = 'None'
-                        yield from client.send_message(message.channel, ':children_crossing: You have claimed the tag `{}`.'.format(params[1]))
+                        await client.send_message(message.channel, ':children_crossing: You have claimed the tag `{}`.'.format(params[1]))
                     else:
-                        yield from client.send_message(message.channel, ':no_entry_sign: This tag is owned by <@{}>.'.format(tags[params[1]]['owner']))
+                        await client.send_message(message.channel, ':no_entry_sign: This tag is owned by <@{}>.'.format(tags[params[1]]['owner']))
                 else:
-                    yield from client.send_message(message.channel, ':no_entry_sign: The tag `{}` could not be found.'.format(params[1]))
+                    await client.send_message(message.channel, ':no_entry_sign: The tag `{}` could not be found.'.format(params[1]))
 
         elif cmd == 'rename':
             p = message.content.split(None, 1)[1]
@@ -319,14 +319,14 @@ def tag(message, client):
             if params[1] in tags:
                 if tags[params[1]]['owner'] == message.author.id:
                     tags[params[2]] = tags.pop(params[1])
-                    yield from client.send_message(message.channel, ':heavy_check_mark: Successfully renamed the tag `{}` to `{}`.'.format(params[1], params[2]))
+                    await client.send_message(message.channel, ':heavy_check_mark: Successfully renamed the tag `{}` to `{}`.'.format(params[1], params[2]))
                 else:
                     if tags[params[1]]['owner'] == 'None':
-                        yield from client.send_message(message.channel, '{} This tag is **orphaned**. You can claim ownership with `.tag claim {}`'.format(random.choice([':boy:', ':girl:']), params[1]))
+                        await client.send_message(message.channel, '{} This tag is **orphaned**. You can claim ownership with `.tag claim {}`'.format(random.choice([':boy:', ':girl:']), params[1]))
                     else:
-                        yield from client.send_message(message.channel, ':no_entry_sign: You do not have permission to modify this tag.')
+                        await client.send_message(message.channel, ':no_entry_sign: You do not have permission to modify this tag.')
             else:
-                yield from client.send_message(message.channel, ':no_entry_sign: The tag `{}` could not be found.'.format(params[1]))
+                await client.send_message(message.channel, ':no_entry_sign: The tag `{}` could not be found.'.format(params[1]))
 
         else:
             p = message.content.split(None, 1)[1]
@@ -338,7 +338,7 @@ def tag(message, client):
 
 
             if cmd in tags:
-                yield from client.send_message(message.channel, tags[cmd]['tag'])
+                await client.send_message(message.channel, tags[cmd]['tag'])
             else:
                 if len(params) > 1:
                     tags[params[0]] = {
@@ -349,13 +349,13 @@ def tag(message, client):
                         tags[params[0]]['server'] = message.server.id
                     else:
                         tags[params[0]]['server'] = 'None'
-                    yield from client.send_message(message.channel, ':heavy_check_mark: Successfully created the tag `{}`.'.format(params[0]))
+                    await client.send_message(message.channel, ':heavy_check_mark: Successfully created the tag `{}`.'.format(params[0]))
 
                 else:
-                    yield from client.send_message(message.channel, ':no_entry_sign: The tag {} could not be found.'.format(cmd))
+                    await client.send_message(message.channel, ':no_entry_sign: The tag {} could not be found.'.format(cmd))
 
         #re-save tags.json
         with open('configs/tags.json', 'w') as file:
             json.dump(tags, file, indent=4)
     except IndexError:
-        yield from client.send_message(message.channel, "If you need help on using this command, call `.help tag`!")
+        await client.send_message(message.channel, "If you need help on using this command, call `.help tag`!")

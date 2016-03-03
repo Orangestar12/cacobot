@@ -8,7 +8,7 @@ import cacobot.base as base
 # No comments. Fuck you.
 
 @base.cacofunc
-def goatnick(message, client):
+async def goatnick(message, client):
     '''
     **.goatnick**
     *This command was created for the Undertale server.*
@@ -49,13 +49,35 @@ def goatnick(message, client):
         'Out Of The Womb, Into The Tomb',
         'No Longer Married Cause Some Kids Got Buried',
         'My Hobbies Include Child Murder',
-        'Big Sad Goat Dad'
+        'Big Sad Goat Dad',
+        'T&T TNT',
+        'A child a day keeps the wife away',
+        'If it\'s under eleven, I\'ll send them to heaven',
+        'The Undertale Underage Undertaker',
+        'The Kindergarten Harvester',
+        'The Daycare Decimator',
+        'Nipper Annihilator',
+        'Moppet Mopper-Upper',
+        'I\'ll Fix Yah With Asphyxia',
+        'Best Child Murderer \'9X',
+        'Alone in bed \'cause some kids are dead',
+        'Adam Lanza\'s number one Fan-za',
+        'The chiller child killer',
+        'Half-pint Holocaust',
+        'Fell into my cave, right into the grave',
+        'Better at Infanticide than Isaac\'s mom',
+        'Where Flowey gets his kill skill from',
+        'Bury the youngster six feet under',
+        'Dunks the little punks',
+        'No MERCY for Li\'l Percy',
+        'My kids an hero\'ed so I went 6/0',
+        'I don\'t have a car in my garage'
     ]
-    yield from client.send_message(message.channel, '{}: Asgore "{}" Dreemurr'.format(message.author.mention, random.choice(asgore_nicks)))
+    await client.send_message(message.channel, '{}: Asgore "{}" Dreemurr'.format(message.author.mention, random.choice(asgore_nicks)))
 goatnick.server = 'Undertale'
 
 @base.cacofunc
-def summon(message, client):
+async def summon(message, client):
     '''
     **.summon** [*monster 1*] [*monster 2*]...
     *This command was created for the Undertale server.*
@@ -142,7 +164,7 @@ def summon(message, client):
 
         msg += '\n```'
 
-        yield from client.send_message(message.channel, msg)
+        await client.send_message(message.channel, msg)
 
     elif message.content.strip()[1:] == 'summon list':
         if message.channel.is_private or message.channel.name not in ['torielshome', 'fanworks', 'workshop']:
@@ -150,7 +172,7 @@ def summon(message, client):
 
         monsters.update(hidden)
 
-        yield from client.send_message(message.channel, 'List of Monster Codes:\n```\n{}\n```'.format(' '.join(sorted(list(monsters)))))
+        await client.send_message(message.channel, 'List of Monster Codes:\n```\n{}\n```'.format(' '.join(sorted(list(monsters)))))
 
     else:
         cmd = message.content.split()[1:]
@@ -272,13 +294,13 @@ def summon(message, client):
                 msg.append(msg.pop(0))
 
         if msg:
-            yield from client.send_message(message.channel, '```\n{}\n```'.format('\n'.join(msg)))
+            await client.send_message(message.channel, '```\n{}\n```'.format('\n'.join(msg)))
         else:
-            yield from client.send_message(message.channel, '{}: I could not find any valid monster codes in your query. Use .summon list to see them all.'.format(message.author.mention))
+            await client.send_message(message.channel, '{}: I could not find any valid monster codes in your query. Use .summon list to see them all.'.format(message.author.mention))
 summon.server = 'Undertale'
 
 @base.cacofunc
-def determinate(message, client):
+async def determinate(message, client):
     r'''
     **.determinate** [color\=*color*] [font\=*font*] <*text*>
     *This command was created for the Undertale server.*
@@ -292,10 +314,10 @@ def determinate(message, client):
 
     try:
         color = '#FFFFFF'
-        font = 'Determination Mono'
+        font = '8bitoperator'
         strokewidth = '0'
         lineheight = 36 #This is actually slightly big for the height of lines but *Shrug*
-        fontwidth = 28
+        fontwidth = 24
         precedent = 32
         width = '640'
 
@@ -485,26 +507,26 @@ def determinate(message, client):
         # requires inkscape
         subprocess.check_call(['inkscape', '-z', 'tmp.svg', '-e', 'tmp.png'])
 
-        yield from client.send_file(message.channel, 'tmp.png')
+        await client.send_file(message.channel, 'tmp.png')
 
         # Try to delete the message.
         try:
-            yield from client.delete_message(message)
+            await client.delete_message(message)
         except (discord.Forbidden, discord.HTTPException):
             # do nothing if no permission or message
             pass
 
         # send msg if wingdings
         if font == 'Wingdings':
-            yield from client.send_message(message.channel, '*{}*'.format(save))
+            await client.send_message(message.channel, '*{}*'.format(save))
 
         # send author
         if rainbow:
-            yield from client.send_message(message.channel, '*Color: {}*. \n*Sent by {}.*'.format(color, message.author.mention))
+            await client.send_message(message.channel, '*Color: {}*. \n*Sent by {}.*'.format(color, message.author.mention))
         else:
-            yield from client.send_message(message.channel, '*Sent by {}.*'.format(message.author.mention))
+            await client.send_message(message.channel, '*Sent by {}.*'.format(message.author.mention))
     except IndexError:
-        yield from client.send_message(message.channel, 'If you do not know how to use this command, call `.help determinate`!')
+        await client.send_message(message.channel, 'If you do not know how to use this command, call `.help determinate`!')
 determinate.server = 'Undertale'
 
 # You know, while I'm here, here's the StackOverflow post that has the function.
@@ -514,7 +536,7 @@ def htmlEntities(string):
     return ''.join(['&#{0};'.format(ord(char)) for char in string])
 
 @base.cacofunc
-def forebode(message, client):
+async def forebode(message, client):
     '''
     **.forebode** [*mention*]
     This is a shortcut to add the "Foreboden" role to a user. If your server has no "Foreboden" role, this will fail.
@@ -525,23 +547,23 @@ def forebode(message, client):
             foreboden = discord.utils.find(lambda m: m.name == 'Foreboden', message.server.roles)
             if foreboden:
                 for ment in message.mentions:
-                    yield from client.replace_roles(ment, foreboden)
-                    yield from client.send_message(message.channel, '{}: {} has been foreboden.'.format(message.author.mention, ment.name))
+                    await client.replace_roles(ment, foreboden)
+                    await client.send_message(message.channel, '{}: {} has been foreboden.'.format(message.author.mention, ment.name))
             else:
-                yield from client.send_message(message.channel, '{}: You must create a role named \'Foreboden\' before you can use this command.'.format(message.author.mention))
+                await client.send_message(message.channel, '{}: You must create a role named \'Foreboden\' before you can use this command.'.format(message.author.mention))
         except discord.Forbidden:
-            yield from client.send_message(message.channel, '{}: I do not have the permission to perform this command yet.'.format(message.author.mention))
+            await client.send_message(message.channel, '{}: I do not have the permission to perform this command yet.'.format(message.author.mention))
     else:
-        yield from client.send_message(message.channel, '{}: You do not have the permission to ban.'.format(message.author.mention))
+        await client.send_message(message.channel, '{}: You do not have the permission to ban.'.format(message.author.mention))
 forebode.server = 'Undertale'
 
 @base.cacofunc
-def say(message, client):
+async def say(message, client):
     '''
     **.say** [*params*]
     A shorcut to `.determinate`.
     '''
-    yield from determinate(message, client)
+    await determinate(message, client)
 
 def issublist(sl, ml):
     sublist = list(sl)
@@ -559,131 +581,7 @@ def issublist(sl, ml):
 say.server = 'Undertale'
 
 @base.cacofunc
-def ship(message, client):
-    '''
-    **.ship** [ list | main | sub | kids | questionable | ausans | encounters | fun | all ]
-    Generates a random Undertale-based ship. Provide any amount of lists from above, or use *all* to mix them all together! Use list [list] to get pm'd a list of all the monsters in that list.
-    *Example: ship main ausanses*
-    '''
-    ships = {
-        'main' : [
-            'Toriel',
-            'Asgore',
-            'Sans',
-            'Papyrus',
-            'Undyne',
-            'Alphys',
-            'Mettaton'
-        ],
-        'sub' : [
-            'Muffet',
-            'Napstablook',
-            'Dogamy',
-            'Dogaressa',
-            'Temmie',
-            'Grillby',
-            'Burgerpants',
-            'Catty',
-            'Bratty',
-            'Nice Cream Guy',
-            'RG 01',
-            'RG 02',
-            'Doggo',
-            'Snowdin Shopkeeper'
-        ],
-        'kids' : [
-            'Frisk',
-            'Chara',
-            'Asriel',
-            'Monster Kid'
-        ],
-        'questionable' : [
-            'Gaster',
-            'Flowey',
-            'All7Souls!Asriel (Edgy Asriel)',
-            'Gerson'
-        ],
-        'fun' : [
-            'The "Thaaaaaat\'s Politics!" Bear',
-            'The Crazy Bun in Grillby\'s',
-            'THE GOD OF HYPERDEATH',
-            'Lesser Dog',
-            'Greater Dog',
-            'River Person',
-            'Ruins Dummy',
-            'Mad Dummy',
-            'Annoying Dog',
-            'Teeth Monster in Grillby\'s',
-            'Snowdin Snowman',
-            'Ferry',
-            'Onionsan',
-            'Bird that carries you across a disproportionately small gap',
-            'Ragel, the "Mushroom Dance" mushroom',
-            'Heats Flamesman'
-        ],
-        'ausans' : [
-            'Outertale!Sans',
-            'Scientist!Sans',
-            'Aftertale!Sans',
-            'Core!Sans',
-            'Error!Sans',
-            'Underfell!Sans',
-            'Underswap!Sans',
-            'Sanzyfresh'
-        ],
-        'encounters' : [
-            'Froggit',
-            'Whimsun',
-            'Loox',
-            'Vegetoid',
-            'Migosp',
-            'Moldsmal',
-            'Snowdrake',
-            'Ice Cap',
-            'Gyftrot',
-            '*Jerry*',
-            'Aaron',
-            'Woshua',
-            'Moldbygg',
-            'Shyren',
-            'Vulkin',
-            'Tsunderplane',
-            'Pyrope',
-            'So Sorry',
-            'Final Froggit',
-            'Whimsalot',
-            'Astigmatism',
-            'Madjick',
-            'Knight Knight',
-            'Glyde'
-        ]
-    }
-    listToChooseFrom = []
-    try:
-        lists = message.content.strip().split()[1:]
-        if lists[0] == 'list':
-            if lists[1] in ships:
-                yield from client.send_message(message.author, ', '.join(ships[lists[1]]))
-            else:
-                yield from client.send_message(message.channel, ':no_entry_sign: Please provide a valid list id to list. You can get the lists with `.help ship`')
-        elif lists[0] == 'all':
-            for x in ships:
-                listToChooseFrom += ships[x]
-            yield from client.send_message(message.channel, '**{}** x **{}**'.format(random.choice(listToChooseFrom), random.choice(listToChooseFrom)))
-        else:
-            for x in lists:
-                if x in ships:
-                    listToChooseFrom += ships[x]
-            if listToChooseFrom:
-                yield from client.send_message(message.channel, '**{}** x **{}**'.format(random.choice(listToChooseFrom), random.choice(listToChooseFrom)))
-            else:
-                yield from client.send_message(':no_entry_sign: You did not provide enough valid lists to choose from.')
-
-    except IndexError:
-        yield from client.send_message(message.channel, ':no_entry_sign: {} You did not provide enough valid lists to choose from.'.format(message.author))
-
-@base.cacofunc
-def what(message, client):
+async def what(message, client):
     '''
     **.What** <was his name again?>
     Generates a name for uh... Fire... Hotsbro... You know, the guy from Hotland who was fire-based.
@@ -887,7 +785,7 @@ def what(message, client):
         guess = random.choice(guesses)
         heats = random.choice(heatsflames)
         if heats[0] == '~':
-            yield from client.send_message(message.channel, '{}**{}**{}'.format(
+            await client.send_message(message.channel, '{}**{}**{}'.format(
                 guess[0],
                 heats[1:],
                 guess[1]
@@ -898,9 +796,9 @@ def what(message, client):
                 flames = random.choice(heatsflames)
             man = random.choice(person)
             if '{} {}{}'.format(heats, flames, man) == 'Heats Flamesman':
-                yield from client.send_message(message.channel, 'Wait, I actually know it! His name was *most definitely* **Heats Flamesman**!')
+                await client.send_message(message.channel, 'Wait, I actually know it! His name was *most definitely* **Heats Flamesman**!')
             else:
-                yield from client.send_message(message.channel, '{}**{} {}{}**{}'.format(
+                await client.send_message(message.channel, '{}**{} {}{}**{}'.format(
                     guess[0],
                     heats,
                     flames,

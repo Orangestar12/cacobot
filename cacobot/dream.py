@@ -14,7 +14,7 @@ ownerperm.manage_messages = True
 ownerperm.manage_roles = True
 
 @base.cacofunc
-def journal(message, client, *args, **kwargs):
+async def journal(message, client, *args, **kwargs):
     '''
     **.journal**
     *This command was created for the Dream Journals server.*
@@ -37,9 +37,9 @@ def journal(message, client, *args, **kwargs):
             journals.append(message.server.id)
             with open('configs/journals.json', 'w') as data:
                 json.dump(journals, data, indent=4)
-            yield from client.send_message(message.channel, ":+1: Users are now allowed to add journals to your server!")
+            await client.send_message(message.channel, ":+1: Users are now allowed to add journals to your server!")
         else:
-            yield from client.send_message(message.channel, ":no_entry_sign: You are not allowed to manage text channels in this server.")
+            await client.send_message(message.channel, ":no_entry_sign: You are not allowed to manage text channels in this server.")
     else:
         if message.server.id in journals:
             weird = False
@@ -52,16 +52,16 @@ def journal(message, client, *args, **kwargs):
                 weird = True
 
             if message.channel.permissions_for(discord.utils.get(message.server.members, id=client.user.id)).manage_channels:
-                newch = yield from client.create_channel(message.server, channel_name)
-                yield from client.edit_channel_permissions(newch, message.server.default_role, deny=everyperm)
-                yield from client.edit_channel_permissions(newch, message.author, allow=ownerperm)
+                newch = await client.create_channel(message.server, channel_name)
+                await client.edit_channel_permissions(newch, message.server.default_role, deny=everyperm)
+                await client.edit_channel_permissions(newch, message.author, allow=ownerperm)
                 if weird:
-                    yield from client.send_message(message.channel, ":warning: I had a lot of trouble trying to parse your name for your channel. Instead, I just gave you a random alphanumeric code! Your channel is {}. You should probably change the name by clicking the **⚙** next to your channel in the list.".format(newch.mention))
+                    await client.send_message(message.channel, ":warning: I had a lot of trouble trying to parse your name for your channel. Instead, I just gave you a random alphanumeric code! Your channel is {}. You should probably change the name by clicking the **⚙** next to your channel in the list.".format(newch.mention))
                 else:
-                    yield from client.send_message(message.channel, ":+1: I have successfully created a journal channel for you. Feel free to change it's name or modify the permissions on it by clicking the **⚙** next to your channel in the list.")
+                    await client.send_message(message.channel, ":+1: I have successfully created a journal channel for you. Feel free to change it's name or modify the permissions on it by clicking the **⚙** next to your channel in the list.")
             else:
-                yield from client.send_message(message.channel, ":no_entry_sign: I do not have the proper permissions to create a journal channel for you yet.")
+                await client.send_message(message.channel, ":no_entry_sign: I do not have the proper permissions to create a journal channel for you yet.")
         else:
-            yield from client.send_message(message.channel, ":no_entry_sign: This server is disallowed from making Journals. If you would like to enable it, have a moderator call `.journal activate`.")
+            await client.send_message(message.channel, ":no_entry_sign: This server is disallowed from making Journals. If you would like to enable it, have a moderator call `.journal activate`.")
 
 journal.server = 'Dream Journals'

@@ -10,7 +10,7 @@ with open('configs/config.json') as data:
 youtube = build(config['youtube']['API_SERVICE_NAME'], config['youtube']['API_VERSION'], developerKey=config['youtube']['DEVELOPER_KEY'])
 
 @base.cacofunc
-def yt(message, client, *args, **kwargs):
+async def yt(message, client, *args, **kwargs):
     '''
     **.yt** <*query*> [.results *int*]
     Searches YouTube and returns the first query. If you provide `.results` with an integer afterwards, returns the first *int* results.
@@ -49,10 +49,10 @@ def yt(message, client, *args, **kwargs):
     for video in range(0, len(vids)):
         all_videos += vids[video] + ' (Result ' + str(video + 1) + ' of ' + str(len(vids)) + ' from YouTube) \n\n'
 
-    yield from client.send_message(message.channel, all_videos)
+    await client.send_message(message.channel, all_videos)
 
-@base.cacofunc
-def ytadd(message, client, *args, **kwargs):
+#@base.cacofunc
+async def ytadd(message, client, *args, **kwargs):
     '''
     **.ytadd** [*query*]
     *This command was created for the /g/ discord server.*
@@ -70,25 +70,25 @@ def ytadd(message, client, *args, **kwargs):
     ).execute()
 
     for search_result in search_response.get('items', []):
-        yield from client.send_message(message.channel, 'I searched YouTube and got **{}**. Shall I add this video to the queue? (Reply **Y**es, **N**o, or **A**bort).\nhttp://youtu.be/{}'.format(search_result['snippet']['title'], search_result['id']['videoId']))
+        await client.send_message(message.channel, 'I searched YouTube and got **{}**. Shall I add this video to the queue? (Reply **Y**es, **N**o, or **A**bort).\nhttp://youtu.be/{}'.format(search_result['snippet']['title'], search_result['id']['videoId']))
 
         success = False
         quit = False
 
         while not success:
-            response = yield from client.wait_for_message(author=message.author, channel=message.channel)
+            response = await client.wait_for_message(author=message.author, channel=message.channel)
             if response.content.lower() == 'yes' or response.content.lower() == 'y':
-                yield from client.send_message(message.channel, '$add http://www.youtube.com/watch?v={}'.format(search_result['id']['videoId']))
+                await client.send_message(message.channel, '$add http://www.youtube.com/watch?v={}'.format(search_result['id']['videoId']))
                 success = True
                 quit = True
             elif response.content.lower() == 'no' or response.content.lower() == 'n':
                 success = True
             elif response.content.lower() == 'abort' or response.content.lower() == 'a':
-                yield from client.send_message(message.channel, 'Okay.')
+                await client.send_message(message.channel, 'Okay.')
                 success = True
                 quit = True
             else:
-                yield from client.send_message(message.channel, 'Please say **Y**es, **N**o, or **A**bort.')
+                await client.send_message(message.channel, 'Please say **Y**es, **N**o, or **A**bort.')
 
         if quit:
             break

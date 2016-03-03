@@ -23,7 +23,7 @@ import cacobot.stats as stats
 #server-specific
 import cacobot.doom as doom
 import cacobot.undertale as undertale
-import cacobot.utau as utau
+import cacobot.fandoms as fandoms
 import cacobot.dream as dream
 import cacobot.woah as woah
 import cacobot.chan as chan

@@ -1,11 +1,14 @@
+import math
+import random
+import subprocess
+
 import cacobot.base as base
-import math, random, subprocess
 
 # Math, for polar2cartesian
 # Random to get random colors and such
 # Subprocess to call imagemagick (convert)
 
-def htmlEntities( string ):
+def htmlEntities(string):
     return ''.join(['&#{0};'.format(ord(char)) for char in string])
 
 # These are Discord's role colors.
@@ -47,7 +50,7 @@ def polar2cartesian(centerX, centerY, radius, angleInDegrees):
     return x, y
 
 @base.cacofunc
-def stats(message, client, *args, **kwargs):
+async def stats(message, client):
     '''
     **.stats**
     Generates a pie chart, representing the last 1000 messages in this channel. Each wedge represents how many messages were sent by the person as a percentage.
@@ -55,8 +58,10 @@ def stats(message, client, *args, **kwargs):
     '''
 
     #Get the most recent logs
-    history = yield from client.logs_from(message.channel, 1000)
-    users = { 'totalmsgcount' : 0 }
+    history = []
+    async for msg in client.logs_from(message.channel, 1000):
+        history.append(msg)
+    users = {'totalmsgcount' : 0}
 
     #Determine amount of messages sent by each user and total messages.
     #Save message content to be compared later.
@@ -87,7 +92,7 @@ def stats(message, client, *args, **kwargs):
             #Prepare a line to be inserted into an SVG file to create a pie chart.
             users[usr]['angle'] = users[usr]['percentdecimal'] * 360
 
-            usrToPrint = htmlEntities(str(usr).replace('', '').replace('\00',''));
+            usrToPrint = htmlEntities(str(usr).replace('', '').replace('\00', ''))
             if len(usr) > 35:
                 usrToPrint = str(usr)[:33] + '...'
 
@@ -119,7 +124,7 @@ def stats(message, client, *args, **kwargs):
         data.write(result)
 
     subprocess.check_call(['inkscape', '-z', 'tmp.svg', '-e', 'tmp.png'])
-    yield from client.send_file(message.channel, 'tmp.png')
+    await client.send_file(message.channel, 'tmp.png')
 
     '''
     If you want to output directly to the channel as messages, use this:

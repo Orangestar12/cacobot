@@ -2,7 +2,7 @@ import random
 import cacobot.base as base
 
 @base.postcommand
-def woah(message, client):
+async def woah(message, client):
     c = message.content.lower()
     send = None
     if message.author.id != client.user.id:
@@ -20,15 +20,15 @@ def woah(message, client):
 
     if send:
         if random.randint(1, 100) == 100:
-            yield from client.send_message(message.channel, send)
+            await client.send_message(message.channel, send)
 
 @base.postcommand
-def wow(message, client):
+async def wow(message, client):
     c = message.content.lower()
     if message.author.id != client.user.id:
         if c == 'wow' or c == 'wow.':
             if random.randint(1, 100) == 100:
-                yield from client.send_message(
+                await client.send_message(
                     message.channel,
                     'Ethan, great moves. Keep it up. I\'m proud of you.'
                     )

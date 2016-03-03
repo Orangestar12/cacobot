@@ -12,7 +12,7 @@ with open('configs/config.json') as data:
 mention_syntax = re.compile(r'(<@([0-9]*?)>)')
 
 @base.cacofunc
-def quote(message, client):
+async def quote(message, client):
     '''
     **.quote** [ *id* | *phrase to search* ]
     Spews a random quote from my database. If *id* is provided, spews the quote with that id. If *phrase to search* is provided, searches my database for quotes containing that phrase, lists every quote with that phrase, and then spews a random one from that list.
@@ -26,7 +26,7 @@ def quote(message, client):
         with open('configs/quotes.json') as qdata:
             quotes = json.load(qdata)
     except FileNotFoundError:
-        yield from client.send_message(message.channel, 'I do not have any quotes to puke.')
+        await client.send_message(message.channel, 'I do not have any quotes to puke.')
         return
 
     if len(message.content.strip().split()) > 1:
@@ -34,7 +34,7 @@ def quote(message, client):
             r = int(message.content.split()[1])
         except ValueError:
             if re.match(r'[0-9]*\.[0-9]*', message.content.split(None, 1)[1]):
-                yield from client.send_message(
+                await client.send_message(
                     message.channel,
                     '2:23 AM - 🎮 Mr McPowned: @KeksGiven to be fair, he can\'t store floats\n2:23 AM - 🎮 Mr McPowned: And if he did, I\'d call him retarded'
                     )
@@ -45,7 +45,7 @@ def quote(message, client):
             msgslist = [i for i, x in enumerate(quotes) if message.content.split(None, 1)[1].lower() in x[0].lower()]
 
             if not msgslist:
-                yield from client.send_message(
+                await client.send_message(
                     message.channel,
                     'I did not find any quotes with "{}" in them.'.format(
                         message.content.split(None, 1)[1].lower()
@@ -64,12 +64,12 @@ def quote(message, client):
             random.choice(numburs),
             r, quotes[r-1][0]
             )
-        yield from client.send_message(message.channel, msg)
+        await client.send_message(message.channel, msg)
         return
 
     if r == 0:
         qindex = random.randint(0, len(quotes))
-        yield from client.send_message(
+        await client.send_message(
             message.channel, '*This is quote {}{}:*\n{}'.format(
                 random.choice(numburs),
                 qindex,
@@ -77,23 +77,23 @@ def quote(message, client):
                 )
             )
     elif r < 1:
-        yield from client.send_message(
+        await client.send_message(
             message.channel,
             'You probably think you\'re really clever. Specify a *positive* quote index next time. Better yet: specify none at all for a random quote.'
             )
     elif r > len(quotes):
-        yield from client.send_message(
+        await client.send_message(
             message.channel,
             ':no_entry_sign: You have specified a quote index that is too high. I only have {} quotes to puke.'.format(
                 len(quotes)
             )
         )
     else:
-        yield from client.send_message(message.channel, quotes[r-1][0])
+        await client.send_message(message.channel, quotes[r-1][0])
 quote.server = 'Quotes'
 
 @base.cacofunc
-def addquote(message, client):
+async def addquote(message, client):
     '''
     **addquote** <*content*>
     Add a quote to my quote database.
@@ -106,15 +106,13 @@ def addquote(message, client):
     # Complain about cheeky asses.
 
     if cmd.startswith('.addquote'):
-        yield from client.send_message(
+        await client.send_message(
             message.channel,
-            '{}: Hah hah, very funny, but that wouldn\'t work anyway.'.format(
-                message.author
-                )
+            '{}: Hah hah, very funny, but that wouldn\'t work anyway.'.format(message.author)
             )
 
     elif cmd.startswith('.quote'):
-        yield from client.send_message(
+        await client.send_message(
             message.channel,
             '{}: Not only would that not work, but that\'s really annoying. Stop that shit.'.format(message.author)
             )
@@ -159,7 +157,7 @@ def addquote(message, client):
                 json.dump(quotes, z, indent=4)
 
             if cmd.startswith('http://') or cmd.startswith('https://'):
-                yield from client.send_message(
+                await client.send_message(
                     message.channel,
                     '{}: :warning: I have added that quote successfully as number {}, but couldn\'t help noticing it starts with a link. If this is an image of a Discord chat log, consider providing your quotes as text next time, or using my `.log` function.'.format(
                         message.author.mention,
@@ -167,7 +165,7 @@ def addquote(message, client):
                         )
                     )
             else:
-                yield from client.send_message(
+                await client.send_message(
                     message.channel,
                     '{}: :heavy_check_mark: Successfully added that to my quote database as quote number {}.'.format(
                         message.author,
@@ -175,13 +173,13 @@ def addquote(message, client):
                         )
                     )
         else:
-            yield from client.send_message(
+            await client.send_message(
                 message.channel,
                 '{}: :no_entry_sign: I already have that exact quote in my database.'.format(message.author))
 addquote.server = 'Quotes'
 
 @base.cacofunc
-def delquote(message, client):
+async def delquote(message, client):
     '''
     **.delquote** [*index*]
     Removes a quote from the database. You can only remove quotes you have created. Specify no index to try to remove the last quote.
@@ -194,7 +192,7 @@ def delquote(message, client):
         try:
             r = int(message.content.split()[1])
         except ValueError:
-            yield from client.send_message(
+            await client.send_message(
                 message.channel,
                 ':no_entry_sign: Please specify an integer next time.'
                 )
@@ -206,7 +204,7 @@ def delquote(message, client):
         with open('configs/quotes.json') as z:
             quotes = json.load(z)
     except FileNotFoundError:
-        yield from client.send_message(message.channel, 'I do not have any quotes to remove.')
+        await client.send_message(message.channel, 'I do not have any quotes to remove.')
         cont = False
 
     if cont:
@@ -218,7 +216,7 @@ def delquote(message, client):
             if r == 0:
                 r = len(quotes)+1
 
-            yield from client.send_message(
+            await client.send_message(
                 message.channel,
                 ':heavy_check_mark: {}: Quote #{} has been removed.'.format(
                     message.author.name,
@@ -226,20 +224,20 @@ def delquote(message, client):
                 )
             )
         else:
-            yield from client.send_message(
+            await client.send_message(
                 message.channel,
                 ':no_entry_sign: You did not create that quote.'
                 )
 delquote.server = 'Quotes'
 
 @base.cacofunc
-def parsequote(message, client):
+async def parsequote(message, client):
     '''
     **.parsequote**
     This command is under renovations.
     *Example: `.parsequote`*
     '''
-    yield from client.send_messag(message.channel, ':no_entry_sign: This command is under renovations.')
+    await client.send_messag(message.channel, ':no_entry_sign: This command is under renovations.')
 parsequote.server = 'Quotes'
 
 # Logging
@@ -268,7 +266,7 @@ def date_format(timestamp):
         )
 
 @base.cacofunc
-def log(message, client):
+async def log(message, client):
     '''
     **.log** [*req*]
     Sends the last 20 messages in a channel to you in a direct message in a nice, copy-pastable format. You can specify [*req*] to get a specific number of messages. (This is subject to limitations emposed by the API and the bot maintainer's preference.)
@@ -284,7 +282,7 @@ def log(message, client):
 
     #Do not continue if requests is over the limit.
     if req > config['log_request_limit']:
-        yield from client.send_message(
+        await client.send_message(
             message.channel,
             '{}: That\'s way too many messages to send, as decreed by my creator. Acceptable amounts end at {}.'.format(
                 message.author,
@@ -294,15 +292,20 @@ def log(message, client):
         return
 
     if req < 1:
-        yield from client.send_message(message.channel, '{}: Very clever, smart ass. Type a whole number next time.'.format(message.author.mention))
+        await client.send_message(message.channel, '{}: Very clever, smart ass. Type a whole number next time.'.format(message.author.mention))
         return
 
     requests = int(req) + 1 #Because logs_from will get the last message (which will be ".logs x"), we anticipate that here.
 
     #Yes you're reading that right. We get an iterator, convert it to a list, reverse it, and then convert THAT to a list so we can len() it.
     #This is because len() doesn't work on iterators, and logs_from returns messages starting from the newest one.
-    msg_iter = yield from client.logs_from(message.channel, requests)
-    messages = list(reversed(list(msg_iter)))
+
+    #Thanks to async for we have to do this manually
+    msg_iter = []
+    async for x in client.logs_from(message.channel, requests):
+        msg_iter.append(x)
+
+    messages = list(reversed(msg_iter))
 
     # This string will hold the log we are going to send in each message, and will be blanked after each message.
     msgToSend = ''
@@ -346,15 +349,15 @@ def log(message, client):
             if len(msgToSend + msgToAdd) < 2000:
                 msgToSend += msgToAdd
             else:
-                yield from client.send_message(message.author, msgToSend)
+                await client.send_message(message.author, msgToSend)
                 msgToSend = msgToAdd
-                yield from asyncio.sleep(5)
+                await asyncio.sleep(5)
 
             if iteration == len(messages) - 2:
-                yield from client.send_message(message.author, msgToSend)
+                await client.send_message(message.author, msgToSend)
 
 @base.cacofunc
-def logquote(message, client):
+async def logquote(message, client):
     '''
     **.logquote** [*num*] [*slice*]
     Takes the last *num* quotes, and then adds them to the Quotes list, after OKaying it with you. If *slice* is provided, the quote will take the last *num* messages up to the last *slice* messages. For example, `.logquote 4 2` would quote the 4th to last, 3rd to last, and 2nd to last messages.
@@ -370,7 +373,7 @@ def logquote(message, client):
                 try:
                     s = int(message.content.split()[2])
                 except ValueError:
-                    yield from client.send_message(
+                    await client.send_message(
                         message.channel,
                         'Please provide an integer to slice.'
                     )
@@ -378,14 +381,17 @@ def logquote(message, client):
             else:
                 s = 1
         except ValueError:
-            yield from client.send_message(message.channel, 'Please provide an integer to log.')
+            await client.send_message(message.channel, 'Please provide an integer to log.')
             return
     else:
-        yield from client.send_message(message.channel, 'Please provide a numeric index or slice.')
+        await client.send_message(message.channel, 'Please provide a numeric index or slice.')
         return
 
-    messages = yield from client.logs_from(message.channel, r + 1)
-    messages = list(reversed(list(messages)))
+
+    msg_iter = []
+    async for x in client.logs_from(message.channel, r + 1):
+        msg_iter.append(x)
+    messages = list(reversed(list(msg_iter)))
 
     msgToAdd = ''
 
@@ -421,24 +427,24 @@ def logquote(message, client):
                     )
 
     if not msgToAdd:
-        yield from client.send_message(message.channel, ':no_entry_sign: I ended up logging nothing, so I added nothing to my quotes.')
+        await client.send_message(message.channel, ':no_entry_sign: I ended up logging nothing, so I added nothing to my quotes.')
         return
 
     if len(msgToAdd) >= 1897:
-        yield from client.send_message(message.channel, ':no_entry_sign: There is too much text for me to log here.')
+        await client.send_message(message.channel, ':no_entry_sign: There is too much text for me to log here.')
         return
 
-    yield from client.send_message(message.channel, 'Confirm my selection in DMs, please.')
-    yield from client.send_message(message.author, 'I have logged the following message:\n{}\nIf this looks correct to you, please respond "Yes". If not, respond "No."'.format(msgToAdd))
+    await client.send_message(message.channel, 'Confirm my selection in DMs, please.')
+    await client.send_message(message.author, 'I have logged the following message:\n{}\nIf this looks correct to you, please respond "Yes". If not, respond "No."'.format(msgToAdd))
 
     loop = True
     while loop:
-        msg = yield from client.wait_for_message(author=message.author, check=lambda msg: msg.channel.is_private)
+        msg = await client.wait_for_message(author=message.author, check=lambda msg: msg.channel.is_private)
         if msg.content.lower() == 'no':
-            yield from client.send_message(message.author, 'I have discarded that quote. My apologies.')
+            await client.send_message(message.author, 'I have discarded that quote. My apologies.')
             return
         elif msg.content.lower() != 'yes':
-            yield from client.send_message(message.author, 'Please respond either "Yes" or "No"')
+            await client.send_message(message.author, 'Please respond either "Yes" or "No"')
         else:
             loop = False
 
@@ -457,7 +463,7 @@ def logquote(message, client):
             with open('configs/quotes.json', 'w') as z:
                 json.dump(quotes, z, indent=4)
 
-            yield from client.send_message(
+            await client.send_message(
                 message.author,
                 '{}: :heavy_check_mark: Successfully added that to my quote database as quote number {}.'.format(
                     message.author,
@@ -465,7 +471,7 @@ def logquote(message, client):
                     )
                 )
 
-            yield from client.send_message(
+            await client.send_message(
                 message.channel,
                 '{}: :heavy_check_mark: Successfully added that to my quote database as quote number {}.'.format(
                     message.author,
@@ -475,7 +481,7 @@ def logquote(message, client):
 logquote.server = 'Quotes'
 
 @base.cacofunc
-def memo(message, client):
+async def memo(message, client):
     '''
     **.memo** [ all | mentions | none ]
     Manages your inclusion into the memoing system.
@@ -497,19 +503,19 @@ def memo(message, client):
         if cmd == 'all':
             if not [x for x in memos if message.author.id == x[0]]:
                 memos.append([message.author.id, 'all'])
-                yield from client.send_message(
+                await client.send_message(
                     message.author,
                     ':notebook_with_decorative_cover: You are now on the memo list and will recieve direct messages with context when you are, or everyone is, mentioned.'
                     )
             elif [x for x in memos if message.author.id == x[0] and x[1] != 'all']:
                 memos.remove([x for x in memos if message.author.id == x[0] and x[1] != 'all'][0])
                 memos.append([message.author.id, 'all'])
-                yield from client.send_message(
+                await client.send_message(
                     message.author,
                     ':notebook_with_decorative_cover: You are now on the memo list and will recieve direct messages with context when you are, or everyone is, mentioned.'
                     )
             else:
-                yield from client.send_message(
+                await client.send_message(
                     message.author,
                     ':no_entry_sign: You are already on the memo list.'
                     )
@@ -517,19 +523,19 @@ def memo(message, client):
         elif cmd == 'mentions':
             if not [x for x in memos if message.author.id == x[0]]:
                 memos.append([message.author.id, 'mentions'])
-                yield from client.send_message(
+                await client.send_message(
                     message.author,
                     ':notebook_with_decorative_cover: You are now on the memo list and will recieve direct messages with context when you are mentioned.'
                     )
             elif [x for x in memos if message.author.id == x[0] and x[1] != 'mentions']:
                 memos.remove([x for x in memos if message.author.id == x[0] and x[1] != 'mentions'][0])
                 memos.append([message.author.id, 'mentions'])
-                yield from client.send_message(
+                await client.send_message(
                     message.author,
                     ':notebook_with_decorative_cover: You are now on the memo list and will recieve direct messages with context when specifically you are mentioned.'
                     )
             else:
-                yield from client.send_message(
+                await client.send_message(
                     message.author,
                     ':no_entry_sign: You are already on the memo list.'
                     )
@@ -537,12 +543,12 @@ def memo(message, client):
         elif cmd == 'remove':
             if [x for x in memos if message.author.id == x[0]]:
                 memos.remove([x for x in memos if message.author.id == x[0]][0])
-                yield from client.send_message(
+                await client.send_message(
                     message.author,
                     ':no_bell: You have been removed from the memo list.'
                     )
             else:
-                yield from client.send_message(
+                await client.send_message(
                     message.author,
                     ':no_entry_sign: You are not on the memo list.'
                     )
@@ -554,10 +560,10 @@ def memo(message, client):
             json.dump(memos, z, indent=4)
 
     except IndexError:
-        yield from client.send_message(message.channel, ':no_entry_sign: You must specify wether I should memo you **all** or **mentions**, or if I should **remove** you from the memo list.')
+        await client.send_message(message.channel, ':no_entry_sign: You must specify wether I should memo you **all** or **mentions**, or if I should **remove** you from the memo list.')
 
 @base.postcommand
-def sendmemo(message, client):
+async def sendmemo(message, client):
     if message.mentions: # False if no mentions
         # Load memo list
         memos = {}
@@ -577,11 +583,13 @@ def sendmemo(message, client):
                 # Store user for later messaging.
                 msgme.append(mention)
 
-        # yield from is weird: You can only call it in specific
+        # await is weird: You can only call it in specific
         # places. Here we reverse a log of the last 5 messages.
         if msgme:
-            thislog = yield from client.logs_from(message.channel, 5)
-            thislog = reversed(list(thislog))
+            msg_iter = []
+            async for x in client.logs_from(message.channel, 5):
+                msg_iter.append(x)
+            thislog = reversed(list(msg_iter))
             # If your net/computer is slow enough, sometimes you'll
             # get a few messages after the mention. Deal with it.
             msgToSend = '**You were mentioned in {}\'s #{} channel.** Here is the context:\n'.format(message.server.name, message.channel.name)
@@ -601,7 +609,7 @@ def sendmemo(message, client):
                     )
 
             for mention in msgme:
-                yield from client.send_message(mention, msgToSend[:1980]) # Really shitty way of making sure it's beneath 2k characters but IT WORKS, SO CAN IT
+                await client.send_message(mention, msgToSend[:1980]) # Really shitty way of making sure it's beneath 2k characters but IT WORKS, SO CAN IT
                 asyncio.sleep(5)
 
     if message.mention_everyone: # @everyone
@@ -624,7 +632,9 @@ def sendmemo(message, client):
                 msgme.append(usr)
 
         if msgme:
-            thislog = yield from client.logs_from(message.channel, 5)
+            msg_iter = []
+            async for x in client.logs_from(message.channel, 5):
+                msg_iter.append(x)
             thislog = reversed(list(thislog))
 
             msgToSend = '**Someone used @everyone in {}\'s #{} channel.** Here is the context:\n'.format(message.server.name, message.channel.name)
@@ -644,5 +654,5 @@ def sendmemo(message, client):
                     )
 
             for mention in msgme:
-                yield from client.send_message(mention, msgToSend[:1980])
+                await client.send_message(mention, msgToSend[:1980])
                 asyncio.sleep(5)

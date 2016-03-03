@@ -1,8 +1,13 @@
+import html
+import re
+import random
+import time
+import urllib.request
+
 import cacobot.base as base
-import time, re, urllib.request, html
 
 @base.cacofunc
-def roll(message, client, *args, **kwargs):
+async def roll(message, client):
     '''
     **.roll**
     *This command was created for the /g/ server.*
@@ -13,13 +18,13 @@ def roll(message, client, *args, **kwargs):
     # This was written by @NoKeksGiven. Give that guy a shout-out!
     num = str(round(int(round(time.time() * 100) % 100000000)))
     if num[-1] == num[-2]:
-        yield from client.send_message(message.channel, '{}: {}, check \'em!'.format(message.author.mention, num))
+        await client.send_message(message.channel, '{}: {}, check \'em!'.format(message.author.mention, num))
     else:
-        yield from client.send_message(message.channel, '{}: {}'.format(message.author.mention, num))
+        await client.send_message(message.channel, '{}: {}'.format(message.author.mention, num))
 roll.server = '/g/'
 
 @base.postcommand
-def parseFor4chThread(message, client, *args, **kwargs):
+async def parseFor4chThread(message, client):
     '''
     Parses for a 4chan thread in the message, and sends the linked message.
     '''
@@ -30,10 +35,10 @@ def parseFor4chThread(message, client, *args, **kwargs):
     # 3. The semantic thread URL, if available (unused)
     # 4. either string "#p and post ID" or nothing (practically unused)
     # 5. linked post ID
-    restring = '(https?:\/\/boards\.4chan\.org\/.*?\/thread\/([0-9]*)(\/[a-z0-9-]*)?\/?(#p([0-9]*))?)'
+    restring = r'(https?:\/\/boards\.4chan\.org\/.*?\/thread\/([0-9]*)(\/[a-z0-9-]*)?\/?(#p([0-9]*))?)'
 
     p = re.search(restring, message.content)
-    q = re.search('\.' + restring, message.content)
+    q = re.search(r'\.' + restring, message.content)
 
     # continue if 4chan thread found
     if p and not q:
@@ -58,7 +63,7 @@ def parseFor4chThread(message, client, *args, **kwargs):
 
         # if post had a file attached, fetch it.
         if pfile != -1:
-            fname = 'https:' + re.search('href="(//i\.4cdn\.org/[^"]*/[^"]*)"', thread[pfile:]).group(1)
+            fname = 'https:' + re.search(r'href="(//i\.4cdn\.org/[^"]*/[^"]*)"', thread[pfile:]).group(1)
 
         # extract post message: replace line breaks and remove/unescape HTML.
         msg = re.search('id="m[0-9]*">(.*?)</blockquote>', thread[pmsg:]).group(1)
@@ -72,7 +77,7 @@ def parseFor4chThread(message, client, *args, **kwargs):
             msg = '__**Linked thread from 4chan: "{}":**__\n{}'.format(threadtitle, msg)
 
         # do not post more than 6 lines unless preceded with "+"
-        if not re.search('\+' + restring, message.content):
+        if not re.search(r'\+' + restring, message.content):
             if len(msg.split('\n')) > 7:
                 msg = '\n'.join(msg.split('\n')[:7]) + '...'
 
@@ -81,5 +86,18 @@ def parseFor4chThread(message, client, *args, **kwargs):
             msg += '\n\n{}'.format(fname)
 
         # send
-        yield from client.send_message(message.channel, msg)
+        await client.send_message(message.channel, msg)
     return
+
+@base.postcommand
+async def cake(message, client):
+    if message.server.id == '120205773425868804':
+        c = re.sub(r'[^A-Za-z0-9 ]', '', message.content.lower())
+        send = None
+        if message.author.id != client.user.id:
+            if c == 'kek':
+                send = 'Cake*'
+
+        if send:
+            if random.randint(1, 2) == 1:
+                await client.send_message(message.channel, send)

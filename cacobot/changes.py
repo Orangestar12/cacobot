@@ -33,7 +33,7 @@ change_list = [
 emojis = [':black_small_square:', ':small_blue_diamond:', ':small_orange_diamond:', ':small_red_triangle:']
 
 @base.cacofunc
-def changes(message, client, *args, **kwargs):
+async def changes(message, client, *args, **kwargs):
     '''
     **.changes**
     Displays the most recent CacoBot changes.
@@ -50,4 +50,4 @@ def changes(message, client, *args, **kwargs):
             if x[0] == 'all' or message.server.name == x[0]:
                 printChanges += '{} {} \n'.format(random.choice(emojis), x[1])
 
-    yield from client.send_message(message.channel, printChanges)
+    await client.send_message(message.channel, printChanges)

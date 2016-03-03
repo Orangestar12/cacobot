@@ -27,7 +27,7 @@ def cacofunc(func):
 pres = {}
 
 def precommand(func):
-    pres[func.__name__]  = func
+    pres[func.__name__] = func
     return func
 
 posts = {}

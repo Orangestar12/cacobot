@@ -14,14 +14,14 @@ def find_all(a_str, sub, start=0, end=0):
         start += len(sub) # use start += 1 to find overlapping matches
 
 @base.cacofunc
-def define(message, client, *args, **kwargs):
+async def define(message, client, *args, **kwargs):
     '''
     **.define** <*phrase*>
     Scrapes Wiktionary for the dictionary definition of <*phrase*> and formats the first 1-5 results.
     *Example: `.define demon`*
     '''
     if message.content.strip()[1:] == 'define':
-        yield from client.send_message(message.channel, '{}: Please provide the word you would like to get the definition from Wiktionary from.'.format(message.author.mention))
+        await client.send_message(message.channel, '{}: Please provide the word you would like to get the definition from Wiktionary from.'.format(message.author.mention))
     else:
         definition = message.content.split(None, 1)[1].lower() # I'm pretty sure all Wiktionary pages are lowercase.
         encoded = urllib.parse.quote(definition, safe='')
@@ -108,25 +108,25 @@ def define(message, client, *args, **kwargs):
 
                 # Join and send.
                 msg = '\n'.join(definitions)
-                yield from client.send_message(message.channel, msg)
+                await client.send_message(message.channel, msg)
 
             except ValueError: # If no part of speech was found, then just send this:
-                yield from client.send_message(message.channel, message.author.mention + ': I can\'t get the definition of that word, but it exists. Go here: https://en.wiktionary.org/wiki/{}'.format(encoded))
+                await client.send_message(message.channel, message.author.mention + ': I can\'t get the definition of that word, but it exists. Go here: https://en.wiktionary.org/wiki/{}'.format(encoded))
                 print(traceback.format_exc())
 
         except urllib.error.HTTPError: # 404 errors mean the word doesn't exist.
-            yield from client.send_message(message.channel, '{}: That\'s not a word, or Wiktionary doesn\'t have an entry on it.'.format(message.author.mention))
+            await client.send_message(message.channel, '{}: That\'s not a word, or Wiktionary doesn\'t have an entry on it.'.format(message.author.mention))
             print(traceback.format_exc())
 
 @base.cacofunc
-def urbdef(message, client, *args, **kwargs):
+async def urbdef(message, client, *args, **kwargs):
     '''
     **.urbdef** <*phrase*>
     Same as .define, only searches Urban Dictionary instead of Wiktionary.
-    *Example: `.urbdef doom`*
+    *Example: `.urbasync def doom`*
     '''
     if message.content.strip()[1:] == 'urbdef':
-        yield from client.send_message(message.channel, '{}: Please provide the word you would like to get the definition from Urban Dictionary from.'.format(message.author.mention))
+        await client.send_message(message.channel, '{}: Please provide the word you would like to get the definition from Urban Dictionary from.'.format(message.author.mention))
     else:
         definition = message.content.split(None, 1)[1].lower()
         encoded = urllib.parse.quote(definition, safe='')
@@ -138,7 +138,7 @@ def urbdef(message, client, *args, **kwargs):
             definitions.append(result['list'][0]['definition'])
             definitions.append('*Read more at {}*'.format(result['list'][0]['permalink']))
             msg = '\n'.join(definitions)
-            yield from client.send_message(message.channel, '{}: {}'.format(message.author.mention,msg))
+            await client.send_message(message.channel, '{}: {}'.format(message.author.mention,msg))
         except: # I shouldn't be doing a general except, but I forgot what this throws. I think urllib.error.HTTPError?
-            yield from client.send_message(message.channel, '{}: Urban Dictionary doesn\'t have that word.'.format(message.author.mention))
+            await client.send_message(message.channel, '{}: Urban Dictionary doesn\'t have that word.'.format(message.author.mention))
             print(traceback.format_exc())

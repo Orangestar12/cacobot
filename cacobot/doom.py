@@ -5,7 +5,7 @@ import urllib.request, random, asyncio
 # eventually. Until then, this command is disabled.
 
 # @base.cacofunc # Uncomment to reenable.
-def wadidea(message, client, *args, **kwargs):
+async def wadidea(message, client, *args, **kwargs):
     '''
     **.wadidea**
     *This command was created for the /vr/ Doom server.*
@@ -28,12 +28,12 @@ def wadidea(message, client, *args, **kwargs):
     #Next, we remove all <br>s and line breaks.
     result = result.replace('<br>\n', ' ')
 
-    yield from client.send_message(message.channel,  '{}: {}\n\n*Provided by boris.slipgate.org/?a=mapgen*'.format(author.mention, result))
+    await client.send_message(message.channel,  '{}: {}\n\n*Provided by boris.slipgate.org/?a=mapgen*'.format(author.mention, result))
     return
 wadidea.server = 'Doom'
 
 @base.cacofunc
-def fortune(message, client, *args, **kwargs):
+async def fortune(message, client, *args, **kwargs):
     '''
     **.fortune**
     Generates a random fortune from a list.
@@ -256,11 +256,11 @@ def fortune(message, client, *args, **kwargs):
     ]
     # most of these are from https://github.com/TerminusEst13/Folded1000Times/blob/940b824a071f4a8298d6426be406725374355825/pk3/acs/weeb_const.h
 
-    yield from client.send_message(message.channel, '{}: **FORTUNE SAY**:\n{}'.format(message.author.mention, random.choice(fortunes)))
+    await client.send_message(message.channel, '{}: **FORTUNE SAY**:\n{}'.format(message.author.mention, random.choice(fortunes)))
 fortune.server = 'Doom'
 
 @base.postcommand
-def doomthree(message, client, *args, **kwargs):
+async def doomthree(message, client, *args, **kwargs):
     if message.author.id != client.user.id:
         if 'doom3' in message.content.lower() or 'doom 3' in message.content.lower() and random.randint(1,50) == 1:
-            yield from client.send_message(message.channel, '**WHO TURNED OUT THE LIGHTS?**')
+            await client.send_message(message.channel, '**WHO TURNED OUT THE LIGHTS?**')
