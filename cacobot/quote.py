@@ -635,7 +635,7 @@ async def sendmemo(message, client):
             msg_iter = []
             async for x in client.logs_from(message.channel, 5):
                 msg_iter.append(x)
-            thislog = reversed(list(thislog))
+            thislog = reversed(list(msg_iter))
 
             msgToSend = '**Someone used @everyone in {}\'s #{} channel.** Here is the context:\n'.format(message.server.name, message.channel.name)
 
