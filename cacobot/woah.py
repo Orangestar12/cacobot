@@ -888,7 +888,9 @@ killmsgs = [
     '%k played a blank card for %o.',
     '%o was oh\'d by %k.',
     '%k oh\'d %o.',
-    '%o\'s killing spree was ended by %k'
+    '%o\'s killing spree was ended by %k',
+    '%o was futurmedia\'d by %k.',
+    '%k futurmedia\'d %o.'
 ]
 
 def postify(phrase, message, pronouns):

@@ -88,7 +88,7 @@ async def changes(message, client, *args, **kwargs):
     *This command is deprecated.*
     *Example: `.changes`*
     '''
-    await client.send_message(message.channel, '{}: This command is deprecated. For most recent changes, check out the commits on the CacoBot GitHub.\nhttps://github.com/Orangestar12/cacobot/commits/master')
+    await client.send_message(message.channel, '{}: This command is deprecated. For most recent changes, check out the commits on the CacoBot GitHub.\nhttps://github.com/Orangestar12/cacobot/commits/master'.format(message.author.name))
 
     # printChanges = '{}: **Latest Changes**\n'.format(message.author.mention)
     #
