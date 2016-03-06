@@ -1,9 +1,8 @@
-import cacobot.base as base
 import inspect # To pretty-print docstrings
-from random import choice # for random emojis
+import cacobot.base as base
 
 @base.cacofunc
-async def help(message, client, *args, **kwargs):
+async def help(message, client):
     '''
     *Cheeky, ain't ya?*
     **.help** [*cmd*]
@@ -56,7 +55,7 @@ async def help(message, client, *args, **kwargs):
             await client.send_message(message.channel, ':no_entry_sign: That command does not exist.')
 
 @base.cacofunc
-async def welcome(message, client, *args, **kwargs):
+async def welcome(message, client):
     '''
     **.welcome**
     Displays a helpful message about how to use CacoBot!
@@ -81,7 +80,7 @@ async def welcome(message, client, *args, **kwargs):
 # emojis = [':black_small_square:', ':small_blue_diamond:', ':small_orange_diamond:', ':small_red_triangle:']
 
 @base.cacofunc
-async def changes(message, client, *args, **kwargs):
+async def changes(message, client):
     '''
     **.changes**
     Displays the most recent CacoBot changes.
