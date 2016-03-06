@@ -296,14 +296,23 @@ async def ship(message, client):
                 listToChooseFrom += ships[x]
             await client.send_message(message.channel, '**{}** x **{}**'.format(random.choice(listToChooseFrom), random.choice(listToChooseFrom)))
         else:
+            unrecognized = []
             for x in lists:
                 if x in ships:
                     listToChooseFrom += ships[x]
-                if x in groups:
+                elif x in groups:
                     for y in groups[x]:
                         listToChooseFrom += ships[y]
+                else:
+                    unrecognized.append(x)
             if listToChooseFrom:
-                await client.send_message(message.channel, '**{}** x **{}**'.format(random.choice(listToChooseFrom), random.choice(listToChooseFrom)))
+                send = '**{}** x **{}**'.format(random.choice(listToChooseFrom), random.choice(listToChooseFrom))
+                if unrecognized:
+                    if len(unrecognized) == 1:
+                        send = '*Removing unrecognized list: {}*\n'.format(unrecognized[0]) + send
+                    else:
+                        send = '*Removing unrecognized lists: {}*\n'.format(', '.join(unrecognized)) + send
+                await client.send_message(message.channel, send)
             else:
                 await client.send_message(message.channel, ':no_entry_sign: You did not provide enough valid lists to choose from.')
 
