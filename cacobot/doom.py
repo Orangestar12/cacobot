@@ -254,7 +254,11 @@ async def fortune(message, client):
         'I am a nihilist I believe in nothing.',
         'Killing me won\'t bring back your honey.',
         'Go Team Edward!',
-        '\*dramatic pause\*'
+        r'\*dramatic pause\*',
+        'Better not tell you now.',
+        'Outlook good.',
+        'Good luck.',
+        'Guys, the thermal drill, go get it.'
     ]
     # most of these are from https://github.com/TerminusEst13/Folded1000Times/blob/940b824a071f4a8298d6426be406725374355825/pk3/acs/weeb_const.h
 
