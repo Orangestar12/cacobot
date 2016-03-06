@@ -31,9 +31,7 @@ async def hush(message, client):
             hushed[message.server.id] = 'server'
             await client.send_message(
                 message.channel,
-                ':mute: **Server hush!** :mute:\n{} will no longer respond to \
-                commands in this server. Call `.listen` if you want me back. \
-                Ask Orangestar to remove me if you want me gone permanently.'.format(
+                ':mute: **Server hush!** :mute:\n{} will no longer respond to commands in this server. Call `.listen` if you want me back. Ask Orangestar to remove me if you want me gone permanently.'.format(
                     message.author.name
                     )
                 )
@@ -43,11 +41,7 @@ async def hush(message, client):
             hushed[message.channel.id] = 'channel'
             await client.send_message(
                 message.channel,
-                ':mute: **Channel hush!** :mute:\n{}: I will no longer respond \
-                to commands in this channel. Call `.listen` if you want to \
-                bring me back. Call `.hush server` if you were hoping to \
-                silence me on the whole server. (Hint: Do it somewhere I can \
-                hear it since you silenced me here.)'.format(message.author.name)
+                ':mute: **Channel hush!** :mute:\n{}: I will no longer respond to commands in this channel. Call `.listen` if you want to bring me back. Call `.hush server` if you were hoping to silence me on the whole server. (Hint: Do it somewhere I can hear it since you silenced me here.)'.format(message.author.name)
                 )
 
         # Save hush list.
@@ -84,8 +78,7 @@ async def checkForHush(message, client):
             hushed.pop(message.server.id)
             await client.send_message(
                 message.channel,
-                ':loud_sound: **Now listening!** :loud_sound:\n{}: I will now \
-                respond to commands in this channel.'.format(
+                ':loud_sound: **Now listening!** :loud_sound:\n{}: I will now respond to commands in this channel.'.format(
                     message.author.mention
                     )
                 )
@@ -101,8 +94,7 @@ async def checkForHush(message, client):
             hushed.pop(message.channel.id)
             await client.send_message(
                 message.channel,
-                ':loud_sound: **Now listening!** :loud_sound:\n{}: I will now \
-                respond to commands in this channel.'.format(
+                ':loud_sound: **Now listening!** :loud_sound:\n{}: I will now respond to commands in this channel.'.format(
                     message.author.mention
                     )
                 )
@@ -404,14 +396,12 @@ async def nuke(message, client):
         else:
             await client.send_message(
                 message.channel,
-                ':no_entry_sign: I do not have permissions to delete messages \
-                yet, so I cannot perform this command.'
+                ':no_entry_sign: I do not have permissions to delete messages yet, so I cannot perform this command.'
                 )
     else:
         await client.send_message(
             message.channel,
-            ':no_entry_sign: Sorry, but I can\'t let you delete messages if \
-            you don\'t have the permission to.'
+            ':no_entry_sign: Sorry, but I can\'t let you delete messages if you don\'t have the permission to.'
             )
 
 @base.cacofunc
@@ -455,13 +445,11 @@ async def cleanup(message, client):
         else:
             await client.send_message(
                 message.channel,
-                ':no_entry_sign: I do not have permissions to delete messages \
-                yet, so I cannot perform this command.'
+                ':no_entry_sign: I do not have permissions to delete messages yet, so I cannot perform this command.'
                 )
     else:
         await client.send_message(
-            message.channel, ':no_entry_sign: Sorry, but I can\'t let you \
-            delete messages if you don\'t have the permission to.'
+            message.channel, ':no_entry_sign: Sorry, but I can\'t let you delete messages if you don\'t have the permission to.'
             )
 
 # @base.cacofunc
@@ -476,8 +464,7 @@ async def chanuke(message, client):
     else:
         await client.send_message(
             message.channel,
-            ":no_entry_sign: You do not have the proper permissions to manage \
-            channels in this server."
+            ":no_entry_sign: You do not have the proper permissions to manage channels in this server."
             )
 chanuke.server = 'hidden'
 
