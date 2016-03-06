@@ -66,9 +66,9 @@ async def parseFor4chThread(message, client):
             fname = 'https:' + re.search(r'href="(//i\.4cdn\.org/[^"]*/[^"]*)"', thread[pfile:]).group(1)
 
         # extract post message: replace line breaks and remove/unescape HTML.
-        msg = re.search('id="m[0-9]*">(.*?)</blockquote>', thread[pmsg:]).group(1)
+        msg = re.search(r'id="m[0-9]*">(.*?)</blockquote>', thread[pmsg:]).group(1)
         msg = msg.replace('<br>', '\n')
-        msg = html.unescape(re.sub('<[^<]+?>', '', msg))
+        msg = html.unescape(re.sub(r'<[^<]+?>', '', msg))
 
         # determine if post or thread again: add relevant text.
         if p.group(3):
