@@ -19,7 +19,7 @@ whitelist = [
 
 @base.postcommand
 async def koolaid(message, client):
-    if (message.server.id, message.channel.id) in whitelist:
+    if message.channel.is_private or (message.server.id, message.channel.id) in whitelist:
         if re.match(r'.*thought i misplaced it[?!.]*$', message.content.lower().replace('*', '')) and\
                 message.author.id != client.user.id:
             # Change Avatar

@@ -295,5 +295,5 @@ ohwhitelist = [
 
 @base.postcommand
 async def oh(message, client):
-    if message.author.id != client.user.id and message.server.id in ohwhitelist and re.sub(r'[^a-z0-9 ]', '', message.content.lower()) == "oh" and random.randint(1, 10) == 1:
+    if message.author.id != client.user.id and (message.channel.is_private or message.server.id in ohwhitelist) and re.sub(r'[^a-z0-9 ]', '', message.content.lower()) == "oh" and random.randint(1, 10) == 1:
         await client.send_message(message.channel, 'oh')
