@@ -247,6 +247,28 @@ async def ship(message, client):
             'Shimmery Twinkleheart',
             'Clay Cyclops',
             'Dipper Clone #7'
+        ],
+        'jt' : [
+            'Jon "JonTron" Jafari',
+            'Arin "Egoraptor" Hanson',
+            'Ethan "h3h3" Klein',
+            'Grimbo',
+            'Jacques',
+            'Spaghetti',
+            'Rockington',
+            'George Lucas',
+            'The Kool-Aid Man',
+            'Duffy The Talking Cat!?!',
+            'Macaulay Culkin',
+            'Malkovich',
+            'Giorgio Armani',
+            'Daniel "Danny Sexbang" Avidan',
+            'Natalia the Rancour',
+            'Blueboobs McFurrydream',
+            'Bootleg Michael Jackson',
+            'Cinnamon (#1 Drowned Bird)',
+            'Fred Durst',
+            'Bootleg Michael Jackson'
         ]
     }
     groups = {
