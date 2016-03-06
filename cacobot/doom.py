@@ -260,7 +260,7 @@ async def fortune(message, client, *args, **kwargs):
 fortune.server = 'Doom'
 
 @base.postcommand
-async def doomthree(message, client, *args, **kwargs):
+async def doomthree(message, client):
     if message.author.id != client.user.id:
-        if 'doom3' in message.content.lower() or 'doom 3' in message.content.lower() and random.randint(1,50) == 1:
+        if ('doom3' in message.content.lower() or 'doom 3' in message.content.lower()) and random.randint(1, 20) == 1:
             await client.send_message(message.channel, '**WHO TURNED OUT THE LIGHTS?**')

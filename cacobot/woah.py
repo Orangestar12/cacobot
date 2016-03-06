@@ -19,7 +19,7 @@ async def woah(message, client):
             send = 'Copy that.'
 
     if send:
-        if random.randint(1, 100) == 100:
+        if random.randint(1, 20) == 1:
             await client.send_message(message.channel, send)
 
 @base.postcommand
@@ -27,7 +27,7 @@ async def wow(message, client):
     c = message.content.lower()
     if message.author.id != client.user.id:
         if c == 'wow' or c == 'wow.':
-            if random.randint(1, 100) == 100:
+            if random.randint(1, 20) == 1:
                 await client.send_message(
                     message.channel,
                     'Ethan, great moves. Keep it up. I\'m proud of you.'
