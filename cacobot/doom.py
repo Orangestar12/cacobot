@@ -1,11 +1,13 @@
+import random
+import urllib.request
+
 import cacobot.base as base
-import urllib.request, random, asyncio
 
 # boris.slipgate.org seems to be misconfigured. I'm sure it'll be fixed
 # eventually. Until then, this command is disabled.
 
 # @base.cacofunc # Uncomment to reenable.
-async def wadidea(message, client, *args, **kwargs):
+async def wadidea(message, client):
     '''
     **.wadidea**
     *This command was created for the /vr/ Doom server.*
@@ -28,12 +30,12 @@ async def wadidea(message, client, *args, **kwargs):
     #Next, we remove all <br>s and line breaks.
     result = result.replace('<br>\n', ' ')
 
-    await client.send_message(message.channel,  '{}: {}\n\n*Provided by boris.slipgate.org/?a=mapgen*'.format(author.mention, result))
+    await client.send_message(message.channel, '{}: {}\n\n*Provided by boris.slipgate.org/?a=mapgen*'.format(message.author.name, result))
     return
 wadidea.server = 'Doom'
 
 @base.cacofunc
-async def fortune(message, client, *args, **kwargs):
+async def fortune(message, client):
     '''
     **.fortune**
     Generates a random fortune from a list.
