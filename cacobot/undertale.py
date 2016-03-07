@@ -314,10 +314,10 @@ async def determinate(message, client):
 
     try:
         color = '#FFFFFF'
-        font = '8bitoperator'
+        font = 'Determination Mono'
         strokewidth = '0'
         lineheight = 36 #This is actually slightly big for the height of lines but *Shrug*
-        fontwidth = 24
+        fontwidth = 28
         precedent = 32
         width = '640'
 
