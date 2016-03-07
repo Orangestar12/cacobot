@@ -195,7 +195,9 @@ suicides = [
     '%k ascended.',
     '%k was lost in the matrix.',
     '%k was digitized to see the MCP.',
-    'I\'m afraid I can\'t do that, %k.'
+    'I\'m afraid I can\'t do that, %k.',
+    '%k was petrified by elementary physics.',
+    '%k was killed by elementary chemistry.'
 ]
 
 killmsgs = [
@@ -265,7 +267,7 @@ killmsgs = [
     "%o was zapped by %k.",
     "%o was viciously vaporized by %k.",
     "%o bowed down to the sheer power of %k's Sigil.",
-    'Looks like Team %o is blasting off again!'
+    'Looks like Team %o is blasting off again!',
     '%k blasted off Team %o again!',
     '%k taught %o the Dewey Decimal System.',
     '%o was taught the Dewey Decimal System by %k.',
@@ -569,10 +571,11 @@ killmsgs = [
     '%k RIPped on %o.',
     '%o got SUPERHOTted by %k.',
     '%k SUPERHOTted %o.',
+    '%k made %o SUPERHOT.',
     '%o got goomba\'d by %k.',
     '%k goomba\'d %o.',
     '%o got Falcon Punched by %k.',
-    '%k Falcon Punched $Y.',
+    '%k Falcon Punched %o.',
     '%o got blazed by %k.',
     '%k blazed %o.',
     '%o got Chaos Sabred by %k.',
@@ -617,8 +620,9 @@ killmsgs = [
     '%o learned about the joy of debt thanks to %k.',
     '%o got mach tornado\'d by %k.',
     '%k mach tornado\'d %o.',
-    '%o got final smahed by %k.',
-    '%k final smahed %o.',
+    '%o got final smashed by %k.',
+    '%k final smashed %o.',
+    '%k tore %o to pieces.',
     '%o got webbed by %k.',
     '%k webbed %o.',
     '%o got heaven-piercing drilled by %k.',
@@ -734,8 +738,8 @@ killmsgs = [
     '%k Donald Trumped %o.',
     '%o got Donald Drumpfed by %k.',
     '%k Donald Drumpfed %o.',
-    '@​%o got pinged by %k.'
-    '%k pinged @%o.',
+    '@​%o got pinged by %k.',
+    '%k pinged @​%o.',
     '%o\'s streak was ended by %k.',
     '%k ended %o\'s streak.',
     '%o\'s game was ended by %k.',
@@ -751,9 +755,9 @@ killmsgs = [
     '%o got heckled at by %k.',
     '%k heckled at %o.',
     '%o got coughed at by %k.',
-    '%k coughted at %o.',
+    '%k coughed at %o.',
     '%o got signed out by %k.',
-    '%k signed out %V.',
+    '%k signed out %k.',
     '%o got sandwiched by %k.',
     '%k sandwiched %o.',
     '%o got swagged on by %k.',
@@ -916,7 +920,7 @@ def postify(phrase, message, pronouns):
 
     return w
 
-cooldown = False
+# cooldown = False
 
 @base.cacofunc
 async def kill(message, client):
