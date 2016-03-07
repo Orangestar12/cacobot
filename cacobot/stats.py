@@ -82,7 +82,7 @@ async def stats(message, client):
     rxy = [250, 150]
 
     #Determine amount of times a message has been sent multiple times.
-    for usr in users:
+    for usr in sorted(list(users), key=lambda x: users[x]['msgcount'] if x != 'totalmsgcount' else users['totalmsgcount'], reverse=True):
         if usr != 'totalmsgcount':
 
             #Determine what percent of messages are sent by this user
