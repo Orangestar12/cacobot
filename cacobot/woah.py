@@ -879,7 +879,7 @@ killmsgs = [
     '%k Spirit Bombed %o.',
     '%o got Who The Hell Do You Think I Am Kicked by %k.',
     '%k Who The Hell Do You Think I Am Kicked %o.',
-    '%o got Jim Sterlinged by %k.',``
+    '%o got Jim Sterlinged by %k.',
     '%k Jim Sterlinged %o.',
     '%k Jim Fucking Sterling Sonned %o.',
     '%o got entropied by %k.',
