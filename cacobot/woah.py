@@ -211,7 +211,7 @@ suicides = [
     '%k was kidnapped by a madman in a police box.',
     '%k was kidnapped by a British guy in a phone booth.',
     '%k tried to bake a cake, but it got too `crazy`.',
-    'Bravely bold Sir %k\nRode forth from Camelot\n%g was not afraid to die\nOh, brave Sir %k\n%g was not at all afraid\nTo be killed in nasty ways\nBrave, brave, brave, brave Sir %k\n\n%g was not in the least bit scared\nTo be mashed into a pulp\nOr to have %p eyes gouged out\nAnd %p elbows broken\nTo have %p kneecaps split\nAnd %p body burned away\nAnd %p limbs all hacked and mangled\nBrave Sir %k', #"Sir" is defos gender neutral right?
+    'Bravely bold Sir %k\nRode forth from Camelot\n%G was not afraid to die\nOh, brave Sir %k\n%G was not at all afraid\nTo be killed in nasty ways\nBrave, brave, brave, brave Sir %k\n\n%G was not in the least bit scared\nTo be mashed into a pulp\nOr to have %p eyes gouged out\nAnd %p elbows broken\nTo have %p kneecaps split\nAnd %p body burned away\nAnd %p limbs all hacked and mangled\nBrave Sir %k.', #"Sir" is defos gender neutral right?
     '%k lost %p creative juices.',
     'The author lost their creative juices to be able to write another death message for %k.',
     '%k was not 20% cooler.',
