@@ -1093,6 +1093,8 @@ killmsgs = [
     'How does %o the short-tempered cronie and creator of the coast guard, founder of the New York Post ardently abuse %p cabinet post and destroy %p reputation? Welcome, folks, to the ***%k Administration!***',
     '%o aimed to the sky to be honorable, but %k fired on the count of 7, jerkass.',
     '%k decided the world wasn\'t wide enough for %o too.',
+    '%o got JOHN CENA\'D by %k. 🎺🎺🎺🎺🎺',
+    '%k JOHN CENA\'D %o. 🎺🎺🎺🎺🎺',
     '%o got forked by %k.',
     '%k forked %o.',
     '%o got pull requested from %k.',
