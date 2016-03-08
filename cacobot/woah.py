@@ -895,10 +895,12 @@ killmsgs = [
     '%k oh\'d %o.',
     '%o\'s killing spree was ended by %k',
     '%o was futurmedia\'d by %k.',
-    '%k futurmedia\'d %o.'
+    '%k futurmedia\'d %o.',
+    '%o imagines death so much it feels more like a memory. Is this where it gets %h? On %p feet... several feet ahead of %h. %G can see it coming. Should %g run, or fire %p gun, or let it be? *There is no beat, no melody.* %k, %p first friend and enemy... maybe the last face %g ever will see. *If %o throws away his shot, is this how %k remembers %h?* What if this bullet is %p legacy...\n***LEGACY...*** *what is a legacy?* It\'s planting seeds in a garden you never get to see. %G wrote some notes at the beginning of a song someone will sing for %h. America, you great unfinished symphony you sent for %h! You let %h make a difference! A place where even orphan immigrants can leave their fingerprints and\n***RISE UP.*** %G might be running out of time, %p *TIME\'S UP.* *WISE UP.* Eyes... *up.* %G catch a glimpse of the other side. Laurens leads a soldier\'s chorus on the other side. *%P son is on the other side! He\'s with %p mother on the other side!* ***Washington is watching from the other side! Teach them how to say goodbye~ RISE UP. RISE UP. RISE UP.*** __***ELIZA***__\n\n%o would love to take your time. %G\'ll see you on the other side.\n~~*Raise a glass, to freedom...*~~\n"**W** %G aims **A** their pistol **I** at the **T** sky!"\n\n%k strikes %h right between %p ribs.'
 ]
 
 def postify(phrase, message, pronouns):
+    #lower case
     w = phrase.replace(
         '%k', message.author.name
         ).replace(
@@ -908,6 +910,15 @@ def postify(phrase, message, pronouns):
                 ).replace(
                     '%p', pronouns['%p']
                     )
+
+    #capitals
+    w = w.replace(
+        '%G', pronouns['%g'].capitalize()
+        ).replace(
+            '%H', pronouns['%h'].capitalize()
+            ).replace(
+                '%P', pronouns['%p'].capitalize()
+                )
 
     if message.mentions:
         w = w.replace(
@@ -947,7 +958,7 @@ async def kill(message, client):
     if message.mentions and message.mentions[0].id in optin:
         pronouns = optin[message.mentions[0].id]
     elif len(message.content.split()) > 1 and [x for x in message.server.members if x.name == message.content.split(None, 1)[1]] and [x.id for x in message.server.members if x.name == message.content.split(None, 1)[1]][0] in optin:
-        pronouns = optin[[x for x in message.server.members if x.name == message.content.split(None, 1)[1]][0]]
+        pronouns = optin[[x.id for x in message.server.members if x.name == message.content.split(None, 1)[1]][0]]
 
     if len(params) < 2:
         if not cooldown:
