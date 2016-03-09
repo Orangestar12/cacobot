@@ -1070,7 +1070,7 @@ killmsgs = [
     '%o got taken to the Mystery Shack by %k.',
     '%k took %o to the Mystery Shack.',
     '%o got a combustible lemon thrown at %h by %k.',
-    '%k threw a combustible lemon at %o.'
+    '%k threw a combustible lemon at %o.',
     '%o got %p neck diddly darn snapped by %k.',
     '%k diddly darn snapped %o\'s neck.',
     '%o was called a "buddy chum pal friend buddy pal chum bud friend fella bruther amigo pal buddy friend chummy chum chum pal friend pal home slice bread slice dawg friend buddy chum friend chum pally pal chum friend friend buddy chum friend chum pally pal chum friend friendly friend friend pal friend buddy chum pally friend chum buddy" by %k.',
