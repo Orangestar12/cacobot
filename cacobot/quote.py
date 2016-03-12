@@ -97,6 +97,7 @@ async def addquote(message, client):
     '''
     **addquote** <*content*>
     Add a quote to my quote database.
+    *Remember, quotes are subject to the Terms of Service for CacoBot, and my judgement. I do go through them. Shitty quotes that make no sense in any context, or quotes that try to be "meta" and refer to the quote index, are often subjected to deletion.*
     *Example: `.addquote <TerminusEst13> .idgames good map
     <idgamesbot> Nothing found.
     <TerminusEst13> Well there you have it, folks.`*
@@ -329,13 +330,17 @@ async def log(message, client):
 
             # Send attachments
             if x.attachments:
+                msgToAdd += '{}:{} - {}:\n'.format(
+                    x.timestamp.hour,
+                    minute,
+                    x.author.name,
+                    )
+
+                if x.content:
+                    msgToAdd += message.content
+
                 for ach in x.attachments:
-                    msgToAdd = '{}:{} - {}: {}\n'.format(
-                        x.timestamp.hour,
-                        minute,
-                        x.author.name,
-                        ach['url']
-                        )
+                    msgToAdd += '\n{}'.format(ach['url'])
 
             # Send message
             else:
@@ -407,17 +412,21 @@ async def logquote(message, client):
             else:
                 minute = str(x.timestamp.minute)
 
-            # Send attachments
+            # log attachments
             if x.attachments:
-                for ach in x.attachments:
-                    msgToAdd += '{}:{} - {}: {}\n'.format(
-                        x.timestamp.hour,
-                        minute,
-                        x.author.name,
-                        ach['url']
-                        )
+                msgToAdd += '{}:{} - {}:\n'.format(
+                    x.timestamp.hour,
+                    minute,
+                    x.author.name,
+                    )
 
-            # Send message
+                if x.content:
+                    msgToAdd += message.content
+
+                for ach in x.attachments:
+                    msgToAdd += '\n{}'.format(ach['url'])
+
+            # log message
             else:
                 msgToAdd += '{}:{} - {}: {}\n'.format(
                     x.timestamp.hour,
@@ -425,6 +434,27 @@ async def logquote(message, client):
                     x.author.name,
                     x.content
                     )
+
+
+    #replace mentions
+    while mention_syntax.search(msgToAdd):
+        member = discord.utils.get(
+            message.server.members,
+            id=mention_syntax.search(msgToAdd).group(2)
+            )
+
+        if member:
+            msgToAdd = msgToAdd.replace(
+                mention_syntax.search(msgToAdd).group(1),
+                '@' + member.name)
+        else:
+            msgToAdd = msgToAdd.replace(
+                mention_syntax.search(msgToAdd).group(1),
+                '@invalid_user'
+            )
+
+    while '@everyone' in msgToAdd:
+        msgToAdd.replace('@everyone', '(everyone)')
 
     if not msgToAdd:
         await client.send_message(message.channel, ':no_entry_sign: I ended up logging nothing, so I added nothing to my quotes.')
