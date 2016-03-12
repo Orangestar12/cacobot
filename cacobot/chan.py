@@ -89,7 +89,7 @@ async def parseFor4chThread(message, client):
         await client.send_message(message.channel, msg)
     return
 
-@base.postcommand
+#@base.postcommand
 async def cake(message, client):
     if not message.channel.is_private and message.server.id == '120205773425868804':
         c = re.sub(r'[^A-Za-z0-9 ]', '', message.content.lower())
