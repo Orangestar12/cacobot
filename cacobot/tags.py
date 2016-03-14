@@ -58,7 +58,10 @@ async def tag(message, client):
             while mention_syntax.search(p):
                 p = p.replace(mention_syntax.search(p).group(1), '@' + discord.utils.get(message.server.members, id=mention_syntax.search(p).group(2)).name)
 
-            params = p.split(None, 3)
+            while '@everyone' in p:
+                p = p.replace('@everyone', '(everyone)')
+
+            params = p.split(None, 2)
 
             if cmd == 'create':
                 if params[1] in tags:
@@ -310,6 +313,9 @@ async def tag(message, client):
             while mention_syntax.search(p):
                 p = p.replace(mention_syntax.search(p).group(1), '@' + discord.utils.get(message.server.members, id=mention_syntax.search(p).group(2)).name)
 
+            while '@everyone' in p:
+                p = p.replace('@everyone', '(everyone)')
+
             params = p.split()
 
             if params[1] in tags:
@@ -332,6 +338,8 @@ async def tag(message, client):
 
             params = p.split(None, 1)
 
+            while '@everyone' in p:
+                p = p.replace('@everyone', '(everyone)')
 
             if cmd in tags:
                 await client.send_message(message.channel, tags[cmd]['tag'])
