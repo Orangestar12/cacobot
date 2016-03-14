@@ -5,9 +5,9 @@ import cacobot.base as base
 async def help(message, client):
     '''
     *Cheeky, ain't ya?*
-    **.help** [*cmd*]
+    **{0}help** [*cmd*]
     Displays a list of commands. If [*cmd*] is supplied, provides help about a specific command.
-    *Example: `.help help`*
+    *Example: `{0}help help`*
     '''
 
     params = message.content.split(" ")
@@ -61,9 +61,9 @@ async def help(message, client):
 @base.cacofunc
 async def welcome(message, client):
     '''
-    **.welcome**
+    **{0}welcome**
     Displays a helpful message about how to use CacoBot!
-    *Example: `.welcome`*
+    *Example: `{0}welcome`*
     '''
 
     # You should customize this message to meet the standards of your own bot.
@@ -86,10 +86,10 @@ async def welcome(message, client):
 @base.cacofunc
 async def changes(message, client):
     '''
-    **.changes**
+    **{0}changes**
     Displays the most recent CacoBot changes.
     *This command is deprecated.*
-    *Example: `.changes`*
+    *Example: `{0}changes`*
     '''
     await client.send_message(message.channel, '{}: This command is deprecated. For most recent changes, check out the commits on the CacoBot GitHub.\nhttps://github.com/Orangestar12/cacobot/commits/master'.format(message.author.name))
 

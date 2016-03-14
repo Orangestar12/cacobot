@@ -1139,10 +1139,10 @@ def postify(phrase, message, pronouns):
 @base.cacofunc
 async def kill(message, client):
     '''
-    **.kill** [ mention ]
-    **.kill** [ optin ] [ he/she/they ] [ him/her/them ] [ his/her/their ]
-    Prints an obituary for the mentioned party. By default, will use "They" pronouns. You can do `.kill optin 1 2 3` to opt into replacing your pronouns with 3 of your choice. The syntax is posted above. This is agnostic: You can use any word you want for a pronoun.
-    *Examples: `.kill @BooBot`, `.kill optin schlee schlim schleir`*
+    **{0}kill** [ mention ]
+    **{0}kill** [ optin ] [ he/she/they ] [ him/her/them ] [ his/her/their ]
+    Prints an obituary for the mentioned party. By default, will use "They" pronouns. You can do `{0}kill optin 1 2 3` to opt into replacing your pronouns with 3 of your choice. The syntax is posted above. This is agnostic: You can use any word you want for a pronoun.
+    *Examples: `{0}kill @BooBot`, `{0}kill optin schlee schlim schleir`*
     '''
     # global cooldown
     cooldown = False

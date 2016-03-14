@@ -9,10 +9,10 @@ import cacobot.base as base
 # @base.cacofunc # Uncomment to reenable.
 async def wadidea(message, client):
     '''
-    **.wadidea**
+    **{0}wadidea**
     *This command was created for the /vr/ Doom server.*
     Generates a wad idea from boris.slipgate.org.
-    *Example: `.wadidea`*
+    *Example: `{0}wadidea`*
     '''
 
     #Download the file.
@@ -37,10 +37,10 @@ wadidea.server = 'Doom'
 @base.cacofunc
 async def fortune(message, client):
     '''
-    **.fortune**
+    **{0}fortune**
     Generates a random fortune from a list.
     *These quotes are from the mod DemonSteele by TerminusEst13. Many are from Shadow Warrior and Shadow Warrior 2013. Thanks for lettin' me use em, Term!*
-    *Example: `.fortune`*
+    *Example: `{0}fortune`*
     '''
     fortunes = [
         'If you want to blow someone\'s mind, consider hollow-point .45s.',

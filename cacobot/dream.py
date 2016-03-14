@@ -16,11 +16,11 @@ ownerperm.manage_roles = True
 @base.cacofunc
 async def journal(message, client, *args, **kwargs):
     '''
-    **.journal**
+    **{0}journal**
     *This command was created for the Dream Journals server.*
     Creates a new text channel that only you can post in, using your name as the title.
-    **This command is only enabled if a moderator calls `.journal activate` first.**
-    *Example: `.journal`*
+    **This command is only enabled if a moderator calls `{0}journal activate` first.**
+    *Example: `{0}journal`*
     '''
 
     journals = []

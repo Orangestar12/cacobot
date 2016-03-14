@@ -16,9 +16,9 @@ def find_all(a_str, sub, start=0, end=0):
 @base.cacofunc
 async def define(message, client, *args, **kwargs):
     '''
-    **.define** <*phrase*>
+    **{0}define** <*phrase*>
     Scrapes Wiktionary for the dictionary definition of <*phrase*> and formats the first 1-5 results.
-    *Example: `.define demon`*
+    *Example: `{0}define demon`*
     '''
     if message.content.strip()[len(base.config['invoker']):] == 'define':
         await client.send_message(message.channel, '{}: Please provide the word you would like to get the definition from Wiktionary from.'.format(message.author.mention))
@@ -121,9 +121,9 @@ async def define(message, client, *args, **kwargs):
 @base.cacofunc
 async def urbdef(message, client, *args, **kwargs):
     '''
-    **.urbdef** <*phrase*>
+    **{0}urbdef** <*phrase*>
     Same as .define, only searches Urban Dictionary instead of Wiktionary.
-    *Example: `.urbasync def doom`*
+    *Example: `{0}urbdef doom`*
     '''
     if message.content.strip()[len(base.config['invoker']):] == 'urbdef':
         await client.send_message(message.channel, '{}: Please provide the word you would like to get the definition from Urban Dictionary from.'.format(message.author.mention))

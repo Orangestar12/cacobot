@@ -10,10 +10,10 @@ import cacobot.base as base
 @base.cacofunc
 async def goatnick(message, client):
     '''
-    **.goatnick**
+    **{0}goatnick**
     *This command was created for the Undertale server.*
     Generates a politically incorrect name for Asgore from a list.
-    *Example: `.goatnick`*
+    *Example: `{0}goatnick`*
     '''
     asgore_nicks = [
         'King Kindergarten Killer',
@@ -79,10 +79,10 @@ goatnick.server = 'Undertale'
 @base.cacofunc
 async def summon(message, client):
     '''
-    **.summon** [*monster 1*] [*monster 2*]...
+    **{0}summon** [*monster 1*] [*monster 2*]...
     *This command was created for the Undertale server.*
     Prints the array of [*monster*]s's encounter texts. Provide as many encounters as you want, or leave it blank to summon a random one.
-    *Example: .summon Papyrus Snowdrake*
+    *Example: {0}summon Papyrus Snowdrake*
     '''
     monsters = {
         'Dummy' : 'You encountered the dummy.',
@@ -302,11 +302,11 @@ summon.server = 'Undertale'
 @base.cacofunc
 async def determinate(message, client):
     r'''
-    **.determinate** [color\=*color*] [font\=*font*] <*text*>
+    **{0}determinate** [color\=*color*] [font\=*font*] <*text*>
     *This command was created for the Undertale server.*
     Generates an image with text of your choice using the font Determination Mono. [color\=*color*] can be provided as a CSS color, like hexadecimal (#FF7700), rgb (rgb(255,128,0)), or color code (orange). [font=*font*] can be *sans*, *papyrus*, *wd*, or *ut*. Omit to leave it as DTM.
     You can also use colons instead of equals signs. If you specify a font not in our keys using underscores in place of spaces, you can specify other fonts, like `font=Roboto_Condensed`.
-    *Example: `.determinate color=#0000FF font=Papyrus YOU'RE BLUE NOW! THAT'S MY ATTACK.`*
+    *Example: `{0}determinate color=#0000FF font=Papyrus YOU'RE BLUE NOW! THAT'S MY ATTACK.`*
     '''
     # The example used to be this:
     # *Example: .determinate color=#FF0000 Where are the knives.*
@@ -543,9 +543,9 @@ def htmlEntities(string):
 @base.cacofunc
 async def forebode(message, client):
     '''
-    **.forebode** [*mention*]
+    **{0}forebode** [*mention*]
     This is a shortcut to add the "Foreboden" role to a user. If your server has no "Foreboden" role, this will fail.
-    *Example: `.forebode @CacoBot`*
+    *Example: `{0}forebode @CacoBot`*
     '''
     if message.channel.permissions_for(message.author).ban_members:
         try:
@@ -565,8 +565,8 @@ forebode.server = 'Undertale'
 @base.cacofunc
 async def say(message, client):
     '''
-    **.say** [*params*]
-    A shorcut to `.determinate`.
+    **{0}say** [*params*]
+    A shorcut to `{0}determinate`.
     '''
     await determinate(message, client)
 
@@ -588,9 +588,9 @@ say.server = 'Undertale'
 @base.cacofunc
 async def what(message, client):
     '''
-    **.What** <was his name again?>
+    **{0}What** <was his name again?>
     Generates a name for uh... Fire... Hotsbro... You know, the guy from Hotland who was fire-based.
-    *Example: `.What was his name again?`*
+    *Example: `{0}What was his name again?`*
     '''
     if message.content.strip()[len(base.config['invoker']):].lower() == 'what was his name again?':
         heatsflames = [

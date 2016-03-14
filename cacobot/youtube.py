@@ -9,9 +9,9 @@ youtube = build(base.config['youtube']['API_SERVICE_NAME'], base.config['youtube
 @base.cacofunc
 async def yt(message, client, *args, **kwargs):
     '''
-    **.yt** <*query*> [.results *int*]
+    **{0}yt** <*query*> [.results *int*]
     Searches YouTube and returns the first query. If you provide `.results` with an integer afterwards, returns the first *int* results.
-    *Example: `.yt Doom E1M1 100% .results 3`*
+    *Example: `{0}yt Doom E1M1 100% .results 3`*
     '''
 
     if message.content.split()[-2] == '.results':
@@ -51,10 +51,10 @@ async def yt(message, client, *args, **kwargs):
 #@base.cacofunc
 async def ytadd(message, client, *args, **kwargs):
     '''
-    **.ytadd** [*query*]
+    **{0}ytadd** [*query*]
     *This command was created for the /g/ discord server.*
     Searches YouTube for *query*, returns the first result, then clarifies with you before adding it to the queue for Memebot Jones. If you deny the result, returns the next result and tries again. This goes until 5 results have been displayed, or the bot recieves `abort`.
-    *Example: `.ytadd meme machine`*
+    *Example: `{0}ytadd meme machine`*
     '''
 
     query = message.content.split(None, 1)[1]

@@ -9,10 +9,10 @@ import cacobot.base as base
 @base.cacofunc
 async def roll(message, client):
     '''
-    **.roll**
+    **{0}roll**
     *This command was created for the /g/ server.*
     Generates an integer based on the current time. If the last two digits are equivalent, appends the message with 'check 'em!'
-    *Example: `.roll`*
+    *Example: `{0}roll`*
     '''
 
     # This was written by @NoKeksGiven. Give that guy a shout-out!

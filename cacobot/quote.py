@@ -11,9 +11,9 @@ mention_syntax = re.compile(r'(<@([0-9]*?)>)')
 @base.cacofunc
 async def quote(message, client):
     '''
-    **.quote** [ *id* | *phrase to search* ]
+    **{0}quote** [ *id* | *phrase to search* ]
     Spews a random quote from my database. If *id* is provided, spews the quote with that id. If *phrase to search* is provided, searches my database for quotes containing that phrase, lists every quote with that phrase, and then spews a random one from that list.
-    *Example: `.quote 1`*
+    *Example: `{0}quote 1`*
     '''
     numburs = ['number ', 'numero ', 'numbuh ', '#', 'integer ', '№ ']
     search = False
@@ -95,7 +95,7 @@ async def addquote(message, client):
     **addquote** <*content*>
     Add a quote to my quote database.
     *Remember, quotes are subject to the Terms of Service for CacoBot, and my judgement. I do go through them. Shitty quotes that make no sense in any context, or quotes that try to be "meta" and refer to the quote index, are often subjected to deletion.*
-    *Example: `.addquote <TerminusEst13> .idgames good map
+    *Example: `{0}addquote <TerminusEst13> .idgames good map
     <idgamesbot> Nothing found.
     <TerminusEst13> Well there you have it, folks.`*
     '''
@@ -180,9 +180,9 @@ addquote.server = 'Quotes'
 @base.cacofunc
 async def delquote(message, client):
     '''
-    **.delquote** [*index*]
+    **{0}delquote** [*index*]
     Removes a quote from the database. You can only remove quotes you have created. Specify no index to try to remove the last quote.
-    *Example: `.delquote 13`*
+    *Example: `{0}delquote 13`*
     '''
 
     cont = True
@@ -232,9 +232,9 @@ delquote.server = 'Quotes'
 @base.cacofunc
 async def parsequote(message, client):
     '''
-    **.parsequote**
+    **{0}parsequote**
     This command is under renovations.
-    *Example: `.parsequote`*
+    *Example: `{0}parsequote`*
     '''
     await client.send_messag(message.channel, ':no_entry_sign: This command is under renovations.')
 parsequote.server = 'Quotes'
@@ -267,9 +267,9 @@ def date_format(timestamp):
 @base.cacofunc
 async def log(message, client):
     '''
-    **.log** [*req*]
+    **{0}log** [*req*]
     Sends the last 20 messages in a channel to you in a direct message in a nice, copy-pastable format. You can specify [*req*] to get a specific number of messages. (This is subject to limitations emposed by the API and the bot maintainer's preference.)
-    *Example: `.log 25`*
+    *Example: `{0}log 25`*
     '''
 
     # Check to see how many messages we should grab.
@@ -362,9 +362,9 @@ async def log(message, client):
 @base.cacofunc
 async def logquote(message, client):
     '''
-    **.logquote** [*num*] [*slice*]
-    Takes the last *num* quotes, and then adds them to the Quotes list, after OKaying it with you. If *slice* is provided, the quote will take the last *num* messages up to the last *slice* messages. For example, `.logquote 4 2` would quote the 4th to last, 3rd to last, and 2nd to last messages.
-    *Example: `.logquote 10 6`*
+    **{0}logquote** [*num*] [*slice*]
+    Takes the last *num* quotes, and then adds them to the Quotes list, after OKaying it with you. If *slice* is provided, the quote will take the last *num* messages up to the last *slice* messages. For example, `{0}logquote 4 2` would quote the 4th to last, 3rd to last, and 2nd to last messages.
+    *Example: `{0}logquote 10 6`*
     '''
     r = None
     s = None
@@ -513,13 +513,13 @@ logquote.server = 'Quotes'
 @base.cacofunc
 async def memo(message, client):
     '''
-    **.memo** [ all | mentions | none ]
+    **{0}memo** [ all | mentions | none ]
     Manages your inclusion into the memoing system.
     `all` will DM you both mentions, and everyone mentions.
     `mentions` will only DM you if someone mentions you specifically.
     `none` removes you from the memoing system.
     If you are on the memoing system and you are mentioned in a channel that this bot is in, and you are not online, this bot will DM you where the mention was recieved (server and channel) plus the last 5 messages in that channel for context.
-    *Example: `.memo add`*
+    *Example: `{0}memo add`*
     '''
 
     try:

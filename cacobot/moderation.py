@@ -8,10 +8,10 @@ import cacobot.base as base
 @base.cacofunc
 async def hush(message, client):
     '''
-    **.hush** [server]
+    **{0}hush** [server]
     Disables this bot from listening for commands in this channel. If [server] is supplied, extends the hush to the entire server.
     You can only call this command if you are able to kick.
-    *Example: `.hush server`*
+    *Example: `{0}hush server`*
     '''
 
     # Do not continue if user does not have kick permissions.
@@ -38,7 +38,7 @@ async def hush(message, client):
             hushed[message.channel.id] = 'channel'
             await client.send_message(
                 message.channel,
-                ':mute: **Channel hush!** :mute:\n{}: I will no longer respond to commands in this channel. Call `{}listen` if you want to bring me back. Call `{}hush server` if you were hoping to silence me on the whole server. (Hint: Do it somewhere I can hear it since you silenced me here.)'.format(
+                ':mute: **Channel hush!** :mute:\n{}: I will no longer respond to commands in this channel. Call `{1}listen` if you want to bring me back. Call `{1}hush server` if you were hoping to silence me on the whole server. (Hint: Do it somewhere I can hear it since you silenced me here.)'.format(
                     message.author.name,
                     base.config['invoker']
                     )
@@ -107,7 +107,7 @@ async def checkForHush(message, client):
 @base.cacofunc
 async def listen(message, client):
     '''
-    **.listen**
+    **{0}listen**
     Cancels a hush. Applies to a channel, server, or both, depending on where it's called. This is the only command that works even if CacoBot is hushed.
     '''
 
@@ -126,9 +126,9 @@ async def listen(message, client):
 # @base.cacofunc # Uncomment this line to add it back.
 async def call(message, client):
     '''
-    **.call** [*role*]
+    **{0}call** [*role*]
     Mentions everyone in the role [*role*]. This is primarily for notifying mods that are away.
-    *Example: `.call Mods`*
+    *Example: `{0}call Mods`*
     '''
 
     roleToMention = message.content.split(None, 1)[1].lower()
@@ -168,10 +168,10 @@ async def call(message, client):
 @base.cacofunc
 async def connect(message, client):
     '''
-    **.connect** [*invite*]
+    **{0}connect** [*invite*]
     Allows this bot to join your server.
-    *Example: `.connect http://discord.gg/0iLJFytdVRBR1vgh`*
-    *Please consider reading the Terms of Service for CacoBot before call `.connect`.*
+    *Example: `{0}connect http://discord.gg/0iLJFytdVRBR1vgh`*
+    *Please consider reading the Terms of Service for CacoBot before calling `{0}connect`.*
     https://github.com/Orangestar12/cacobot/blob/master/tos.md
     '''
     try:
@@ -195,7 +195,7 @@ async def connect(message, client):
 @base.cacofunc
 async def debug(message, client):
     '''
-    **.debug** [await | exec | *command*]
+    **{0}debug** [await | exec | *command*]
     *This is a debug command. Only the bot owner can use it.*
     '''
 
@@ -240,9 +240,9 @@ debug.server = 'Debug'
 @base.cacofunc
 async def plug(message, client):
     '''
-    **.plug** [*mention*]
+    **{0}plug** [*mention*]
     Makes this bot stop listening to a specific user. Only users that can kick can plug and unplug.
-    *Example: `.plug @BooBot`*
+    *Example: `{0}plug @BooBot`*
     '''
 
     if message.author.id == base.config['owner_id'] or\
@@ -271,9 +271,9 @@ async def plug(message, client):
 @base.cacofunc
 async def unplug(message, client):
     '''
-    **.unplug** [*mention*]
+    **{0}unplug** [*mention*]
     Makes this bot resume listen to a user that has been plugged. Only users that can kick can plug and unplug.
-    *Example: `.unplug @Orangestar`*
+    *Example: `{0}unplug @Orangestar`*
     '''
 
     if message.author.id == base.config['owner_id'] or \
@@ -324,9 +324,9 @@ async def checkForPlug(message, client):
 @base.cacofunc
 async def git(message, client):
     '''
-    **.git** [*file*]
+    **{0}git** [*file*]
     Sends a link to the CacoBot repo on Github. Provide [*file*] to link to a specific file. This is naive.
-    *Example: `.git cacobot/changes.py`*
+    *Example: `{0}git cacobot/changes.py`*
     '''
     snark = [
         'Stare into the abyss, and the abyss will stare back at you.',
@@ -355,9 +355,9 @@ async def git(message, client):
 @base.cacofunc
 async def myid(message, client):
     '''
-    **.myid**
+    **{0}myid**
     Returns your Discord ID for when another bot can't for some reason.
-    *Example: `.myid`*
+    *Example: `{0}myid`*
     '''
     await client.send_message(
         message.channel,
@@ -369,10 +369,10 @@ myid.server = 'Debug'
 @base.cacofunc
 async def nuke(message, client):
     '''
-    **.nuke** [*number*]
-    Removes *number* amount of posts from the channel. If no number is specified, removes 20. This does not include your `.nuke` command.
+    **{0}nuke** [*number*]
+    Removes *number* amount of posts from the channel. If no number is specified, removes 20. This does not include your `{}nuke` command.
     You can only call this command if you can remove posts yourself.
-    *Example: `.nuke 20`*
+    *Example: `{0}nuke 20`*
     '''
 
     # r = number of requested deletions
@@ -408,10 +408,10 @@ async def nuke(message, client):
 @base.cacofunc
 async def cleanup(message, client):
     '''
-    **.cleanup** [*number*]
+    **{0}cleanup** [*number*]
     Removes *number* amount of posts by CacoBot from the channel, plus the invokers, for up to the last 100 messages. If no number is specified, removes 5.
     You can only call this command if you can remove posts yourself.
-    *Example: `.cleanup 20`*
+    *Example: `{0}cleanup 20`*
     '''
 
     # c = number of commands
@@ -471,12 +471,12 @@ chanuke.server = 'hidden'
 
 @base.cacofunc
 async def remove(message, client):
-    """
-    **.remove**
+    '''
+    **{0}remove**
     Removes all messages in the last 2000 posts by a user specified.
     This is currently under development, so only the bot owner can invoke it.
-    *Example: `.remove Skulltrail`*
-    """
+    *Example: `{0}remove Skulltrail`*
+    '''
     await client.delete_message(message)
     if message.author.id == base.config['owner_id']:
         async for x in client.logs_from(message.channel, 2000):
