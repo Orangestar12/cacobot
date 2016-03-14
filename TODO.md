@@ -14,6 +14,8 @@
 
  - `.later` should fall back to Imgur uploaded versions of the images if the bot can't upload files.
 
+- Don't deprecate `.changes`, Read the latest commits and post a link to the GitHub instead
+
 ## Low Priority
 
 - bring back CacoRadio!
