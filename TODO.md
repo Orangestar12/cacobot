@@ -1,3 +1,5 @@
+# TODO
+
  ~~- Tags are still broken as shit.~~
 
  - `.determinate` needs a whole overhaul.
@@ -11,3 +13,7 @@
  - OH BOY GET READY FOR OFFICIAL API BECAUSE THAT'S GONNA BREAK A LOOOOOOOOOOT
 
  - `.later` should fall back to Imgur uploaded versions of the images if the bot can't upload files.
+
+## Low Priority
+
+- bring back CacoRadio!

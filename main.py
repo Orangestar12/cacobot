@@ -42,7 +42,6 @@ async def on_ready():
     print(client.user.name)
     print(client.user.id)
     print('------')
-    #cacobot.radio.init()
     await random_game()
 
 @client.event
