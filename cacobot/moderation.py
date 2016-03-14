@@ -5,10 +5,6 @@ import random
 import discord
 import cacobot.base as base
 
-# Open the config to get owner id.
-with open('configs/config.json') as data:
-    config = json.load(data)
-
 @base.cacofunc
 async def hush(message, client):
     '''
@@ -27,12 +23,13 @@ async def hush(message, client):
             hushed = json.load(z)
 
         # Server hush
-        if message.content == '.hush server':
+        if message.content == base.config['invoker'] + 'hush server':
             hushed[message.server.id] = 'server'
             await client.send_message(
                 message.channel,
-                ':mute: **Server hush!** :mute:\n{} will no longer respond to commands in this server. Call `.listen` if you want me back. Ask Orangestar to remove me if you want me gone permanently.'.format(
-                    message.author.name
+                ':mute: **Server hush!** :mute:\n{} will no longer respond to commands in this server. Call `{}listen` if you want me back. Ask Orangestar to remove me if you want me gone permanently.'.format(
+                    message.author.name,
+                    base.config['invoker']
                     )
                 )
 
@@ -41,7 +38,10 @@ async def hush(message, client):
             hushed[message.channel.id] = 'channel'
             await client.send_message(
                 message.channel,
-                ':mute: **Channel hush!** :mute:\n{}: I will no longer respond to commands in this channel. Call `.listen` if you want to bring me back. Call `.hush server` if you were hoping to silence me on the whole server. (Hint: Do it somewhere I can hear it since you silenced me here.)'.format(message.author.name)
+                ':mute: **Channel hush!** :mute:\n{}: I will no longer respond to commands in this channel. Call `{}listen` if you want to bring me back. Call `{}hush server` if you were hoping to silence me on the whole server. (Hint: Do it somewhere I can hear it since you silenced me here.)'.format(
+                    message.author.name,
+                    base.config['invoker']
+                    )
                 )
 
         # Save hush list.
@@ -69,12 +69,11 @@ async def checkForHush(message, client):
         with open('configs/hush.json', 'w') as z:
             z.write('{}')
 
-    # In retrospect this next bit could probably be a seperate function.
     if\
      not message.channel.is_private and\
      message.server.id in hushed and\
      hushed[message.server.id] == 'server':
-        if message.content.startswith(config['invoker'] + 'listen'):
+        if message.content.startswith(base.config['invoker'] + 'listen'):
             hushed.pop(message.server.id)
             await client.send_message(
                 message.channel,
@@ -86,11 +85,11 @@ async def checkForHush(message, client):
                 json.dump(hushed, z, indent=4)
         return False
 
-    elif\
+    if\
      not message.channel.is_private and\
      message.channel.id in hushed and\
      hushed[message.channel.id] == 'channel':
-        if message.content.startswith(config['invoker'] + 'listen'):
+        if message.content.startswith(base.config['invoker'] + 'listen'):
             hushed.pop(message.channel.id)
             await client.send_message(
                 message.channel,
@@ -102,9 +101,8 @@ async def checkForHush(message, client):
                 json.dump(hushed, z, indent=4)
         return False
 
-    else:
-        # Continue on to the command if we're not hushed.
-        return True
+    # Continue on to the command if we're not hushed.
+    return True
 
 @base.cacofunc
 async def listen(message, client):
@@ -201,7 +199,7 @@ async def debug(message, client):
     *This is a debug command. Only the bot owner can use it.*
     '''
 
-    if message.author.id == config['owner_id']:
+    if message.author.id == base.config['owner_id']:
         cfgs = {}
 
         for x in [
@@ -237,6 +235,7 @@ async def debug(message, client):
             message.channel,
             ':no_entry_sign: You are not authorized to perform that command.'
             )
+debug.server = 'Debug'
 
 @base.cacofunc
 async def plug(message, client):
@@ -246,9 +245,9 @@ async def plug(message, client):
     *Example: `.plug @BooBot`*
     '''
 
-    if message.author.id == config['owner_id'] or\
+    if message.author.id == base.config['owner_id'] or\
             message.channel.permissions_for(message.author).kick_members:
-        if message.author.id == config['owner_id'] and\
+        if message.author.id == base.config['owner_id'] and\
                 message.content.split()[1] == 'GLOBAL':
             srv = 'GLOBAL'
         else:
@@ -277,7 +276,7 @@ async def unplug(message, client):
     *Example: `.unplug @Orangestar`*
     '''
 
-    if message.author.id == config['owner_id'] or \
+    if message.author.id == base.config['owner_id'] or \
             message.channel.permissions_for(message.author).kick_members:
         with open('configs/plugs.json') as z:
             plugs = json.load(z)
@@ -297,8 +296,9 @@ async def unplug(message, client):
 
 @base.precommand
 async def checkForPlug(message, client):
-    if message.content.startswith(config['invoker']) and\
-            message.content.split()[0][1:] in base.functions and\
+    if message.content.startswith(base.config['invoker']) and\
+            len(message.content.split()[0]) > 1 and\
+            message.content.split()[0][len(base.config['invoker']):] in base.functions and\
             message.author.id != client.user.id:
         plugs = {}
         try:
@@ -336,7 +336,7 @@ async def git(message, client):
         'Ohhhhhhhhhhhhhh yeeeeeeeeeeeessssssss!',
         '*Nervous coughing*'
     ]
-    if message.content.strip() == '.git':
+    if message.content.strip() == base.config['invoker'] + 'git':
         await client.send_message(
             message.channel,
             '{}\nhttps://github.com/Orangestar12/cacobot/'.format(
@@ -363,6 +363,7 @@ async def myid(message, client):
         message.channel,
         '{}: Your ID is `{}`.'.format(message.author, message.author.id)
         )
+myid.server = 'Debug'
 
 
 @base.cacofunc
@@ -433,12 +434,12 @@ async def cleanup(message, client):
             try:
                 async for msg in client.logs_from(message.channel, 100):
                     if (msg.author.id == client.user.id or\
-                            (msg.content.lower().startswith(config['invoker']) and\
-                            msg.content[1:].split(" ", 1)[0] in base.functions)) and\
+                            (msg.content.lower().startswith(base.config['invoker']) and\
+                            msg.content[len(base.config['invoker']):].split(" ", 1)[0] in base.functions)) and\
                             c < r:
                         await client.delete_message(msg)
-                        if msg.content.startswith(config['invoker']) and\
-                                msg.content[1:].split(" ", 1)[0] in base.functions:
+                        if msg.content.startswith(base.config['invoker']) and\
+                                msg.content[len(base.config['invoker']):].split(" ", 1)[0] in base.functions:
                             c = c + 1
             except discord.errors.NotFound:
                 pass
@@ -477,7 +478,20 @@ async def remove(message, client):
     *Example: `.remove Skulltrail`*
     """
     await client.delete_message(message)
-    if message.author.id == config['owner_id']:
+    if message.author.id == base.config['owner_id']:
         async for x in client.logs_from(message.channel, 2000):
             if x.author.name == message.content.split()[1]:
                 await client.delete_message(x)
+
+@base.cacofunc
+async def ssg(message, client):
+    '''
+    ***{0}ssg***
+    Closes the bot.
+    *This is a debug command. Only the bot owner can use it.*
+    *Example: `{0}ssg`*
+    '''
+    if message.author.id == base.config['owner_id']:
+        await client.send_message(message.channel, '*Cacodemon death gurgle.*')
+        await client.close()
+ssg.server = 'Debug'

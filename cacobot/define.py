@@ -20,7 +20,7 @@ async def define(message, client, *args, **kwargs):
     Scrapes Wiktionary for the dictionary definition of <*phrase*> and formats the first 1-5 results.
     *Example: `.define demon`*
     '''
-    if message.content.strip()[1:] == 'define':
+    if message.content.strip()[len(base.config['invoker']):] == 'define':
         await client.send_message(message.channel, '{}: Please provide the word you would like to get the definition from Wiktionary from.'.format(message.author.mention))
     else:
         definition = message.content.split(None, 1)[1].lower() # I'm pretty sure all Wiktionary pages are lowercase.
@@ -125,7 +125,7 @@ async def urbdef(message, client, *args, **kwargs):
     Same as .define, only searches Urban Dictionary instead of Wiktionary.
     *Example: `.urbasync def doom`*
     '''
-    if message.content.strip()[1:] == 'urbdef':
+    if message.content.strip()[len(base.config['invoker']):] == 'urbdef':
         await client.send_message(message.channel, '{}: Please provide the word you would like to get the definition from Urban Dictionary from.'.format(message.author.mention))
     else:
         definition = message.content.split(None, 1)[1].lower()

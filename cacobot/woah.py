@@ -1084,7 +1084,7 @@ killmsgs = [
     'When %o aimed at the sky %g may have been the first one to die, but %k\'s the one who paid for it.',
     '"%o, do you yield?"\n"%k shot %h in the chest, *yes* %g yields!"',
     '%k tore %o apart for speaking freely about the Continental Congress.',
-    '%o looked into %k\'s eyes and was helpless- wait, that\'s `.ship`, wrong command. Sorry.',
+    '%o looked into %k\'s eyes and was helpless- wait, that\'s `{}ship`, wrong command. Sorry.'.format(base.config['invoker']),
     '%o called %k "Son" one time too many.',
     '%k looks %o in the eye, aims no higher, summons all the courage that\'s required, then counts...\n*1, 2, 3, 4, 5, 6, 7, 8, 9...*\n***Number 10... paces! Fire!***',
     '%k blew %o the fuck out in a cabinet meeting.',

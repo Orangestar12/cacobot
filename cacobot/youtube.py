@@ -4,10 +4,7 @@ from apiclient.discovery import build
 from apiclient.errors import HttpError
 from oauth2client.tools import argparser
 
-with open('configs/config.json') as data:
-    config = json.load(data)
-
-youtube = build(config['youtube']['API_SERVICE_NAME'], config['youtube']['API_VERSION'], developerKey=config['youtube']['DEVELOPER_KEY'])
+youtube = build(base.config['youtube']['API_SERVICE_NAME'], base.config['youtube']['API_VERSION'], developerKey=base.config['youtube']['DEVELOPER_KEY'])
 
 @base.cacofunc
 async def yt(message, client, *args, **kwargs):
@@ -27,10 +24,10 @@ async def yt(message, client, *args, **kwargs):
     #This string will store the message that will eventually be sent.
     all_videos = ''
 
-    #Limit requests if exceeds config
-    if results > config['youtube']['request_limit']:
-        all_videos += '*I had to limit your request to {} results at the behest of my maintainer.*\n'.format(config['youtube']['request_limit'])
-        results = config['youtube']['request_limit']
+    #Limit requests if exceeds base.config
+    if results > base.config['youtube']['request_limit']:
+        all_videos += '*I had to limit your request to {} results at the behest of my maintainer.*\n'.format(base.config['youtube']['request_limit'])
+        results = base.config['youtube']['request_limit']
 
     #this is all pretty much from the YouTube API Python example.
 

@@ -285,7 +285,7 @@ async def ship(message, client):
     }
     listToChooseFrom = []
     if len(message.content.split()) > 1:
-        lists = message.content.lower().strip().split()[1:]
+        lists = message.content.lower().strip().split()[len(base.config['invoker']):]
         if lists[0] == 'list':
             if len(lists) > 1 and lists[1] in ships:
                 await client.send_message(message.author, ', '.join(ships[lists[1]]))
@@ -320,8 +320,9 @@ async def ship(message, client):
         await client.send_message(message.channel, ':no_entry_sign: {} You did not provide enough valid lists to choose from.'.format(message.author))
 
 ohwhitelist = [
-    '152821755164098561',
-    '149167686159564800'
+    '152821755164098561', # remove soon
+    '149167686159564800',
+    '143896176213622784'
 ]
 
 @base.postcommand

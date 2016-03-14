@@ -11,7 +11,7 @@ async def help(message, client):
     '''
 
     params = message.content.split(" ")
-    if message.content.strip()[1:] == 'help':
+    if message.content.strip()[len(base.config['invoker']):] == 'help':
         msg = 'These are my commands:\n'
 
         dect = {} # Oh god here we go
@@ -41,14 +41,18 @@ async def help(message, client):
                 msg += ' '.join(sorted(dect[x]))
                 msg += '\n\n'
 
-        msg += 'Use `.help [`*`command`*`]` to get more information about a command.\nUse `.welcome` if you are completely unsure of how to use this bot.'
+        msg += 'Use `{0}help [`*`command`*`]` to get more information about a command.\nUse `{0}welcome` if you are completely unsure of how to use this bot.'.format(
+            base.config['invoker']
+            )
         await client.send_message(message.channel, msg)
     else:
         if params[1] in base.functions:
             # check for docstring
             if base.functions[params[1]].__doc__:
                 # Use inspect.getdoc() to clean the docstring up.
-                await client.send_message(message.channel, inspect.getdoc(base.functions[params[1]]))
+                await client.send_message(message.channel, inspect.getdoc(base.functions[params[1]]).format(
+                    base.config['invoker']
+                ))
             else:
                 await client.send_message(message.channel, ':heavy_exclamation_mark: This command has no docstring! Go tell Orangestar that it\'s broken.')
         else:

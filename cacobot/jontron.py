@@ -4,9 +4,6 @@ import asyncio
 import json
 import cacobot.base as base
 
-with open('configs/config.json') as data:
-    config = json.load(data)
-
 whitelist = [
     ('99293578949316608', '142417518118699008'),
     ('120330239996854274', '120331931735949313'),
@@ -24,7 +21,7 @@ async def koolaid(message, client):
                 message.author.id != client.user.id:
             # Change Avatar
             with open('ethan/ethan.png', 'rb') as wow_ethan:
-                await client.edit_profile(config['password'], avatar=wow_ethan.read())
+                await client.edit_profile(base.config['password'], avatar=wow_ethan.read())
 
             # comedic timing
             await asyncio.sleep(5)
@@ -148,4 +145,4 @@ async def koolaid(message, client):
                                 )
 
             with open('avatar.jpg', 'rb') as avatar:
-                await client.edit_profile(config['password'], avatar=avatar.read())
+                await client.edit_profile(base.config['password'], avatar=avatar.read())

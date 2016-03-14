@@ -6,9 +6,6 @@ import asyncio # to sleep in log
 import discord
 import cacobot.base as base
 
-with open('configs/config.json') as data:
-    config = json.load(data)
-
 mention_syntax = re.compile(r'(<@([0-9]*?)>)')
 
 @base.cacofunc
@@ -106,13 +103,13 @@ async def addquote(message, client):
 
     # Complain about cheeky asses.
 
-    if cmd.startswith('.addquote'):
+    if cmd.startswith(base.config['invoker'] + 'addquote'):
         await client.send_message(
             message.channel,
             '{}: Hah hah, very funny, but that wouldn\'t work anyway.'.format(message.author)
             )
 
-    elif cmd.startswith('.quote'):
+    elif cmd.startswith(base.config['invoker'] + 'quote'):
         await client.send_message(
             message.channel,
             '{}: Not only would that not work, but that\'s really annoying. Stop that shit.'.format(message.author)
@@ -160,16 +157,17 @@ async def addquote(message, client):
             if cmd.startswith('http://') or cmd.startswith('https://'):
                 await client.send_message(
                     message.channel,
-                    '{}: :warning: I have added that quote successfully as number {}, but couldn\'t help noticing it starts with a link. If this is an image of a Discord chat log, consider providing your quotes as text next time, or using my `.log` function.'.format(
-                        message.author.mention,
-                        len(quotes)
+                    '{}: :warning: I have added that quote successfully as number {}, but couldn\'t help noticing it starts with a link. If this is an image of a Discord chat log, consider providing your quotes as text next time, or using my `{}log` function.'.format(
+                        message.author.name,
+                        len(quotes),
+                        base.config['invoker']
                         )
                     )
             else:
                 await client.send_message(
                     message.channel,
                     '{}: :heavy_check_mark: Successfully added that to my quote database as quote number {}.'.format(
-                        message.author,
+                        message.author.name,
                         len(quotes)
                         )
                     )
@@ -195,7 +193,7 @@ async def delquote(message, client):
         except ValueError:
             await client.send_message(
                 message.channel,
-                ':no_entry_sign: Please specify an integer next time.'
+                ':no_entry_sign: {}: Please specify an integer next time.'.format(message.author.name)
                 )
             cont = False
     else:
@@ -209,7 +207,7 @@ async def delquote(message, client):
         cont = False
 
     if cont:
-        if message.author.id == quotes[r - 1][1] or message.author.id == config['owner_id']:
+        if message.author.id == quotes[r - 1][1] or message.author.id == base.config['owner_id']:
             quotes.pop(r - 1)
             with open('configs/quotes.json', 'w') as z:
                 json.dump(quotes, z, indent=4)
@@ -282,12 +280,12 @@ async def log(message, client):
         req = 20
 
     #Do not continue if requests is over the limit.
-    if req > config['log_request_limit']:
+    if req > base.config['log_request_limit']:
         await client.send_message(
             message.channel,
             '{}: That\'s way too many messages to send, as decreed by my creator. Acceptable amounts end at {}.'.format(
                 message.author,
-                config['log_request_limit']
+                base.config['log_request_limit']
                 )
             )
         return
@@ -380,7 +378,9 @@ async def logquote(message, client):
                 except ValueError:
                     await client.send_message(
                         message.channel,
-                        'Please provide an integer to slice.'
+                        '{}: Please provide an integer to slice.'.format(
+                            message.author.name
+                        )
                     )
                     return
             else:

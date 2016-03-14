@@ -146,7 +146,7 @@ async def summon(message, client):
     }
 
     # Just summon
-    if message.content.strip()[1:] == 'summon':
+    if message.content.strip()[len(base.config['invoker']):] == 'summon':
 
         # Add spoilers unless spoiler-free channel
         if message.channel.is_private or message.channel.name not in ['torielshome', 'fanworks', 'workshop']:
@@ -166,7 +166,7 @@ async def summon(message, client):
 
         await client.send_message(message.channel, msg)
 
-    elif message.content.strip()[1:] == 'summon list':
+    elif message.content.strip()[len(base.config['invoker']):] == 'summon list':
         if message.channel.is_private or message.channel.name not in ['torielshome', 'fanworks', 'workshop']:
             monsters.update(spoilers)
 
@@ -175,7 +175,7 @@ async def summon(message, client):
         await client.send_message(message.channel, 'List of Monster Codes:\n```\n{}\n```'.format(' '.join(sorted(list(monsters)))))
 
     else:
-        cmd = message.content.split()[1:]
+        cmd = message.content.split()[len(base.config['invoker']):]
         msg = []
 
         monsters.update(hidden)
@@ -526,7 +526,12 @@ async def determinate(message, client):
         else:
             await client.send_message(message.channel, '*Sent by {}.*'.format(message.author.mention))
     except IndexError:
-        await client.send_message(message.channel, 'If you do not know how to use this command, call `.help determinate`!')
+        await client.send_message(
+            message.channel,
+            'If you do not know how to use this command, call `{0}help determinate`!'.format(
+                base.config['invoker']
+                )
+            )
 determinate.server = 'Undertale'
 
 # You know, while I'm here, here's the StackOverflow post that has the function.
@@ -587,7 +592,7 @@ async def what(message, client):
     Generates a name for uh... Fire... Hotsbro... You know, the guy from Hotland who was fire-based.
     *Example: `.What was his name again?`*
     '''
-    if message.content.strip()[1:].lower() == 'what was his name again?':
+    if message.content.strip()[len(base.config['invoker']):].lower() == 'what was his name again?':
         heatsflames = [
             'Heats',
             'Flames',

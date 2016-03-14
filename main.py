@@ -64,7 +64,7 @@ async def on_message(message):
     if cont:
         if message.content.startswith(config['invoker']) and \
         message.author.id != client.user.id and len(message.content) > 1: # ignore our own commands
-            command = message.content[1:].split()[0].lower()
+            command = message.content[len(cacobot.base.config['invoker']):].split()[0].lower()
             # So basically if the message was ".Repeat Butt talker!!!" this
             # would be "repeat"
             if command in cacobot.base.functions:

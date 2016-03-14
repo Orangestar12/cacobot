@@ -32,7 +32,7 @@ async def journal(message, client, *args, **kwargs):
         with open('configs/journals.json', 'w') as data:
             data.write('[]')
 
-    if message.content.strip()[1:] == 'journal activate':
+    if message.content.strip()[len(base.config['invoker']):] == 'journal activate':
         if message.channel.permissions_for(message.author).manage_channels:
             journals.append(message.server.id)
             with open('configs/journals.json', 'w') as data:
@@ -62,6 +62,11 @@ async def journal(message, client, *args, **kwargs):
             else:
                 await client.send_message(message.channel, ":no_entry_sign: I do not have the proper permissions to create a journal channel for you yet.")
         else:
-            await client.send_message(message.channel, ":no_entry_sign: This server is disallowed from making Journals. If you would like to enable it, have a moderator call `.journal activate`.")
+            await client.send_message(
+                message.channel,
+                ":no_entry_sign: This server is disallowed from making Journals. If you would like to enable it, have a moderator call `{}journal activate`.".format(
+                    base.config['invoker']
+                    )
+                )
 
 journal.server = 'Dream Journals'

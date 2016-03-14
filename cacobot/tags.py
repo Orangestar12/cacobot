@@ -13,10 +13,7 @@ import cacobot.base as base
 # urllibs to post configs to pastebin
 # re to find mentions
 
-mention_syntax = re.compile('(<@([0-9]*?)>)')
-
-with open('configs/config.json') as data:
-    config = json.load(data)
+mention_syntax = re.compile(r'(<@([0-9]*?)>)')
 
 @base.cacofunc
 async def tag(message, client):
@@ -133,7 +130,7 @@ async def tag(message, client):
                             lst += '\n\n'
 
                         values = {
-                          'api_dev_key' : config['pastebin_key'],
+                          'api_dev_key' : base.config['pastebin_key'],
                           'api_option' : 'paste',
                           'api_paste_code' : lst,
                           'api_paste_private' : '1',
@@ -155,7 +152,7 @@ async def tag(message, client):
                             lst += x + ' '
 
                         values = {
-                          'api_dev_key' : config['pastebin_key'],
+                          'api_dev_key' : base.config['pastebin_key'],
                           'api_option' : 'paste',
                           'api_paste_code' : lst,
                           'api_paste_private' : '1',
@@ -217,7 +214,7 @@ async def tag(message, client):
                             lst += '\n\n'
 
                         values = {
-                            'api_dev_key' : config['pastebin_key'],
+                            'api_dev_key' : base.config['pastebin_key'],
                             'api_option' : 'paste',
                             'api_paste_code' : lst,
                             'api_paste_private' : '1',
@@ -251,7 +248,7 @@ async def tag(message, client):
                     lst = lst[:-2]
 
                     values = {
-                        'api_dev_key' : config['pastebin_key'],
+                        'api_dev_key' : base.config['pastebin_key'],
                         'api_option' : 'paste',
                         'api_paste_code' : lst,
                         'api_paste_private' : '1',
@@ -358,4 +355,6 @@ async def tag(message, client):
         with open('configs/tags.json', 'w') as file:
             json.dump(tags, file, indent=4)
     except IndexError:
-        await client.send_message(message.channel, "If you need help on using this command, call `.help tag`!")
+        await client.send_message(message.channel, "If you need help on using this command, call `{}help tag`!".format(
+            base.config['invoker']
+            ))
