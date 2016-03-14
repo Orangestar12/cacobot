@@ -1162,6 +1162,8 @@ async def kill(message, client):
         pronouns = optin[message.mentions[0].id]
     elif len(message.content.split()) > 1 and [x for x in message.server.members if x.name == message.content.split(None, 1)[1]] and [x.id for x in message.server.members if x.name == message.content.split(None, 1)[1]][0] in optin:
         pronouns = optin[[x.id for x in message.server.members if x.name == message.content.split(None, 1)[1]][0]]
+    elif message.author.id in optin:
+        pronouns = optin[message.author.id]
 
     if len(params) < 2:
         if not cooldown:
