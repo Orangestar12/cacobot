@@ -1,6 +1,6 @@
-- Tags are still broken as shit.
+ - Tags are still broken as shit.
 
-- `.determinate` needs a whole overhaul.
+ - `.determinate` needs a whole overhaul.
 
  - Make a proper close instead of having to use debug.
 
