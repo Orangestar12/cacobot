@@ -2,7 +2,7 @@
 
  - `.determinate` needs a whole overhaul.
 
- - Make a proper close instead of having to use debug.
+ ~~- Make a proper close instead of having to use debug.~~
 
  - First time setup?
 
