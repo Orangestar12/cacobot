@@ -396,7 +396,7 @@ async def determinate(message, client):
             TextToSay = TextToSay[:index] + TextToSay[end:]
 
         TextToSay = TextToSay.strip()
-        if font == 'Wingdings':
+        if font.lower() in ['wingdings', 'webdings']:
             TextToSay = TextToSay.upper()
 
         # true if "* " exists, false if it doesn't.
@@ -517,7 +517,7 @@ async def determinate(message, client):
             pass
 
         # send msg if wingdings
-        if font == 'Wingdings':
+        if font.lower() in ['wingdings', 'webdings']:
             await client.send_message(message.channel, '*{}*'.format(save))
 
         # send author
