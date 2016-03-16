@@ -51,7 +51,7 @@ async def help(message, client):
                 msg += ' '.join(sorted(dect[x]))
                 msg += '\n\n'
 
-        msg += 'Use `{0}help [`*`command`*`]` to get more information about a command.\nUse `{0}welcome` if you are completely unsure of how to use this bot.'.format(
+        msg += 'Use `{0}help [`*`command`*`]` to get more information about a command.'.format(
             base.config['invoker']
             )
         await client.send_message(message.channel, msg)
@@ -68,19 +68,28 @@ async def help(message, client):
         else:
             await client.send_message(message.channel, ':no_entry_sign: That command does not exist.')
 
-@base.cacofunc
-async def welcome(message, client):
-    '''
-    **{0}welcome**
-    Displays a helpful message about how to use CacoBot!
-    *Example: `{0}welcome`*
-    '''
+#@base.cacofunc
+# async def welcome(message, client):
+    # '''
+    # **{0}welcome**
+    # Displays a helpful message about how to use CacoBot!
+    # *Example: `{0}welcome`*
+    # '''
 
     # You should customize this message to meet the standards of your own bot.
 
-    await client.send_message(message.author, 'HISSSSSSS! I\'m **CacoBot** r22! I was made by **Orangestar** to help out with a Doom-related server, but now I roam Discord checking out the servers available. My purpose is to act as a *supplementary* bot to existing bots on your server. I\'m packing a bunch of weird, superfluous commands that keep me lightweight and don\'t obsolete other bots. You can check them out with the `.help` command! Some stuff you might be interested:\n\nUse `.log` to get a nice, copy-pastable copy of the last few messages in a channel to add to quotes or share with a friend.\n\nCheck out my Github repo and personal server with `.git`.\n\nI have a set of commands for saving hilarious quotes from other users! Log is perfect for adding quotes to this database. If you ever need a pick-me-up, call `.quote`!\n\nFor everything else, you should call `.help` for a list of commands and `.help [`*`command`*`]` for specific information about a specific command. Have fun!')
+    # await client.send_message(message.author, 'HISSSSSSS! I\'m **CacoBot** r22! I was made by **Orangestar** to help out with a Doom-related server, but now I roam Discord checking out the servers available. My purpose is to act as a *supplementary* bot to existing bots on your server. I\'m packing a bunch of weird, superfluous commands that keep me lightweight and don\'t obsolete other bots. You can check them out with the `.help` command! Some stuff you might be interested:\n\nUse `.log` to get a nice, copy-pastable copy of the last few messages in a channel to add to quotes or share with a friend.\n\nCheck out my Github repo and personal server with `.git`.\n\nI have a set of commands for saving hilarious quotes from other users! Log is perfect for adding quotes to this database. If you ever need a pick-me-up, call `.quote`!\n\nFor everything else, you should call `.help` for a list of commands and `.help [`*`command`*`]` for specific information about a specific command. Have fun!')
 
-
+# provide short information if mentioned.
+@base.postcommand
+async def welcome(message, client):
+    if not message.channel.is_private and message.server.me in message.mentions:
+        await client.send_message(
+            message.channel,
+            '{}: For information on this bot, type `.help`. I don\'t log messages. Also, check out the `.git` command for my TOS and code.'.format(
+                message.author.name
+                )
+            )
 
 @base.cacofunc
 async def changes(message, client):
@@ -122,3 +131,4 @@ async def changes(message, client):
         await client.send_message(message.channel, 'This is embarrasing, there\'s been so many changes to my code I can\'t print them all. You can always check the GitHub repo at https://github.com/{}/{}/commits/master for the latest updates.\n(Hey! Also, tell my owner "You have the date in help.py set too high"! Thanks.)'.format(base.config['git']['repo_author'], base.config['git']['repo_name']))
 
 # If you're taking the senic tour of the code, you're free to look around as you
+# please from this point on, though I recommend checking out configs/config.json

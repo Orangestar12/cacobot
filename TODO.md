@@ -16,7 +16,7 @@
 
  ~~- Don't deprecate `.changes`, Read the latest commits and post a link to the GitHub instead~~
 
- - Remove `.welcome`. Instead, post a simple introductory prompt when CB is mentioned.~~
+ ~~- Remove `.welcome`. Instead, post a simple introductory prompt when CB is mentioned.~~
 
 ## Low Priority
 
