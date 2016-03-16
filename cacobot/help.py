@@ -29,12 +29,13 @@ async def help(message, client):
         for x in base.functions: # in with dictionaries gives keys, which are strings.
             # If a function is based upon a specific server (defined by a function's "server" attribute, which it may or may not have)
             if hasattr(base.functions[x], 'server'):
-                # Append to a key with that server's name
-                try:
-                    dect[base.functions[x].server].append(x)
-                except KeyError:
-                    dect[base.functions[x].server] = []
-                    dect[base.functions[x].server].append(x)
+                if base.functions[x].server != 'hidden':
+                    # Append to a key with that server's name
+                    try:
+                        dect[base.functions[x].server].append(x)
+                    except KeyError:
+                        dect[base.functions[x].server] = []
+                        dect[base.functions[x].server].append(x)
             else:
                 try:
                     dect['all'].append(x)
