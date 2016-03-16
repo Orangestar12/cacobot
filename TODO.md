@@ -14,7 +14,9 @@
 
  - `.later` should fall back to Imgur uploaded versions of the images if the bot can't upload files.
 
-- Don't deprecate `.changes`, Read the latest commits and post a link to the GitHub instead
+ ~~- Don't deprecate `.changes`, Read the latest commits and post a link to the GitHub instead~~
+
+ - Remove `.welcome`. Instead, post a simple introductory prompt when CB is mentioned.~~
 
 ## Low Priority
 

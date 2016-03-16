@@ -172,8 +172,9 @@ async def connect(message, client):
     Allows this bot to join your server.
     *Example: `{0}connect http://discord.gg/0iLJFytdVRBR1vgh`*
     *Please consider reading the Terms of Service for CacoBot before calling `{0}connect`.*
-    https://github.com/Orangestar12/cacobot/blob/master/tos.md
+    https://github.com/{1}/{2}/blob/master/tos.md
     '''
+
     try:
         await client.accept_invite(message.content.split()[1])
         await client.send_message(
