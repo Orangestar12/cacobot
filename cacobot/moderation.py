@@ -38,7 +38,7 @@ async def hush(message, client):
             hushed[message.channel.id] = 'channel'
             await client.send_message(
                 message.channel,
-                ':mute: **Channel hush!** :mute:\n{}: I will no longer respond to commands in this channel. Call `{1}listen` if you want to bring me back. Call `{1}hush server` if you were hoping to silence me on the whole server. (Hint: Do it somewhere I can hear it since you silenced me here.)'.format(
+                ':mute: **Channel hush!** :mute:\n{0}: I will no longer respond to commands in this channel. Call `{1}listen` if you want to bring me back. Call `{1}hush server` if you were hoping to silence me on the whole server. (Hint: Do it somewhere I can hear it since you silenced me here.)'.format(
                     message.author.name,
                     base.config['invoker']
                     )
@@ -185,6 +185,11 @@ async def connect(message, client):
         await client.send_message(
             message.channel,
             ':no_entry_sign: That was not a valid channel invite or id.'
+            )
+    except IndexError:
+        await client.send_message(
+            message.channel,
+            ':no_entry_sign: Please send a link to a channel invite or id with this command.'
             )
     except:
         await client.send_message(
