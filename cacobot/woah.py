@@ -1099,7 +1099,9 @@ killmsgs = [
     '%o got forked by %k.',
     '%k forked %o.',
     '%o got pull requested from %k.',
-    '%k pull requested %o.'
+    '%k pull requested %o.',
+    '%k supervises %o with a shitton of soldiers. And then %p security was downgraded to a ***fuck***ton of soldiers. *(Did I say downgrade? I meant upgrade.)*',
+    'It is true that %k killed %o, and yet, %g is not %p murderer'
 ]
 
 def postify(phrase, message, pronouns):
@@ -1157,6 +1159,10 @@ async def kill(message, client):
 
     params = message.content.split()
     pronouns = {'%g':'they', '%h':'them', '%p': 'their'}
+
+    if message.content.lower() == '{}kill la kill'.format(base.config['invoker']):
+        await client.send_message(message.channel, '{} tried to make a shitty anime joke and was victimized because of it.'.format(message.author.name))
+        return
 
     if message.mentions and message.mentions[0].id in optin:
         pronouns = optin[message.mentions[0].id]
