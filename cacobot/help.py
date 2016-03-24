@@ -62,7 +62,9 @@ async def help(message, client):
             if base.functions[params[1]].__doc__:
                 # Use inspect.getdoc() to clean the docstring up.
                 await client.send_message(message.channel, inspect.getdoc(base.functions[params[1]]).format(
-                    base.config['invoker']
+                    base.config['invoker'],
+                    base.config['git']['repo_author'],
+                    base.config['git']['repo_name']
                 ))
             else:
                 await client.send_message(message.channel, ':heavy_exclamation_mark: This command has no docstring! Go tell Orangestar that it\'s broken.')
