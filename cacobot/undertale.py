@@ -291,7 +291,7 @@ async def summon(message, client):
         if msg:
             await client.send_message(message.channel, '```\n{}\n```'.format('\n'.join(msg)))
         else:
-            await client.send_message(message.channel, '{}: I could not find any valid monster codes in your query. Use .summon list to see them all.'.format(message.author.mention))
+            await client.send_message(message.channel, '{}: I could not find any valid monster codes in your query. Use .summon list to see them all.'.format(message.author.name))
 summon.server = 'Undertale'
 
 @base.cacofunc
@@ -517,9 +517,9 @@ async def determinate(message, client):
 
         # send author
         if rainbow:
-            await client.send_message(message.channel, '*Color: {}*. \n*Sent by {}.*'.format(color, message.author.mention))
+            await client.send_message(message.channel, '*Color: {}*. \n*Sent by {}.*'.format(color, message.author.name))
         else:
-            await client.send_message(message.channel, '*Sent by {}.*'.format(message.author.mention))
+            await client.send_message(message.channel, '*Sent by {}.*'.format(message.author.name))
     except IndexError:
         await client.send_message(
             message.channel,
@@ -548,13 +548,13 @@ async def forebode(message, client):
             if foreboden:
                 for ment in message.mentions:
                     await client.replace_roles(ment, foreboden)
-                    await client.send_message(message.channel, '{}: {} has been foreboden.'.format(message.author.mention, ment.name))
+                    await client.send_message(message.channel, '{}: {} has been foreboden. Here is some information on that user:\nTheir ID is **{}**.\nTheir discriminator is **#{}**.\n'.format(message.author.name, ment.name, ment.id, ment.discriminator))
             else:
-                await client.send_message(message.channel, '{}: You must create a role named \'Foreboden\' before you can use this command.'.format(message.author.mention))
+                await client.send_message(message.channel, '{}: You must create a role named \'Foreboden\' before you can use this command.'.format(message.author.name))
         except discord.Forbidden:
-            await client.send_message(message.channel, '{}: I do not have the permission to perform this command yet.'.format(message.author.mention))
+            await client.send_message(message.channel, '{}: I do not have the permission to perform this command yet.'.format(message.author.name))
     else:
-        await client.send_message(message.channel, '{}: You do not have the permission to ban.'.format(message.author.mention))
+        await client.send_message(message.channel, '{}: You do not have the permission to ban.'.format(message.author.name))
 forebode.server = 'Undertale'
 
 @base.cacofunc
