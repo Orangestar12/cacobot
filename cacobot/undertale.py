@@ -147,19 +147,16 @@ async def summon(message, client):
 
     # Just summon
     if message.content.strip()[len(base.config['invoker']):] == 'summon':
+        monsters.update(spoilers)
 
-        # Add spoilers unless spoiler-free channel
-        if message.channel.is_private or message.channel.name not in ['torielshome', 'fanworks', 'workshop']:
-            monsters.update(spoilers)
-
-        # 1 in 8k chance to add hidden monsters to rotation
-        if random.randrange(0, 8000) == 300:
+        # 1 in 50 chance to add hidden monsters to rotation
+        if random.randrange(1, 50) == 1:
             monsters.update(hidden)
 
         msg = '```\n' + monsters[random.choice(list(monsters))]
 
         # 1 in 1k chance to spawn Jerry
-        if random.randrange(0, 1000) == 300:
+        if random.randrange(0, 20) == 1:
             msg += '\nJerry came, too.'
 
         msg += '\n```'
@@ -167,9 +164,7 @@ async def summon(message, client):
         await client.send_message(message.channel, msg)
 
     elif message.content.strip()[len(base.config['invoker']):] == 'summon list':
-        if message.channel.is_private or message.channel.name not in ['torielshome', 'fanworks', 'workshop']:
-            monsters.update(spoilers)
-
+        monsters.update(spoilers)
         monsters.update(hidden)
 
         await client.send_message(message.channel, 'List of Monster Codes:\n```\n{}\n```'.format(' '.join(sorted(list(monsters)))))
