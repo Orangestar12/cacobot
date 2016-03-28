@@ -42,5 +42,5 @@ def postcommand(func):
 with open('configs/config.json') as data:
     config = json.load(data)
 
-# If you're taking the senic tour of the code, you should check out
+# If you're taking the scenic tour of the code, you should check out
 # cacobot/help.py next.
