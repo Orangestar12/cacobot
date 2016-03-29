@@ -13,32 +13,28 @@ import cacobot.base as base
 # urllibs to post configs to pastebin
 # re to find mentions
 
-mention_syntax = re.compile('(<@([0-9]*?)>)')
-
-with open('configs/config.json') as data:
-    config = json.load(data)
+mention_syntax = re.compile(r'(<@([0-9]*?)>)')
 
 @base.cacofunc
 async def tag(message, client):
     '''
-    **.tag** <create | delete | edit | rename | gift | list | *tag id*> [mine | *content* | *tag id*] [*content* | *new id* | *new content* | *mention*]
+    **{0}tag** <create | delete | edit | rename | gift | list | *tag id*> [mine | *content* | *tag id*] [*content* | *new id* | *new content* | *mention*]
     Allows you to manage tags.
-    **.tag create [*id*] [*content*]** will create a new tag with the id [id] and content [content].
-    **.tag delete [*id*]** will let you delete a tag, as long as you own it.
-    **.tag edit [*id*] [*new content*]** will change [*id*]'s content to [*new content*].
-    **.tag rename [*id*] [*new id*]** will change a tag's id to [*new id*].
-    **.tag gift [*id*] [*mention*]** will change the owner of the tag to [*mention*].
-    **.tag orphan [*id*]** will orphan a tag, allowing anyone to become the owner.
-    **.tag claim [*id*]** lets you claim a tag that has been orphaned.
-    **.tag list** will DM you all of the tags created in this server.
-    **.tag list all** will list ALL of the tags CacoBot has.
-    **.tag list mine** will DM you all of the tags you personally own.
-    If you paste the resulting `list` message back in a channel CacoBot is listening to (including the "Retrieving tags owned by" part) CacoBot will tell you the number of tags it calculated.
-    **.tag list orphaned** will DM you all of the tags that have no owner.
-    **.tag [*id*]** will puke the tag with the id [*id*].
-    **.tag [*id*] [*content*]** will implicitly create a tag if it can't find one.
-    *Example: `.tag create gitgud http://i.imgur.com/Y3AZ1uX.jpg`*
-    *(If a bot in your server already has tags, use their implementation, please. You can still use our tags, though. We have the AOE II taunts under tags 01-30! Try `.tag 08` and see what we mean!)*
+    **{0}tag create [*id*] [*content*]** will create a new tag with the id [id] and content [content].
+    **{0}tag delete [*id*]** will let you delete a tag, as long as you own it.
+    **{0}tag edit [*id*] [*new content*]** will change [*id*]'s content to [*new content*].
+    **{0}tag rename [*id*] [*new id*]** will change a tag's id to [*new id*].
+    **{0}tag gift [*id*] [*mention*]** will change the owner of the tag to [*mention*].
+    **{0}tag orphan [*id*]** will orphan a tag, allowing anyone to become the owner.
+    **{0}tag claim [*id*]** lets you claim a tag that has been orphaned.
+    **{0}tag list** will DM you all of the tags created in this server.
+    **{0}tag list all** will list ALL of the tags CacoBot has.
+    **{0}tag list mine** will DM you all of the tags you personally own.
+    **{0}tag list orphaned** will DM you all of the tags that have no owner.
+    **{0}tag [*id*]** will puke the tag with the id [*id*].
+    **{0}tag [*id*] [*content*]** will implicitly create a tag if it can't find one.
+    *Example: `{0}tag create gitgud http://i.imgur.com/Y3AZ1uX.jpg`*
+    *(If a bot in your server already has tags, use their implementation, please. You can still use our tags, though. We have the AOE II taunts under tags 01-30! Try `{0}tag 08` and see what we mean!)*
     '''
 
     # Each tag has three objects: ['tag'], ['server'] and ['owner']. ['tag'] is the tag
@@ -62,7 +58,10 @@ async def tag(message, client):
             while mention_syntax.search(p):
                 p = p.replace(mention_syntax.search(p).group(1), '@' + discord.utils.get(message.server.members, id=mention_syntax.search(p).group(2)).name)
 
-            params = p.split(None, 3)
+            while '@everyone' in p:
+                p = p.replace('@everyone', '(everyone)')
+
+            params = p.split(None, 2)
 
             if cmd == 'create':
                 if params[1] in tags:
@@ -133,7 +132,7 @@ async def tag(message, client):
                             lst += '\n\n'
 
                         values = {
-                          'api_dev_key' : config['pastebin_key'],
+                          'api_dev_key' : base.config['pastebin_key'],
                           'api_option' : 'paste',
                           'api_paste_code' : lst,
                           'api_paste_private' : '1',
@@ -155,7 +154,7 @@ async def tag(message, client):
                             lst += x + ' '
 
                         values = {
-                          'api_dev_key' : config['pastebin_key'],
+                          'api_dev_key' : base.config['pastebin_key'],
                           'api_option' : 'paste',
                           'api_paste_code' : lst,
                           'api_paste_private' : '1',
@@ -217,7 +216,7 @@ async def tag(message, client):
                             lst += '\n\n'
 
                         values = {
-                            'api_dev_key' : config['pastebin_key'],
+                            'api_dev_key' : base.config['pastebin_key'],
                             'api_option' : 'paste',
                             'api_paste_code' : lst,
                             'api_paste_private' : '1',
@@ -251,7 +250,7 @@ async def tag(message, client):
                     lst = lst[:-2]
 
                     values = {
-                        'api_dev_key' : config['pastebin_key'],
+                        'api_dev_key' : base.config['pastebin_key'],
                         'api_option' : 'paste',
                         'api_paste_code' : lst,
                         'api_paste_private' : '1',
@@ -314,6 +313,9 @@ async def tag(message, client):
             while mention_syntax.search(p):
                 p = p.replace(mention_syntax.search(p).group(1), '@' + discord.utils.get(message.server.members, id=mention_syntax.search(p).group(2)).name)
 
+            while '@everyone' in p:
+                p = p.replace('@everyone', '(everyone)')
+
             params = p.split()
 
             if params[1] in tags:
@@ -336,6 +338,8 @@ async def tag(message, client):
 
             params = p.split(None, 1)
 
+            while '@everyone' in p:
+                p = p.replace('@everyone', '(everyone)')
 
             if cmd in tags:
                 await client.send_message(message.channel, tags[cmd]['tag'])
@@ -358,4 +362,6 @@ async def tag(message, client):
         with open('configs/tags.json', 'w') as file:
             json.dump(tags, file, indent=4)
     except IndexError:
-        await client.send_message(message.channel, "If you need help on using this command, call `.help tag`!")
+        await client.send_message(message.channel, "If you need help on using this command, call `{}help tag`!".format(
+            base.config['invoker']
+            ))

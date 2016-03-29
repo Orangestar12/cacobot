@@ -10,10 +10,10 @@ import cacobot.base as base
 @base.cacofunc
 async def goatnick(message, client):
     '''
-    **.goatnick**
+    **{0}goatnick**
     *This command was created for the Undertale server.*
     Generates a politically incorrect name for Asgore from a list.
-    *Example: `.goatnick`*
+    *Example: `{0}goatnick`*
     '''
     asgore_nicks = [
         'King Kindergarten Killer',
@@ -79,10 +79,10 @@ goatnick.server = 'Undertale'
 @base.cacofunc
 async def summon(message, client):
     '''
-    **.summon** [*monster 1*] [*monster 2*]...
+    **{0}summon** [*monster 1*] [*monster 2*]...
     *This command was created for the Undertale server.*
     Prints the array of [*monster*]s's encounter texts. Provide as many encounters as you want, or leave it blank to summon a random one.
-    *Example: .summon Papyrus Snowdrake*
+    *Example: {0}summon Papyrus Snowdrake*
     '''
     monsters = {
         'Dummy' : 'You encountered the dummy.',
@@ -146,36 +146,31 @@ async def summon(message, client):
     }
 
     # Just summon
-    if message.content.strip()[1:] == 'summon':
+    if message.content.strip()[len(base.config['invoker']):] == 'summon':
+        monsters.update(spoilers)
 
-        # Add spoilers unless spoiler-free channel
-        if message.channel.is_private or message.channel.name not in ['torielshome', 'fanworks', 'workshop']:
-            monsters.update(spoilers)
-
-        # 1 in 8k chance to add hidden monsters to rotation
-        if random.randrange(0, 8000) == 300:
+        # 1 in 50 chance to add hidden monsters to rotation
+        if random.randrange(1, 50) == 1:
             monsters.update(hidden)
 
         msg = '```\n' + monsters[random.choice(list(monsters))]
 
         # 1 in 1k chance to spawn Jerry
-        if random.randrange(0, 1000) == 300:
+        if random.randrange(0, 20) == 1:
             msg += '\nJerry came, too.'
 
         msg += '\n```'
 
         await client.send_message(message.channel, msg)
 
-    elif message.content.strip()[1:] == 'summon list':
-        if message.channel.is_private or message.channel.name not in ['torielshome', 'fanworks', 'workshop']:
-            monsters.update(spoilers)
-
+    elif message.content.strip()[len(base.config['invoker']):] == 'summon list':
+        monsters.update(spoilers)
         monsters.update(hidden)
 
         await client.send_message(message.channel, 'List of Monster Codes:\n```\n{}\n```'.format(' '.join(sorted(list(monsters)))))
 
     else:
-        cmd = message.content.split()[1:]
+        cmd = message.content.split()[len(base.config['invoker']):]
         msg = []
 
         monsters.update(hidden)
@@ -296,17 +291,17 @@ async def summon(message, client):
         if msg:
             await client.send_message(message.channel, '```\n{}\n```'.format('\n'.join(msg)))
         else:
-            await client.send_message(message.channel, '{}: I could not find any valid monster codes in your query. Use .summon list to see them all.'.format(message.author.mention))
+            await client.send_message(message.channel, '{}: I could not find any valid monster codes in your query. Use .summon list to see them all.'.format(message.author.name))
 summon.server = 'Undertale'
 
 @base.cacofunc
 async def determinate(message, client):
     r'''
-    **.determinate** [color\=*color*] [font\=*font*] <*text*>
+    **{0}determinate** [color\=*color*] [font\=*font*] <*text*>
     *This command was created for the Undertale server.*
     Generates an image with text of your choice using the font Determination Mono. [color\=*color*] can be provided as a CSS color, like hexadecimal (#FF7700), rgb (rgb(255,128,0)), or color code (orange). [font=*font*] can be *sans*, *papyrus*, *wd*, or *ut*. Omit to leave it as DTM.
     You can also use colons instead of equals signs. If you specify a font not in our keys using underscores in place of spaces, you can specify other fonts, like `font=Roboto_Condensed`.
-    *Example: `.determinate color=#0000FF font=Papyrus YOU'RE BLUE NOW! THAT'S MY ATTACK.`*
+    *Example: `{0}determinate color=#0000FF font=Papyrus YOU'RE BLUE NOW! THAT'S MY ATTACK.`*
     '''
     # The example used to be this:
     # *Example: .determinate color=#FF0000 Where are the knives.*
@@ -396,7 +391,7 @@ async def determinate(message, client):
             TextToSay = TextToSay[:index] + TextToSay[end:]
 
         TextToSay = TextToSay.strip()
-        if font == 'Wingdings':
+        if font.lower() in ['wingdings', 'webdings']:
             TextToSay = TextToSay.upper()
 
         # true if "* " exists, false if it doesn't.
@@ -517,16 +512,21 @@ async def determinate(message, client):
             pass
 
         # send msg if wingdings
-        if font == 'Wingdings':
+        if font.lower() in ['wingdings', 'webdings']:
             await client.send_message(message.channel, '*{}*'.format(save))
 
         # send author
         if rainbow:
-            await client.send_message(message.channel, '*Color: {}*. \n*Sent by {}.*'.format(color, message.author.mention))
+            await client.send_message(message.channel, '*Color: {}*. \n*Sent by {}.*'.format(color, message.author.name))
         else:
-            await client.send_message(message.channel, '*Sent by {}.*'.format(message.author.mention))
+            await client.send_message(message.channel, '*Sent by {}.*'.format(message.author.name))
     except IndexError:
-        await client.send_message(message.channel, 'If you do not know how to use this command, call `.help determinate`!')
+        await client.send_message(
+            message.channel,
+            'If you do not know how to use this command, call `{0}help determinate`!'.format(
+                base.config['invoker']
+                )
+            )
 determinate.server = 'Undertale'
 
 # You know, while I'm here, here's the StackOverflow post that has the function.
@@ -538,9 +538,9 @@ def htmlEntities(string):
 @base.cacofunc
 async def forebode(message, client):
     '''
-    **.forebode** [*mention*]
+    **{0}forebode** [*mention*]
     This is a shortcut to add the "Foreboden" role to a user. If your server has no "Foreboden" role, this will fail.
-    *Example: `.forebode @CacoBot`*
+    *Example: `{0}forebode @CacoBot`*
     '''
     if message.channel.permissions_for(message.author).ban_members:
         try:
@@ -548,20 +548,20 @@ async def forebode(message, client):
             if foreboden:
                 for ment in message.mentions:
                     await client.replace_roles(ment, foreboden)
-                    await client.send_message(message.channel, '{}: {} has been foreboden.'.format(message.author.mention, ment.name))
+                    await client.send_message(message.channel, '{}: {} has been foreboden. Here is some information on that user:\nTheir ID is **{}**.\nTheir discriminator is **#{}**.\n'.format(message.author.name, ment.name, ment.id, ment.discriminator))
             else:
-                await client.send_message(message.channel, '{}: You must create a role named \'Foreboden\' before you can use this command.'.format(message.author.mention))
+                await client.send_message(message.channel, '{}: You must create a role named \'Foreboden\' before you can use this command.'.format(message.author.name))
         except discord.Forbidden:
-            await client.send_message(message.channel, '{}: I do not have the permission to perform this command yet.'.format(message.author.mention))
+            await client.send_message(message.channel, '{}: I do not have the permission to perform this command yet.'.format(message.author.name))
     else:
-        await client.send_message(message.channel, '{}: You do not have the permission to ban.'.format(message.author.mention))
+        await client.send_message(message.channel, '{}: You do not have the permission to ban.'.format(message.author.name))
 forebode.server = 'Undertale'
 
 @base.cacofunc
 async def say(message, client):
     '''
-    **.say** [*params*]
-    A shorcut to `.determinate`.
+    **{0}say** [*params*]
+    A shorcut to `{0}determinate`.
     '''
     await determinate(message, client)
 
@@ -583,11 +583,11 @@ say.server = 'Undertale'
 @base.cacofunc
 async def what(message, client):
     '''
-    **.What** <was his name again?>
+    **{0}What** <was his name again?>
     Generates a name for uh... Fire... Hotsbro... You know, the guy from Hotland who was fire-based.
-    *Example: `.What was his name again?`*
+    *Example: `{0}What was his name again?`*
     '''
-    if message.content.strip()[1:].lower() == 'what was his name again?':
+    if message.content.strip()[len(base.config['invoker']):].lower() == 'what was his name again?':
         heatsflames = [
             'Heats',
             'Flames',

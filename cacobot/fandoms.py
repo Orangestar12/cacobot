@@ -7,10 +7,10 @@ import cacobot.base as base
 @base.cacofunc
 async def limbo(message, client):
     '''
-    **.limbo** [*mention*]
+    **{0}limbo** [*mention*]
     *This command was created for the Vocaloid server. Just for Rodea. ;)*
     This is a shortcut to add the "Limbo" role to a user. If your server has no "Limbo" role, this will fail.
-    *Example: `.limbo @CacoBot`*
+    *Example: `{0}limbo @CacoBot`*
     '''
     if message.channel.permissions_for(message.author).ban_members:
         try:
@@ -31,9 +31,9 @@ async def limbo(message, client):
 @base.cacofunc
 async def ship(message, client):
     '''
-    **.ship** [ list | *category* | *groups* ]
-    Generates a random ship. Provide any amount of lists, or use *all* to mix them all together. Use `.ship list` to get a list of all existing lists and groups to ship, or use `.ship list [list]` to get DMed a list of all of the characters in that list.
-    *Example: `ship utmain gfsubsub`*
+    **{0}ship** [ list | *category* | *groups* ]
+    Generates a random ship. Provide any amount of lists, or use *all* to mix them all together. Use `{0}ship list` to get a list of all existing lists and groups to ship, or use `{0}ship list [list]` to get DMed a list of all of the characters in that list.
+    *Example: `{0}ship utmain gfsubsub`*
     '''
     ships = {
         'utmain' : [
@@ -285,7 +285,7 @@ async def ship(message, client):
     }
     listToChooseFrom = []
     if len(message.content.split()) > 1:
-        lists = message.content.lower().strip().split()[1:]
+        lists = message.content.lower().strip().split()[len(base.config['invoker']):]
         if lists[0] == 'list':
             if len(lists) > 1 and lists[1] in ships:
                 await client.send_message(message.author, ', '.join(ships[lists[1]]))
@@ -320,8 +320,9 @@ async def ship(message, client):
         await client.send_message(message.channel, ':no_entry_sign: {} You did not provide enough valid lists to choose from.'.format(message.author))
 
 ohwhitelist = [
-    '152821755164098561',
-    '149167686159564800'
+    '152821755164098561', # remove soon
+    '149167686159564800',
+    '143896176213622784'
 ]
 
 @base.postcommand

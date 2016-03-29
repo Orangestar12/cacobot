@@ -4,9 +4,9 @@ import random, os
 @base.cacofunc
 async def d(message, client, *args, **kwargs):
     '''
-    **.d** <*x*>d<*y*>
+    **{0}d** <*x*>d<*y*>
     Rolls <*x*> dice with <*y*> sides.
-    *Example: `.d 2d6`*
+    *Example: `{0}d 2d6`*
     '''
     try:
         params = message.content.split()
@@ -48,9 +48,9 @@ async def d(message, client, *args, **kwargs):
 @base.cacofunc
 async def choice(message, client, *args, **kwargs):
     '''
-    **.choice** [*one*; *two*...]
+    **{0}choice** [*one*; *two*...]
     Randomly choses an option from a semicolon-seperated list.
-    *Example: `.choice CacoBot is Life; CacoBot is Love`*
+    *Example: `{0}choice CacoBot is Life; CacoBot is Love`*
     '''
 
     choices = message.content.split(None, 1)
@@ -66,9 +66,9 @@ async def choice(message, client, *args, **kwargs):
 @base.cacofunc
 async def later(message, client, *args, **kwargs):
     '''
-    **.later**
+    **{0}later**
     Posts a Spongebob title card referring to a later time.
-    *Example: `.later`*
+    *Example: `{0}later`*
     '''
     pics = os.listdir('later')
     await client.send_file(message.channel, 'later/' + random.choice(pics))

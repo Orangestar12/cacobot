@@ -52,9 +52,9 @@ def polar2cartesian(centerX, centerY, radius, angleInDegrees):
 @base.cacofunc
 async def stats(message, client):
     '''
-    **.stats**
+    **{0}stats**
     Generates a pie chart, representing the last 1000 messages in this channel. Each wedge represents how many messages were sent by the person as a percentage.
-    *Example: `.stats`*
+    *Example: `{0}stats`*
     '''
 
     #Get the most recent logs

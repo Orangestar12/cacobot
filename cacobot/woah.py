@@ -229,9 +229,9 @@ suicides = [
     '%k will never be satisfied.',
     '%k\'s world turned upside down.',
     '%k couldn\'t say no to this.',
-    '"Ah, Mister Secretary."\n"Mr. Burr, sir!"\n"Did you hear the news about good ol\' general %k, sir?"\n"No."\n"You know Clairmont street?"\n"Yeah?"\n"They renamed it after %h. The %k legacy is secure!"\n"Sure."\n"And all he had to do was die."\n"That\'s a lot less work."\n"We oughta give it a try."',
-    '%k fell prey to the SOUTHERN MOTHERFUCKING DEMOCRATIC-REPUBLICANS.',
-    '%k thought he was in the eye of a hurricane.',
+    '"Ah, Mister Secretary."\n"Mr. Burr, sir!"\n"Did you hear the news about good ol\' general %k, sir?"\n"No."\n"You know Clairmont street?"\n"Yeah?"\n"They renamed it after %h. The %k legacy is secure!"\n"Sure."\n"And all %g had to do was die."\n"That\'s a lot less work."\n"We oughta give it a try."',
+    '%k didn\'t know %g was up against the SOUTHERN MOTHERFUCKING DEMOCRATIC-REPUBLICANS.',
+    '%k thought %g was in the eye of a hurricane.',
     '%k doesn\'t die... %g must learn to live with the unimaginable instead.',
     'It\'s quiet uptown. %k never liked the quiet before.',
     '%k swallowed a fishbone.',
@@ -678,6 +678,8 @@ killmsgs = [
     '%k oh\'d %o.',
     '%o\'s killing spree was ended by %k',
     '%k futurmedia\'d %o.',
+    '%o imagines death so much it feels more like a memory. Is this where it gets %h? On %p feet... several feet ahead of %h. %G can see it coming. Should %g run, or fire %p gun, or let it be? *There is no beat, no melody.* %k, %p first friend and enemy... maybe the last face %g ever will see. *If %o throws away his shot, is this how %k remembers %h?* What if this bullet is %p legacy...\n***LEGACY...*** *what is a legacy?* It\'s planting seeds in a garden you never get to see. %G wrote some notes at the beginning of a song someone will sing for %h. America, you great unfinished symphony you sent for %h! You let %h make a difference! A place where even orphan immigrants can leave their fingerprints and\n***RISE UP.*** %G might be running out of time, %p *TIME\'S UP.* *WISE UP.* Eyes... *up.* %G catch a glimpse of the other side. Laurens leads a soldier\'s chorus on the other side. *%P son is on the other side! He\'s with %p mother on the other side!* ***Washington is watching from the other side! Teach them how to say goodbye~ RISE UP. RISE UP. RISE UP.*** __***ELIZA***__\n\n%o would love to take your time. %G\'ll see you on the other side.\n~~*Raise a glass, to freedom...*~~\n"**W** %G aims **A** their pistol **I** at the **T** sky!"\n\n%k strikes %h right between %p ribs.',
+    '%o was kicked from the party by %k.',
     '%k kicked %o out of the party.',
     '%k banhammered %o.',
     '%k Ramza\'d %o.',
@@ -756,9 +758,9 @@ killmsgs = [
     '%k wowza\'d %o.',
     '%k toffee\'d %o.',
     'When %o aimed at the sky %g may have been the first one to die, but %k\'s the one who paid for it.',
-    '"%o, do you yield?"\n"%k shot %h in the chest, *yes* he yields!"',
+    '"%o, do you yield?"\n"%k shot %h in the chest, *yes* %g yields!"',
     '%k tore %o apart for speaking freely about the Continental Congress.',
-    '%o looked into %k\'s eyes and was helpless- wait, that\'s `.ship`, wrong command. Sorry.',
+    '%o looked into %k\'s eyes and was helpless- wait, that\'s `{}ship`, wrong command. Sorry.'.format(base.config['invoker']),
     '%o called %k "Son" one time too many.',
     '%k looks %o in the eye, aims no higher, summons all the courage that\'s required, then counts...\n*1, 2, 3, 4, 5, 6, 7, 8, 9...*\n***Number 10... paces! Fire!***',
     '%k blew %o the fuck out in a cabinet meeting.',
@@ -771,6 +773,8 @@ killmsgs = [
     '%k JOHN CENA\'D %o. 🎺🎺🎺🎺🎺',
     '%k forked %o.',
     '%k pull requested %o.',
+    '%k supervises %o with a shitton of soldiers. And then %p security was downgraded to a ***fuck***ton of soldiers. *(Did I say downgrade? I meant upgrade.)*',
+    'It is true that %k killed %o, and yet, is not %p murderer',
     '%k used Outburst!\nSensational!\n%o is dazed!',
     '%o 🔫 %k.',
     '%k 👞 %o.',
@@ -840,6 +844,7 @@ killmsgs = [
 ]
 
 def postify(phrase, message, pronouns):
+    #lower case
     w = phrase.replace(
         '%k', message.author.name
         ).replace(
@@ -849,6 +854,15 @@ def postify(phrase, message, pronouns):
                 ).replace(
                     '%p', pronouns['%p']
                     )
+
+    #capitals
+    w = w.replace(
+        '%G', pronouns['%g'].capitalize()
+        ).replace(
+            '%H', pronouns['%h'].capitalize()
+            ).replace(
+                '%P', pronouns['%p'].capitalize()
+                )
 
     if message.mentions:
         w = w.replace(
@@ -866,10 +880,10 @@ def postify(phrase, message, pronouns):
 @base.cacofunc
 async def kill(message, client):
     '''
-    **.kill** [ mention ]
-    **.kill** [ optin ] [ he/she/they ] [ him/her/them ] [ his/her/their ]
-    Prints an obituary for the mentioned party. By default, will use "They" pronouns. You can do `.kill optin 1 2 3` to opt into replacing your pronouns with 3 of your choice. The syntax is posted above. This is agnostic: You can use any word you want for a pronoun.
-    *Examples: `.kill @BooBot`, `.kill optin schlee schlim schleir`*
+    **{0}kill** [ mention ]
+    **{0}kill** [ optin ] [ he/she/they ] [ him/her/them ] [ his/her/their ]
+    Prints an obituary for the mentioned party. By default, will use "They" pronouns. You can do `{0}kill optin 1 2 3` to opt into replacing your pronouns with 3 of your choice. The syntax is posted above. This is agnostic: You can use any word you want for a pronoun.
+    *Examples: `{0}kill @BooBot`, `{0}kill optin schlee schlim schleir`*
     '''
     # global cooldown
     cooldown = False
@@ -885,10 +899,16 @@ async def kill(message, client):
     params = message.content.split()
     pronouns = {'%g':'they', '%h':'them', '%p': 'their'}
 
+    if message.content.lower() == '{}kill la kill'.format(base.config['invoker']):
+        await client.send_message(message.channel, '{} tried to make a shitty anime joke and was victimized because of it.'.format(message.author.name))
+        return
+
     if message.mentions and message.mentions[0].id in optin:
         pronouns = optin[message.mentions[0].id]
     elif len(message.content.split()) > 1 and [x for x in message.server.members if x.name == message.content.split(None, 1)[1]] and [x.id for x in message.server.members if x.name == message.content.split(None, 1)[1]][0] in optin:
-        pronouns = optin[[x for x in message.server.members if x.name == message.content.split(None, 1)[1]][0]]
+        pronouns = optin[[x.id for x in message.server.members if x.name == message.content.split(None, 1)[1]][0]]
+    elif message.author.id in optin:
+        pronouns = optin[message.author.id]
 
     if len(params) < 2:
         if not cooldown:

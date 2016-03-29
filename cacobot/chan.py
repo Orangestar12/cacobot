@@ -9,10 +9,10 @@ import cacobot.base as base
 @base.cacofunc
 async def roll(message, client):
     '''
-    **.roll**
+    **{0}roll**
     *This command was created for the /g/ server.*
     Generates an integer based on the current time. If the last two digits are equivalent, appends the message with 'check 'em!'
-    *Example: `.roll`*
+    *Example: `{0}roll`*
     '''
 
     # This was written by @NoKeksGiven. Give that guy a shout-out!
@@ -89,7 +89,7 @@ async def parseFor4chThread(message, client):
         await client.send_message(message.channel, msg)
     return
 
-@base.postcommand
+#@base.postcommand
 async def cake(message, client):
     if not message.channel.is_private and message.server.id == '120205773425868804':
         c = re.sub(r'[^A-Za-z0-9 ]', '', message.content.lower())

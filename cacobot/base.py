@@ -1,3 +1,5 @@
+import json
+
 # This dictionary will be filled with key-function pairs. The key will be the
 # invoker of the function, and the object will be the function to call.
 functions = {}
@@ -21,7 +23,7 @@ def cacofunc(func):
 # **WARNINGS**:
 # PRECOMMANDS *MUST* RETURN TRUE TO CONTINUE TO THE MESSAGE.
 # If you would like a precommand to not continue to the message, return false.
-# BOTH PRECOMMANDS AND POSTCOMMANDS MUST USE GENERATORS SOMEWHERE. Else you will
+# BOTH PRECOMMANDS AND POSTCOMMANDS MUST BE ASYNC. Else you will
 # cause a slew of NoneType error messages.
 
 pres = {}
@@ -36,5 +38,9 @@ def postcommand(func):
     posts[func.__name__] = func
     return func
 
-# If you're taking the senic tour of the code, you should check out
+# This is a global reference to your configuration file.
+with open('configs/config.json') as data:
+    config = json.load(data)
+
+# If you're taking the scenic tour of the code, you should check out
 # cacobot/help.py next.

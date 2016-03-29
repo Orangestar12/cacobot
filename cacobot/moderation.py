@@ -5,17 +5,13 @@ import random
 import discord
 import cacobot.base as base
 
-# Open the config to get owner id.
-with open('configs/config.json') as data:
-    config = json.load(data)
-
 @base.cacofunc
 async def hush(message, client):
     '''
-    **.hush** [server]
+    **{0}hush** [server]
     Disables this bot from listening for commands in this channel. If [server] is supplied, extends the hush to the entire server.
     You can only call this command if you are able to kick.
-    *Example: `.hush server`*
+    *Example: `{0}hush server`*
     '''
 
     # Do not continue if user does not have kick permissions.
@@ -27,12 +23,13 @@ async def hush(message, client):
             hushed = json.load(z)
 
         # Server hush
-        if message.content == '.hush server':
+        if message.content == base.config['invoker'] + 'hush server':
             hushed[message.server.id] = 'server'
             await client.send_message(
                 message.channel,
-                ':mute: **Server hush!** :mute:\n{} will no longer respond to commands in this server. Call `.listen` if you want me back. Ask Orangestar to remove me if you want me gone permanently.'.format(
-                    message.author.name
+                ':mute: **Server hush!** :mute:\n{} will no longer respond to commands in this server. Call `{}listen` if you want me back. Ask Orangestar to remove me if you want me gone permanently.'.format(
+                    message.author.name,
+                    base.config['invoker']
                     )
                 )
 
@@ -41,7 +38,10 @@ async def hush(message, client):
             hushed[message.channel.id] = 'channel'
             await client.send_message(
                 message.channel,
-                ':mute: **Channel hush!** :mute:\n{}: I will no longer respond to commands in this channel. Call `.listen` if you want to bring me back. Call `.hush server` if you were hoping to silence me on the whole server. (Hint: Do it somewhere I can hear it since you silenced me here.)'.format(message.author.name)
+                ':mute: **Channel hush!** :mute:\n{0}: I will no longer respond to commands in this channel. Call `{1}listen` if you want to bring me back. Call `{1}hush server` if you were hoping to silence me on the whole server. (Hint: Do it somewhere I can hear it since you silenced me here.)'.format(
+                    message.author.name,
+                    base.config['invoker']
+                    )
                 )
 
         # Save hush list.
@@ -50,7 +50,7 @@ async def hush(message, client):
     else:
         await client.send_message(
             message.channel,
-            ':no_entry_sign: {} You do not have permission to call this command.'.format(
+            '🚫 {} You do not have permission to call this command.'.format(
                 message.author.mention
                 )
             )
@@ -69,12 +69,12 @@ async def checkForHush(message, client):
         with open('configs/hush.json', 'w') as z:
             z.write('{}')
 
-    # In retrospect this next bit could probably be a seperate function.
     if\
      not message.channel.is_private and\
      message.server.id in hushed and\
      hushed[message.server.id] == 'server':
-        if message.content.startswith(config['invoker'] + 'listen'):
+        if message.content.startswith(base.config['invoker'] + 'listen') and\
+         message.channel.permissions_for(message.author).kick_members:
             hushed.pop(message.server.id)
             await client.send_message(
                 message.channel,
@@ -86,11 +86,12 @@ async def checkForHush(message, client):
                 json.dump(hushed, z, indent=4)
         return False
 
-    elif\
+    if\
      not message.channel.is_private and\
      message.channel.id in hushed and\
      hushed[message.channel.id] == 'channel':
-        if message.content.startswith(config['invoker'] + 'listen'):
+        if message.content.startswith(base.config['invoker'] + 'listen') and\
+         message.channel.permissions_for(message.author).kick_members:
             hushed.pop(message.channel.id)
             await client.send_message(
                 message.channel,
@@ -102,14 +103,13 @@ async def checkForHush(message, client):
                 json.dump(hushed, z, indent=4)
         return False
 
-    else:
-        # Continue on to the command if we're not hushed.
-        return True
+    # Continue on to the command if we're not hushed.
+    return True
 
 @base.cacofunc
 async def listen(message, client):
     '''
-    **.listen**
+    **{0}listen**
     Cancels a hush. Applies to a channel, server, or both, depending on where it's called. This is the only command that works even if CacoBot is hushed.
     '''
 
@@ -118,7 +118,7 @@ async def listen(message, client):
 
     await client.send_message(
         message.channel,
-        ':no_entry_sign: I am not hushed in this channel.'
+        '🚫 I am not hushed in this channel.'
         )
 
 # People be like "Hey why can't we mention specific roles like mods?" and I add
@@ -128,9 +128,9 @@ async def listen(message, client):
 # @base.cacofunc # Uncomment this line to add it back.
 async def call(message, client):
     '''
-    **.call** [*role*]
+    **{0}call** [*role*]
     Mentions everyone in the role [*role*]. This is primarily for notifying mods that are away.
-    *Example: `.call Mods`*
+    *Example: `{0}call Mods`*
     '''
 
     roleToMention = message.content.split(None, 1)[1].lower()
@@ -170,12 +170,13 @@ async def call(message, client):
 @base.cacofunc
 async def connect(message, client):
     '''
-    **.connect** [*invite*]
+    **{0}connect** [*invite*]
     Allows this bot to join your server.
-    *Example: `.connect http://discord.gg/0iLJFytdVRBR1vgh`*
-    *Please consider reading the Terms of Service for CacoBot before call `.connect`.*
-    https://github.com/Orangestar12/cacobot/blob/master/tos.md
+    *Example: `{0}connect http://discord.gg/0iLJFytdVRBR1vgh`*
+    *Please consider reading the Terms of Service for CacoBot before calling `{0}connect`.*
+    https://github.com/{1}/{2}/blob/master/tos.md
     '''
+
     try:
         await client.accept_invite(message.content.split()[1])
         await client.send_message(
@@ -185,23 +186,28 @@ async def connect(message, client):
     except discord.errors.NotFound:
         await client.send_message(
             message.channel,
-            ':no_entry_sign: That was not a valid channel invite or id.'
+            '🚫 That was not a valid channel invite or id.'
+            )
+    except IndexError:
+        await client.send_message(
+            message.channel,
+            '🚫 Please send a link to a channel invite or id with this command.'
             )
     except:
         await client.send_message(
             message.channel,
-            ':no_entry_sign: Your input was invalid. I have saved the traceback to my log. Please notify the bot maintainer immediately.'
+            '🚫 Your input was invalid. I have saved the traceback to my log. Please notify the bot maintainer immediately.'
             )
         print(traceback.format_exc())
 
 @base.cacofunc
 async def debug(message, client):
     '''
-    **.debug** [await | exec | *command*]
+    **{0}debug** [await | exec | *command*]
     *This is a debug command. Only the bot owner can use it.*
     '''
 
-    if message.author.id == config['owner_id']:
+    if message.author.id == base.config['owner_id']:
         cfgs = {}
 
         for x in [
@@ -235,98 +241,168 @@ async def debug(message, client):
     else:
         await client.send_message(
             message.channel,
-            ':no_entry_sign: You are not authorized to perform that command.'
+            '🚫 You are not authorized to perform that command.'
             )
+debug.server = 'Debug'
+
+with open('configs/plugs.json') as z:
+    plugs = json.load(z)
 
 @base.cacofunc
 async def plug(message, client):
     '''
-    **.plug** [*mention*]
+    **{0}plug** [*mention*]
     Makes this bot stop listening to a specific user. Only users that can kick can plug and unplug.
-    *Example: `.plug @BooBot`*
+    *Example: `{0}plug @BooBot`*
     '''
+    global plugs
 
-    if message.author.id == config['owner_id'] or\
-            message.channel.permissions_for(message.author).kick_members:
-        if message.author.id == config['owner_id'] and\
-                message.content.split()[1] == 'GLOBAL':
-            srv = 'GLOBAL'
-        else:
-            srv = message.server.id
-        with open('configs/plugs.json') as z:
-            plugs = json.load(z)
-        for mention in message.mentions:
-            plugs[mention.id] = srv
-            await client.send_message(
-                message.channel,
-                ':heavy_check_mark: {} has been plugged.'.format(mention.name)
-                )
-        with open('configs/plugs.json', 'w') as z:
-            json.dump(plugs, z, indent=4)
-    else:
+    if message.author.id != base.config['owner_id'] and \
+     not message.channel.permissions_for(message.author).kick_members:
         await client.send_message(
             message.channel,
-            ':no_entry_sign: You are not authorized to perform that command.'
+             '🚫 {}: You are not authorized to perform that command.'.format(
+                message.author.name
+                )
             )
+        return
+
+    if message.content.split()[1] == 'GLOBAL':
+        if message.author.id != base.config['owner_id']:
+            await client.send_message(
+               message.channel,
+                '🚫 {}: You are not authorized to plug users globally.'.format(
+                   message.author.name
+                   )
+               )
+            return
+        if 'GLOBAL' in plugs:
+            plugs['GLOBAL'].append(message.mentions[0].id)
+        else:
+            plugs['GLOBAL'] = [message.mentions[0].id]
+        await client.send_message(
+            message.channel,
+            '✔ {}: {} has been globally plugged.'.format(message.author.name, mention.name)
+            )
+
+        with open('configs/plugs.json', 'w') as z:
+            json.dump(plugs, z, indent=4)
+        return
+
+    for x in message.mentions:
+        if x.id == client.user.id:
+            await client.send_message(
+                message.channel,
+                '🚫 {}: You cannot plug me from my own commands.'.format(message.author.name, x.name)
+                )
+
+        elif x.id in plugs['GLOBAL']:
+            await client.send_message(
+                message.channel,
+                '🚫 {}: {} is globally plugged. You do not have to plug him locally.'.format(message.author.name, x.name)
+                )
+
+        elif message.server.id not in plugs:
+            plugs[message.server.id] = [x.id]
+            await client.send_message(
+                message.channel,
+                '✔ {}: {} has been plugged.'.format(message.author.name, x.name)
+                )
+
+        elif x.id in plugs[message.server.id]:
+            await client.send_message(
+                message.channel,
+                '🚫 {}: {} is already plugged.'.format(message.author.name, x.name)
+                )
+
+        else:
+            plugs[message.server.id].append(x.id)
+            await client.send_message(
+                message.channel,
+                '✔ {}: {} has been plugged.'.format(message.author.name, x.name)
+                )
 
 @base.cacofunc
 async def unplug(message, client):
     '''
-    **.unplug** [*mention*]
-    Makes this bot resume listen to a user that has been plugged. Only users that can kick can plug and unplug.
-    *Example: `.unplug @Orangestar`*
+    **{0}unplug** [*mention*]
+    Makes this bot resume listening to a user that has been plugged. Only users that can kick can plug and unplug.
+    *Example: `{0}unplug @Orangestar`*
     '''
+    global plugs
 
-    if message.author.id == config['owner_id'] or \
-            message.channel.permissions_for(message.author).kick_members:
-        with open('configs/plugs.json') as z:
-            plugs = json.load(z)
-        for mention in message.mentions:
-            plugs.pop(mention.id)
-            await client.send_message(
-                message.channel,
-                ':heavy_check_mark: {} has been unplugged.'.format(mention.name)
-                )
-        with open('configs/plugs.json', 'w') as z:
-            json.dump(plugs, z, indent=4)
-    else:
+    if message.author.id != base.config['owner_id'] and \
+     not message.channel.permissions_for(message.author).kick_members:
         await client.send_message(
             message.channel,
-            ':no_entry_sign: You are not authorized to perform that command.'
+             '🚫 {}: You are not authorized to perform that command.'.format(
+                message.author.name
+                )
             )
+        return
+
+    if message.server.id not in plugs:
+       await client.send_message(
+           message.channel,
+            '🚫 {}: There are no users plugged in this server.'.format(
+               message.author.name
+               )
+           )
+       return
+
+    for mention in message.mentions:
+        if message.mention.id in plugs[message.server.id]:
+            plugs[message.server.id].remove([mention.id])
+            await client.send_message(
+                message.channel,
+                '✔ {}: {} has been unplugged.'.format(message.author.name, mention.name)
+                )
+
+        if mention.id in plugs['GLOBAL']:
+            if message.author.id != base.config['owner_id']:
+                await client.send_message(
+                    message.channel,
+                    '🚫 {}: {} has been plugged globally, and cannot be unplugged by you.'.format(message.author.name, mention.name)
+                    )
+            else:
+                plugs['GLOBAL'].remove([mention.id])
+                await client.send_message(
+                    message.channel,
+                    '✔ {}: {} has been unplugged.'.format(message.author.name, mention.name)
+                    )
+
+    if plugs[message.server.id] == []:
+        plugs.pop(message.server.id)
+
+    with open('configs/plugs.json', 'w') as z:
+        json.dump(plugs, z, indent=4)
 
 @base.precommand
 async def checkForPlug(message, client):
-    if message.content.startswith(config['invoker']) and\
-            message.content.split()[0][1:] in base.functions and\
-            message.author.id != client.user.id:
-        plugs = {}
-        try:
-            with open('configs/plugs.json') as z:
-                plugs = json.load(z)
-        except FileNotFoundError: # Create plugs.json if it doesn't exist
-            with open('configs/plugs.json', 'w') as z:
-                z.write('{}')
+    '''Returns false if the user is in the plug list.'''
+    global plugs
 
-        if message.author.id in plugs and (\
-                plugs[message.author.id] == 'GLOBAL' or\
-                plugs[message.author.id] == message.server.id\
-                ):
-            await client.send_message(
-                message.channel,
-                '{}: Sorry, but you have been plugged.'.format(
-                    message.author.mention
-                    )
-                )
+    if message.channel.is_private:
+        if message.author.id in plugs['GLOBAL']:
+            await client.send_message(message.channel, '🚫 {}: Sorry, but you have been plugged.'.format(message.author.name))
             return False
+        return True
+
+    if message.server.id in plugs:
+        if message.author.id in plugs[message.server.id]:
+            return False
+
+    if message.author.id in plugs['GLOBAL']:
+        return False
+
     return True
 
 @base.cacofunc
 async def git(message, client):
     '''
-    **.git** [*file*]
+    **{0}git** [*file*]
     Sends a link to the CacoBot repo on Github. Provide [*file*] to link to a specific file. This is naive.
-    *Example: `.git cacobot/changes.py`*
+    *Example: `{0}git cacobot/changes.py`*
     '''
     snark = [
         'Stare into the abyss, and the abyss will stare back at you.',
@@ -336,7 +412,7 @@ async def git(message, client):
         'Ohhhhhhhhhhhhhh yeeeeeeeeeeeessssssss!',
         '*Nervous coughing*'
     ]
-    if message.content.strip() == '.git':
+    if message.content.strip() == base.config['invoker'] + 'git':
         await client.send_message(
             message.channel,
             '{}\nhttps://github.com/Orangestar12/cacobot/'.format(
@@ -355,23 +431,24 @@ async def git(message, client):
 @base.cacofunc
 async def myid(message, client):
     '''
-    **.myid**
+    **{0}myid**
     Returns your Discord ID for when another bot can't for some reason.
-    *Example: `.myid`*
+    *Example: `{0}myid`*
     '''
     await client.send_message(
         message.channel,
         '{}: Your ID is `{}`.'.format(message.author, message.author.id)
         )
+myid.server = 'Debug'
 
 
 @base.cacofunc
 async def nuke(message, client):
     '''
-    **.nuke** [*number*]
-    Removes *number* amount of posts from the channel. If no number is specified, removes 20. This does not include your `.nuke` command.
+    **{0}nuke** [*number*]
+    Removes *number* amount of posts from the channel. If no number is specified, removes 20. This does not include your `{}nuke` command.
     You can only call this command if you can remove posts yourself.
-    *Example: `.nuke 20`*
+    *Example: `{0}nuke 20`*
     '''
 
     # r = number of requested deletions
@@ -396,21 +473,21 @@ async def nuke(message, client):
         else:
             await client.send_message(
                 message.channel,
-                ':no_entry_sign: I do not have permissions to delete messages yet, so I cannot perform this command.'
+                '🚫 I do not have permissions to delete messages yet, so I cannot perform this command.'
                 )
     else:
         await client.send_message(
             message.channel,
-            ':no_entry_sign: Sorry, but I can\'t let you delete messages if you don\'t have the permission to.'
+            '🚫 Sorry, but I can\'t let you delete messages if you don\'t have the permission to.'
             )
 
 @base.cacofunc
 async def cleanup(message, client):
     '''
-    **.cleanup** [*number*]
+    **{0}cleanup** [*number*]
     Removes *number* amount of posts by CacoBot from the channel, plus the invokers, for up to the last 100 messages. If no number is specified, removes 5.
     You can only call this command if you can remove posts yourself.
-    *Example: `.cleanup 20`*
+    *Example: `{0}cleanup 20`*
     '''
 
     # c = number of commands
@@ -433,23 +510,23 @@ async def cleanup(message, client):
             try:
                 async for msg in client.logs_from(message.channel, 100):
                     if (msg.author.id == client.user.id or\
-                            (msg.content.lower().startswith(config['invoker']) and\
-                            msg.content[1:].split(" ", 1)[0] in base.functions)) and\
+                            (msg.content.lower().startswith(base.config['invoker']) and\
+                            msg.content[len(base.config['invoker']):].split(" ", 1)[0] in base.functions)) and\
                             c < r:
                         await client.delete_message(msg)
-                        if msg.content.startswith(config['invoker']) and\
-                                msg.content[1:].split(" ", 1)[0] in base.functions:
+                        if msg.content.startswith(base.config['invoker']) and\
+                                msg.content[len(base.config['invoker']):].split(" ", 1)[0] in base.functions:
                             c = c + 1
             except discord.errors.NotFound:
                 pass
         else:
             await client.send_message(
                 message.channel,
-                ':no_entry_sign: I do not have permissions to delete messages yet, so I cannot perform this command.'
+                '🚫 I do not have permissions to delete messages yet, so I cannot perform this command.'
                 )
     else:
         await client.send_message(
-            message.channel, ':no_entry_sign: Sorry, but I can\'t let you delete messages if you don\'t have the permission to.'
+            message.channel, '🚫 Sorry, but I can\'t let you delete messages if you don\'t have the permission to.'
             )
 
 # @base.cacofunc
@@ -464,20 +541,33 @@ async def chanuke(message, client):
     else:
         await client.send_message(
             message.channel,
-            ":no_entry_sign: You do not have the proper permissions to manage channels in this server."
+            "🚫 You do not have the proper permissions to manage channels in this server."
             )
 chanuke.server = 'hidden'
 
 @base.cacofunc
 async def remove(message, client):
-    """
-    **.remove**
+    '''
+    **{0}remove**
     Removes all messages in the last 2000 posts by a user specified.
     This is currently under development, so only the bot owner can invoke it.
-    *Example: `.remove Skulltrail`*
-    """
+    *Example: `{0}remove Skulltrail`*
+    '''
     await client.delete_message(message)
-    if message.author.id == config['owner_id']:
+    if message.author.id == base.config['owner_id']:
         async for x in client.logs_from(message.channel, 2000):
             if x.author.name == message.content.split()[1]:
                 await client.delete_message(x)
+
+@base.cacofunc
+async def ssg(message, client):
+    '''
+    ***{0}ssg***
+    Closes the bot.
+    *This is a debug command. Only the bot owner can use it.*
+    *Example: `{0}ssg`*
+    '''
+    if message.author.id == base.config['owner_id']:
+        await client.send_message(message.channel, '*Cacodemon death gurgle.*')
+        await client.close()
+ssg.server = 'Debug'

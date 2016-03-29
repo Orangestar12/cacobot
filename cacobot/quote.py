@@ -6,17 +6,14 @@ import asyncio # to sleep in log
 import discord
 import cacobot.base as base
 
-with open('configs/config.json') as data:
-    config = json.load(data)
-
 mention_syntax = re.compile(r'(<@([0-9]*?)>)')
 
 @base.cacofunc
 async def quote(message, client):
     '''
-    **.quote** [ *id* | *phrase to search* ]
+    **{0}quote** [ *id* | *phrase to search* ]
     Spews a random quote from my database. If *id* is provided, spews the quote with that id. If *phrase to search* is provided, searches my database for quotes containing that phrase, lists every quote with that phrase, and then spews a random one from that list.
-    *Example: `.quote 1`*
+    *Example: `{0}quote 1`*
     '''
     numburs = ['number ', 'numero ', 'numbuh ', '#', 'integer ', '№ ']
     search = False
@@ -97,7 +94,8 @@ async def addquote(message, client):
     '''
     **addquote** <*content*>
     Add a quote to my quote database.
-    *Example: `.addquote <TerminusEst13> .idgames good map
+    *Remember, quotes are subject to the Terms of Service for CacoBot, and my judgement. I do go through them. Shitty quotes that make no sense in any context, or quotes that try to be "meta" and refer to the quote index, are often subjected to deletion.*
+    *Example: `{0}addquote <TerminusEst13> .idgames good map
     <idgamesbot> Nothing found.
     <TerminusEst13> Well there you have it, folks.`*
     '''
@@ -105,13 +103,13 @@ async def addquote(message, client):
 
     # Complain about cheeky asses.
 
-    if cmd.startswith('.addquote'):
+    if cmd.startswith(base.config['invoker'] + 'addquote'):
         await client.send_message(
             message.channel,
             '{}: Hah hah, very funny, but that wouldn\'t work anyway.'.format(message.author)
             )
 
-    elif cmd.startswith('.quote'):
+    elif cmd.startswith(base.config['invoker'] + 'quote'):
         await client.send_message(
             message.channel,
             '{}: Not only would that not work, but that\'s really annoying. Stop that shit.'.format(message.author)
@@ -159,16 +157,17 @@ async def addquote(message, client):
             if cmd.startswith('http://') or cmd.startswith('https://'):
                 await client.send_message(
                     message.channel,
-                    '{}: :warning: I have added that quote successfully as number {}, but couldn\'t help noticing it starts with a link. If this is an image of a Discord chat log, consider providing your quotes as text next time, or using my `.log` function.'.format(
-                        message.author.mention,
-                        len(quotes)
+                    '{}: :warning: I have added that quote successfully as number {}, but couldn\'t help noticing it starts with a link. If this is an image of a Discord chat log, consider providing your quotes as text next time, or using my `{}log` function.'.format(
+                        message.author.name,
+                        len(quotes),
+                        base.config['invoker']
                         )
                     )
             else:
                 await client.send_message(
                     message.channel,
                     '{}: :heavy_check_mark: Successfully added that to my quote database as quote number {}.'.format(
-                        message.author,
+                        message.author.name,
                         len(quotes)
                         )
                     )
@@ -181,9 +180,9 @@ addquote.server = 'Quotes'
 @base.cacofunc
 async def delquote(message, client):
     '''
-    **.delquote** [*index*]
+    **{0}delquote** [*index*]
     Removes a quote from the database. You can only remove quotes you have created. Specify no index to try to remove the last quote.
-    *Example: `.delquote 13`*
+    *Example: `{0}delquote 13`*
     '''
 
     cont = True
@@ -194,7 +193,7 @@ async def delquote(message, client):
         except ValueError:
             await client.send_message(
                 message.channel,
-                ':no_entry_sign: Please specify an integer next time.'
+                ':no_entry_sign: {}: Please specify an integer next time.'.format(message.author.name)
                 )
             cont = False
     else:
@@ -208,7 +207,7 @@ async def delquote(message, client):
         cont = False
 
     if cont:
-        if message.author.id == quotes[r - 1][1] or message.author.id == config['owner_id']:
+        if message.author.id == quotes[r - 1][1] or message.author.id == base.config['owner_id']:
             quotes.pop(r - 1)
             with open('configs/quotes.json', 'w') as z:
                 json.dump(quotes, z, indent=4)
@@ -233,9 +232,9 @@ delquote.server = 'Quotes'
 @base.cacofunc
 async def parsequote(message, client):
     '''
-    **.parsequote**
+    **{0}parsequote**
     This command is under renovations.
-    *Example: `.parsequote`*
+    *Example: `{0}parsequote`*
     '''
     await client.send_messag(message.channel, ':no_entry_sign: This command is under renovations.')
 parsequote.server = 'Quotes'
@@ -268,9 +267,9 @@ def date_format(timestamp):
 @base.cacofunc
 async def log(message, client):
     '''
-    **.log** [*req*]
+    **{0}log** [*req*]
     Sends the last 20 messages in a channel to you in a direct message in a nice, copy-pastable format. You can specify [*req*] to get a specific number of messages. (This is subject to limitations emposed by the API and the bot maintainer's preference.)
-    *Example: `.log 25`*
+    *Example: `{0}log 25`*
     '''
 
     # Check to see how many messages we should grab.
@@ -281,12 +280,12 @@ async def log(message, client):
         req = 20
 
     #Do not continue if requests is over the limit.
-    if req > config['log_request_limit']:
+    if req > base.config['log_request_limit']:
         await client.send_message(
             message.channel,
             '{}: That\'s way too many messages to send, as decreed by my creator. Acceptable amounts end at {}.'.format(
                 message.author,
-                config['log_request_limit']
+                base.config['log_request_limit']
                 )
             )
         return
@@ -329,13 +328,17 @@ async def log(message, client):
 
             # Send attachments
             if x.attachments:
+                msgToAdd += '{}:{} - {}:\n'.format(
+                    x.timestamp.hour,
+                    minute,
+                    x.author.name,
+                    )
+
+                if x.content:
+                    msgToAdd += message.content
+
                 for ach in x.attachments:
-                    msgToAdd = '{}:{} - {}: {}\n'.format(
-                        x.timestamp.hour,
-                        minute,
-                        x.author.name,
-                        ach['url']
-                        )
+                    msgToAdd += '\n{}'.format(ach['url'])
 
             # Send message
             else:
@@ -359,9 +362,9 @@ async def log(message, client):
 @base.cacofunc
 async def logquote(message, client):
     '''
-    **.logquote** [*num*] [*slice*]
-    Takes the last *num* quotes, and then adds them to the Quotes list, after OKaying it with you. If *slice* is provided, the quote will take the last *num* messages up to the last *slice* messages. For example, `.logquote 4 2` would quote the 4th to last, 3rd to last, and 2nd to last messages.
-    *Example: `.logquote 10 6`*
+    **{0}logquote** [*num*] [*slice*]
+    Takes the last *num* quotes, and then adds them to the Quotes list, after OKaying it with you. If *slice* is provided, the quote will take the last *num* messages up to the last *slice* messages. For example, `{0}logquote 4 2` would quote the 4th to last, 3rd to last, and 2nd to last messages.
+    *Example: `{0}logquote 10 6`*
     '''
     r = None
     s = None
@@ -375,7 +378,9 @@ async def logquote(message, client):
                 except ValueError:
                     await client.send_message(
                         message.channel,
-                        'Please provide an integer to slice.'
+                        '{}: Please provide an integer to slice.'.format(
+                            message.author.name
+                        )
                     )
                     return
             else:
@@ -407,17 +412,21 @@ async def logquote(message, client):
             else:
                 minute = str(x.timestamp.minute)
 
-            # Send attachments
+            # log attachments
             if x.attachments:
-                for ach in x.attachments:
-                    msgToAdd += '{}:{} - {}: {}\n'.format(
-                        x.timestamp.hour,
-                        minute,
-                        x.author.name,
-                        ach['url']
-                        )
+                msgToAdd += '{}:{} - {}:\n'.format(
+                    x.timestamp.hour,
+                    minute,
+                    x.author.name,
+                    )
 
-            # Send message
+                if x.content:
+                    msgToAdd += message.content
+
+                for ach in x.attachments:
+                    msgToAdd += '\n{}'.format(ach['url'])
+
+            # log message
             else:
                 msgToAdd += '{}:{} - {}: {}\n'.format(
                     x.timestamp.hour,
@@ -425,6 +434,27 @@ async def logquote(message, client):
                     x.author.name,
                     x.content
                     )
+
+
+    #replace mentions
+    while mention_syntax.search(msgToAdd):
+        member = discord.utils.get(
+            message.server.members,
+            id=mention_syntax.search(msgToAdd).group(2)
+            )
+
+        if member:
+            msgToAdd = msgToAdd.replace(
+                mention_syntax.search(msgToAdd).group(1),
+                '@' + member.name)
+        else:
+            msgToAdd = msgToAdd.replace(
+                mention_syntax.search(msgToAdd).group(1),
+                '@invalid_user'
+            )
+
+    while '@everyone' in msgToAdd:
+        msgToAdd.replace('@everyone', '(everyone)')
 
     if not msgToAdd:
         await client.send_message(message.channel, ':no_entry_sign: I ended up logging nothing, so I added nothing to my quotes.')
@@ -483,13 +513,13 @@ logquote.server = 'Quotes'
 @base.cacofunc
 async def memo(message, client):
     '''
-    **.memo** [ all | mentions | none ]
+    **{0}memo** [ all | mentions | none ]
     Manages your inclusion into the memoing system.
     `all` will DM you both mentions, and everyone mentions.
     `mentions` will only DM you if someone mentions you specifically.
     `none` removes you from the memoing system.
     If you are on the memoing system and you are mentioned in a channel that this bot is in, and you are not online, this bot will DM you where the mention was recieved (server and channel) plus the last 5 messages in that channel for context.
-    *Example: `.memo add`*
+    *Example: `{0}memo add`*
     '''
 
     try:

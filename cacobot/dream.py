@@ -16,11 +16,11 @@ ownerperm.manage_roles = True
 @base.cacofunc
 async def journal(message, client, *args, **kwargs):
     '''
-    **.journal**
+    **{0}journal**
     *This command was created for the Dream Journals server.*
     Creates a new text channel that only you can post in, using your name as the title.
-    **This command is only enabled if a moderator calls `.journal activate` first.**
-    *Example: `.journal`*
+    **This command is only enabled if a moderator calls `{0}journal activate` first.**
+    *Example: `{0}journal`*
     '''
 
     journals = []
@@ -32,7 +32,7 @@ async def journal(message, client, *args, **kwargs):
         with open('configs/journals.json', 'w') as data:
             data.write('[]')
 
-    if message.content.strip()[1:] == 'journal activate':
+    if message.content.strip()[len(base.config['invoker']):] == 'journal activate':
         if message.channel.permissions_for(message.author).manage_channels:
             journals.append(message.server.id)
             with open('configs/journals.json', 'w') as data:
@@ -62,6 +62,11 @@ async def journal(message, client, *args, **kwargs):
             else:
                 await client.send_message(message.channel, ":no_entry_sign: I do not have the proper permissions to create a journal channel for you yet.")
         else:
-            await client.send_message(message.channel, ":no_entry_sign: This server is disallowed from making Journals. If you would like to enable it, have a moderator call `.journal activate`.")
+            await client.send_message(
+                message.channel,
+                ":no_entry_sign: This server is disallowed from making Journals. If you would like to enable it, have a moderator call `{}journal activate`.".format(
+                    base.config['invoker']
+                    )
+                )
 
 journal.server = 'Dream Journals'
