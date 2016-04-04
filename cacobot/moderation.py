@@ -250,7 +250,7 @@ try:
         plugs = json.load(z)
 except FileNotFoundError:
     with open('configs/plugs.json', 'w') as z:
-        z.write('{}')
+        z.write('{ "GLOBAL" : [] }')
         plugs = {}
 
 @base.cacofunc

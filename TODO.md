@@ -22,6 +22,8 @@
 
  - `.log` should delete the log invoker?
 
+ - `.changes` shouldn't show minors. That was a bad idea.
+
 ## Low Priority
 
  - `.cahsim`, which can either create a random winning Cards Against Humanity  pair, or start a single round of CaH with users (by PMing them white cards.)
