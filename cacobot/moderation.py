@@ -463,28 +463,25 @@ async def nuke(message, client):
     except (ValueError, IndexError):
         r = 21
 
-    if message.channel.permissions_for(message.author).manage_messages:
-        if message.channel.permissions_for(
-                discord.utils.get(
-                    message.server.members,
-                    id=client.user.id
-                    )
-        ).manage_messages:
-            try:
-                async for msg in client.logs_from(message.channel, r):
-                    await client.delete_message(msg)
-            except discord.errors.NotFound:
-                pass
-        else:
+    if not message.channel.permissions_for(message.author).manage_messages:
+        await client.send_message(
+            message.channel,
+            '🚫 {}: Sorry, but I can\'t let you delete messages if you don\'t have the permission to.'.format(message.author.name)
+            )
+        return
+
+    if not message.channel.permissions_for(message.server.me).manage_messages:
             await client.send_message(
                 message.channel,
                 '🚫 I do not have permissions to delete messages yet, so I cannot perform this command.'
                 )
-    else:
-        await client.send_message(
-            message.channel,
-            '🚫 Sorry, but I can\'t let you delete messages if you don\'t have the permission to.'
-            )
+            return
+
+    try:
+        async for msg in client.logs_from(message.channel, r):
+            await client.delete_message(msg)
+    except discord.errors.NotFound:
+        pass
 
 @base.cacofunc
 async def cleanup(message, client):
