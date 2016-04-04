@@ -48,7 +48,7 @@ Create a folder called `configs` with these two files, filling in any necessary 
         "Oh no!",
         "How'd you do that?",
         "Oops..."
-    ],
+    ]
 }
 ```
 
