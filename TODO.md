@@ -18,6 +18,16 @@
 
  ~~- Remove `.welcome`. Instead, post a simple introductory prompt when CB is mentioned.~~
 
+ - Ok fuck Wiktionary, go check if Reference.com has an API and if not start scraping from it.
+
+ - `.log` should delete the log invoker?
+
 ## Low Priority
 
-- bring back CacoRadio!
+ - `.cahsim`, which can either create a random winning Cards Against Humanity  pair, or start a single round of CaH with users (by PMing them white cards.)
+
+ - `.cipher` to encode and decode ciphers.
+
+ - SOMETHING ELSE BUT I FORGOT IT RIP
+
+ - bring back CacoRadio!
