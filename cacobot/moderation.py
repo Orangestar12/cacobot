@@ -245,8 +245,13 @@ async def debug(message, client):
             )
 debug.server = 'Debug'
 
-with open('configs/plugs.json') as z:
-    plugs = json.load(z)
+try:
+    with open('configs/plugs.json') as z:
+        plugs = json.load(z)
+except FileNotFoundError:
+    with open('configs/plugs.json', 'w') as z:
+        z.write('{}')
+        plugs = {}
 
 @base.cacofunc
 async def plug(message, client):
