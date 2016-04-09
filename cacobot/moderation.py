@@ -251,7 +251,7 @@ try:
 except FileNotFoundError:
     with open('configs/plugs.json', 'w') as z:
         z.write('{ "GLOBAL" : [] }')
-        plugs = {}
+        plugs = { "GLOBAL" : [] }
 
 @base.cacofunc
 async def plug(message, client):
