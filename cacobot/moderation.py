@@ -171,34 +171,29 @@ async def call(message, client):
 async def connect(message, client):
     '''
     **{0}connect** [*invite*]
-    Allows this bot to join your server.
-    *Example: `{0}connect http://discord.gg/0iLJFytdVRBR1vgh`*
-    *Please consider reading the Terms of Service for CacoBot before calling `{0}connect`.*
+    Sends you to the authorization page for this bot.
+    *Example: `{0}connect`*
+    *Please consider reading the Terms of Service  before calling `{0}connect`.*
     https://github.com/{1}/{2}/blob/master/tos.md
     '''
 
-    try:
-        await client.accept_invite(message.content.split()[1])
+    if len(message.content.split()) > 1:
         await client.send_message(
             message.channel,
-            ':heart: I have successfully joined your server.'
+            '🕴 {}: This command does not require an invite anymore. You must have an administrator authorize me at this URL:\n{}.'.format(
+                message.author.name,
+                discord.utils.oauth_url(base.config['client_id'])
+                )
             )
-    except discord.errors.NotFound:
-        await client.send_message(
-            message.channel,
-            '🚫 That was not a valid channel invite or id.'
+        return
+
+    await client.send_message(
+        message.channel,
+        '❤ {}: Please have an administrator authorize me here:\n{}.'.format(
+            message.author.name,
+            discord.utils.oauth_url(base.config['client_id'])
             )
-    except IndexError:
-        await client.send_message(
-            message.channel,
-            '🚫 Please send a link to a channel invite or id with this command.'
-            )
-    except:
-        await client.send_message(
-            message.channel,
-            '🚫 Your input was invalid. I have saved the traceback to my log. Please notify the bot maintainer immediately.'
-            )
-        print(traceback.format_exc())
+        )
 
 @base.cacofunc
 async def debug(message, client):

@@ -42,6 +42,8 @@ async def on_ready():
     print(client.user.name)
     print(client.user.id)
     print('------')
+    # pylint: disable=w1401
+    # pylint was freaking out about the ascii bullshit so I had to add that.
     print("""
   ____                ____        _     ____                _
  / ___|__ _  ___ ___ | __ )  ___ | |_  |  _ \ ___  __ _  __| |_   _
@@ -63,33 +65,31 @@ async def on_message(message):
 
     # execute Precommands
     for func in cacobot.base.pres:
-        if cont:
-            cont = await cacobot.base.pres[func](message, client)
-        else:
-            break
+        cont = await cacobot.base.pres[func](message, client)
+        if not cont:
+            return
 
-    if cont:
-        if message.content.startswith(config['invoker']) and \
-        message.author.id != client.user.id and len(message.content) > 1: # ignore our own commands
-            command = message.content[len(cacobot.base.config['invoker']):].split()[0].lower()
-            # So basically if the message was ".Repeat Butt talker!!!" this
-            # would be "repeat"
-            if command in cacobot.base.functions:
-                if message.channel.is_private or\
-                message.channel.permissions_for(message.server.me).send_messages:
-                    await client.send_typing(message.channel)
-                    await cacobot.base.functions[command](message, client)
-                else:
-                    print('\n===========\nThe bot cannot send messages to #{} in the server "{}"!\n===========\n\nThis message is only showing up because I *tried* to send a message but it didn\'t go through. This probably means the mod team has tried to disable this bot, but someone is still trying to use it!\n\nHere is the command in question:\n\n{}\n\nThis was sent by {}.\n\nIf this message shows up a lot, the bot might be disabled in that server. You should just make it leave if the mod team isn\'t going to just kick it!'.format(
-                        message.channel.name,
-                        message.server.name,
-                        message.content,
-                        message.author.name
-                        )
-                         )
+    if message.content.startswith(config['invoker']) and \
+    message.author.id != client.user.id and len(message.content) > 1: # ignore our own commands
+        command = message.content[len(cacobot.base.config['invoker']):].split()[0].lower()
+        # So basically if the message was ".Repeat Butt talker!!!" this
+        # would be "repeat"
+        if command in cacobot.base.functions:
+            if message.channel.is_private or\
+            message.channel.permissions_for(message.server.me).send_messages:
+                await client.send_typing(message.channel)
+                await cacobot.base.functions[command](message, client)
+            else:
+                print('\n===========\nThe bot cannot send messages to #{} in the server "{}"!\n===========\n\nThis message is only showing up because I *tried* to send a message but it didn\'t go through. This probably means the mod team has tried to disable this bot, but someone is still trying to use it!\n\nHere is the command in question:\n\n{}\n\nThis was sent by {}.\n\nIf this message shows up a lot, the bot might be disabled in that server. You should just make it leave if the mod team isn\'t going to just kick it!'.format(
+                    message.channel.name,
+                    message.server.name,
+                    message.content,
+                    message.author.name
+                    )
+                ) # pylint: disable=c0330
 
-        for func in cacobot.base.posts:
-            await cacobot.base.posts[func](message, client)
+    for func in cacobot.base.posts:
+        await cacobot.base.posts[func](message, client)
 
 @client.event
 async def on_error(*args):
@@ -134,7 +134,7 @@ async def on_error(*args):
                             sys.exc_info()[0].__name__)
                         )
 
-client.run(config['email'], config['password'])
+client.run(config['token'])
 
 # Here's the old manual-loop way of starting the bot.
 

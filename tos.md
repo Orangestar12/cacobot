@@ -28,7 +28,7 @@ In short, **You are given full permission to utilize every CacoBot command as pe
 
 As the owner and maintainer of CacoBot, I retain some rights about what I can do about the data received by CacoBot.
 
-1. **I retain the right to sign in through CacoBot and view any server he is connected to.** This means that I will, occasionally (usually to perform maintenance) sign into the Discord client as CacoBot. Usually what I do with CacoBot isn't too intrusive, but I'm putting this here to cover my ass because people complained about this last time.
+1. **I retain the right to use any CacoBot commands to access or view any server he is connected to.** This means that I will, occasionally (usually to debug) use CacoBot's debug commands to examine servers he's connected to and messages he's received. Usually what I do with CacoBot isn't too intrusive, but I'm putting this here to cover my ass because people complained about this last time.
 
 2. **I retain the right to completely restrict your usage of CacoBot through the global plug command, at any time.** This is usually restricted to other bots to prevent CacoBot from doing commands spurred by them from other users, but just know that if you're being enough of a nuisance, I can kick you out of CacoBot.
 
