@@ -1,6 +1,8 @@
+# pylint: disable=c0302
 import random
 import json
-import asyncio
+
+import discord
 
 import cacobot.base as base
 
@@ -776,7 +778,7 @@ killmsgs = [
     '%k tried to tell %o to be sensible, but %g didn\'t listen!',
     'Actually, %k snaps %o in two. **Just kidding!**',
     '%k fillered %o.',
-    '%k showed %o %p code pen.',
+    '%k showed %o a lethal Codepen.',
     '%o lost to %k at Cards Against Humanity.',
     '%k Oldbagged %o.',
     '%k took %o to the Mystery Shack.',
@@ -882,7 +884,13 @@ def postify(phrase, message, pronouns):
                 '%h', pronouns['%h']
                 ).replace(
                     '%p', pronouns['%p']
-                    )
+                    ).replace(
+                        '%v', pronouns['%g']
+                        ).replace(
+                            '%b', pronouns['%h']
+                            ).replace(
+                                '%l', pronouns['%p']
+                                )
 
     #capitals
     w = w.replace(
@@ -891,7 +899,14 @@ def postify(phrase, message, pronouns):
             '%H', pronouns['%h'].capitalize()
             ).replace(
                 '%P', pronouns['%p'].capitalize()
-                )
+                ).replace(
+                    '%K', pronouns['%g'].capitalize()
+                    ).replace(
+                        '%B', pronouns['%h'].capitalize()
+                        ).replace(
+                            '%L', pronouns['%p'].capitalize()
+                            )
+
 
     if message.mentions:
         w = w.replace(
@@ -904,8 +919,6 @@ def postify(phrase, message, pronouns):
 
     return w
 
-# cooldown = False
-
 @base.cacofunc
 async def kill(message, client):
     '''
@@ -914,8 +927,6 @@ async def kill(message, client):
     Prints an obituary for the mentioned party. By default, will use "They" pronouns. You can do `{0}kill optin 1 2 3` to opt into replacing your pronouns with 3 of your choice. The syntax is posted above. This is agnostic: You can use any word you want for a pronoun.
     *Examples: `{0}kill @BooBot`, `{0}kill optin schlee schlim schleir`*
     '''
-    # global cooldown
-    cooldown = False
 
     try:
         with open('configs/pronouns.json') as datastream:
@@ -926,6 +937,10 @@ async def kill(message, client):
         optin = {}
 
     params = message.content.split()
+    name = message.content.split(None, 1)
+    if len(name) > 1:
+        name = name[1]
+
     pronouns = {'%g':'they', '%h':'them', '%p': 'their'}
 
     if message.content.lower() == '{}kill la kill'.format(base.config['invoker']):
@@ -934,57 +949,66 @@ async def kill(message, client):
 
     if message.mentions and message.mentions[0].id in optin:
         pronouns = optin[message.mentions[0].id]
-    elif len(message.content.split()) > 1 and [x for x in message.server.members if x.name == message.content.split(None, 1)[1]] and [x.id for x in message.server.members if x.name == message.content.split(None, 1)[1]][0] in optin:
-        pronouns = optin[[x.id for x in message.server.members if x.name == message.content.split(None, 1)[1]][0]]
-    elif message.author.id in optin:
-        pronouns = optin[message.author.id]
+    else:
+        if len(message.content.split()) > 1:
+            name2member = discord.utils.get(message.server.members, name=name)
+            if name2member and name2member.id in optin:
+                pronouns = optin[name2member.id]
+        elif message.author.id in optin:
+            pronouns = optin[message.author.id]
 
     if len(params) < 2:
-        if not cooldown:
-            await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
-            cooldown = True
-            await asyncio.sleep(5)
-            cooldown = False
-    elif message.mentions and message.mentions[0] == message.author:
-        if not cooldown:
-            await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
-            cooldown = True
-            await asyncio.sleep(5)
-            cooldown = False
-    elif message.mentions:
-        if not cooldown:
-            await client.send_message(message.channel, postify(random.choice(killmsgs), message, pronouns))
-            cooldown = True
-            await asyncio.sleep(5)
-            cooldown = False
-    elif params[1] == 'optin':
+        await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
+        return
+
+    if message.mentions and message.mentions[0] == message.author:
+        await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
+        return
+
+    if message.mentions:
+        await client.send_message(message.channel, postify(random.choice(killmsgs), message, pronouns))
+        return
+
+    if params[1] == 'optin':
+        if len(params) == 3 and params[2] == 'check':
+            await client.send_message(
+                message.channel,
+                'Your pronouns are set to:\nHe/She/They: {}\nHim/Her/Them: {}\nHis/Her/Their: {}.'.format(
+                    optin[message.author.id]['%g'],
+                    optin[message.author.id]['%h'],
+                    optin[message.author.id]['%p']
+                    )
+                )
+            return
+
         try:
             optin[message.author.id] = {
                 '%g' : params[2],
                 '%h' : params[3],
                 '%p' : params[4]
             }
+
             with open('configs/pronouns.json', 'w') as datastream:
                 json.dump(optin, datastream, indent=4)
+
             await client.send_message(message.channel, '{}: I have successfully updated your pronouns to {}/{}/{}.'.format(
                 message.author.name,
                 params[2],
                 params[3],
                 params[4]
                 ))
+
         except IndexError:
             await client.send_message(message.channel, '{}: You must provide 3 pronouns as an analogue to "he/she/they", "him/her/them", and "his/her/their", in that order.'.format(message.author.name))
-    elif [x for x in message.server.members if x.name == message.content.split(None, 1)[1]] and [x for x in message.server.members if x.name == message.content.split(None, 1)[1]][0] == message.author:
-        if not cooldown:
-            await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
-            cooldown = True
-            await asyncio.sleep(5)
-            cooldown = False
-    elif '@everyone' in message.content:
+
+        return
+
+    if name == message.author.name or name.lower() in ['me', 'myself', 'i']:
+        await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
+        return
+
+    if '@everyone' in message.content:
         await client.send_message(message.channel, '{}: **Do not use this command to circumvent everyone mention restrictions.**'.format(message.author.name))
-    else:
-        if not cooldown:
-            await client.send_message(message.channel, postify(random.choice(killmsgs), message, pronouns))
-            cooldown = True
-            await asyncio.sleep(5)
-            cooldown = False
+        return
+
+    await client.send_message(message.channel, postify(random.choice(killmsgs), message, pronouns))
