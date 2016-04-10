@@ -89,8 +89,9 @@ async def welcome(message, client):
     if not message.channel.is_private and message.server.me in message.mentions:
         await client.send_message(
             message.channel,
-            '{}: For information on this bot, type `.help`. I don\'t log messages. Also, check out the `.git` command for my TOS and code.'.format(
-                message.author.name
+            '{0}: For information on this bot, type `{1}help`. I don\'t log messages unless asked. Also, check out the `{1}git` command for my TOS and code.'.format(
+                message.author.name,
+                base.config['invoker']
                 )
             )
 
@@ -119,7 +120,9 @@ async def changes(message, client):
     msgToSend = '__**Recent commits from {} repository on GitHub:**__\n'.format(base.config['git']['repo_name'])
 
     for x in req:
-        commsg = x['commit']['message'].replace('\n', '\n    ')
+        commsg = x['commit']['message'].split('\n')[0]
+        if len(commsg) > 40:
+            commsg = commsg[:40]
         if x['committer']['login'] == base.config['git']['repo_author']:
             msgToSend += '**{}:** {}'.format(x['committer']['login'], commsg)
         else:

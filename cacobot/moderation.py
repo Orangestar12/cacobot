@@ -276,14 +276,13 @@ async def plug(message, client):
                    )
                )
             return
-        if 'GLOBAL' in plugs:
-            plugs['GLOBAL'].append(message.mentions[0].id)
-        else:
-            plugs['GLOBAL'] = [message.mentions[0].id]
-        await client.send_message(
-            message.channel,
-            '✔ {}: {} has been globally plugged.'.format(message.author.name, mention.name)
-            )
+
+        for mention in message.mentions:
+            plugs['GLOBAL'].append(mention.id)
+            await client.send_message(
+                message.channel,
+                '✔ {}: {} has been globally plugged.'.format(message.author.name, mention.name)
+                )
 
         with open('configs/plugs.json', 'w') as z:
             json.dump(plugs, z, indent=4)
