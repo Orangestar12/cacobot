@@ -874,9 +874,21 @@ killmsgs = [
     '%k randomverbed %o.'
 ]
 
-def postify(phrase, message, pronouns):
+def postify(phrase, message, pronouns, suicide=False, *args):
+    w = phrase
+
+    if suicide:
+        if message.mentions:
+            w = w.replace(
+                '%k', message.mentions[0].name
+                )
+        elif len(message.content.split()) > 1:
+            w = w.replace(
+                '%k', message.content.split(None, 1)[1]
+            )
+
     #lower case
-    w = phrase.replace(
+    w = w.replace(
         '%k', message.author.name
         ).replace(
             '%g', pronouns['%g']
@@ -884,13 +896,7 @@ def postify(phrase, message, pronouns):
                 '%h', pronouns['%h']
                 ).replace(
                     '%p', pronouns['%p']
-                    ).replace(
-                        '%v', pronouns['%g']
-                        ).replace(
-                            '%b', pronouns['%h']
-                            ).replace(
-                                '%l', pronouns['%p']
-                                )
+                    )
 
     #capitals
     w = w.replace(
@@ -899,13 +905,23 @@ def postify(phrase, message, pronouns):
             '%H', pronouns['%h'].capitalize()
             ).replace(
                 '%P', pronouns['%p'].capitalize()
+                )
+
+    if args:
+        print(args)
+        w = phrase.replace(
+            '%v', args[0]['%g']
+            ).replace(
+                '%b', args[0]['%h']
                 ).replace(
-                    '%K', pronouns['%g'].capitalize()
+                    '%l', args[0]['%p']
                     ).replace(
-                        '%B', pronouns['%h'].capitalize()
+                        '%V', args[0]['%g'].capitalize()
                         ).replace(
-                            '%L', pronouns['%p'].capitalize()
-                            )
+                            '%B', args[0]['%h'].capitalize()
+                            ).replace(
+                                '%L', args[0]['%p'].capitalize()
+                                )
 
 
     if message.mentions:
@@ -922,9 +938,9 @@ def postify(phrase, message, pronouns):
 @base.cacofunc
 async def kill(message, client):
     '''
-    **{0}kill** [ mention ]
+    **{0}kill** [ mention | string ]
     **{0}kill** [ optin ] [ he/she/they ] [ him/her/them ] [ his/her/their ]
-    Prints an obituary for the mentioned party. By default, will use "They" pronouns. You can do `{0}kill optin 1 2 3` to opt into replacing your pronouns with 3 of your choice. The syntax is posted above. This is agnostic: You can use any word you want for a pronoun.
+    Prints an obituary for the mentioned party as though you had killed it. By default, will use "They" pronouns. You can do `{0}kill optin 1 2 3` to opt into replacing your pronouns with 3 of your choice. The syntax is posted above. This is agnostic: You can use any word you want for a pronoun.
     *Examples: `{0}kill @BooBot`, `{0}kill optin schlee schlim schleir`*
     '''
 
@@ -942,6 +958,7 @@ async def kill(message, client):
         name = name[1]
 
     pronouns = {'%g':'they', '%h':'them', '%p': 'their'}
+    killerpronouns = {'%g':'they', '%h':'them', '%p': 'their'}
 
     if message.content.lower() == '{}kill la kill'.format(base.config['invoker']):
         await client.send_message(message.channel, '{} tried to make a shitty anime joke and was victimized because of it.'.format(message.author.name))
@@ -957,6 +974,9 @@ async def kill(message, client):
         elif message.author.id in optin:
             pronouns = optin[message.author.id]
 
+    if message.author.id in optin:
+        killerpronouns = optin[message.author.id]
+
     if len(params) < 2:
         await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
         return
@@ -966,7 +986,7 @@ async def kill(message, client):
         return
 
     if message.mentions:
-        await client.send_message(message.channel, postify(random.choice(killmsgs), message, pronouns))
+        await client.send_message(message.channel, postify(random.choice(killmsgs), message, pronouns, killerpronouns))
         return
 
     if params[1] == 'optin':
@@ -1011,4 +1031,59 @@ async def kill(message, client):
         await client.send_message(message.channel, '{}: **Do not use this command to circumvent everyone mention restrictions.**'.format(message.author.name))
         return
 
-    await client.send_message(message.channel, postify(random.choice(killmsgs), message, pronouns))
+    await client.send_message(message.channel, postify(random.choice(killmsgs), message, pronouns, killerpronouns))
+
+@base.cacofunc
+async def rip(message, client):
+    '''
+    **{0}rip** [ mention | string ]
+    Prints an obituary for the mentioned party as though they had died from either their own means or an outside party. Pronouns are taken from the `{0}kill` command. See it's help file for more information.
+    *Example: `{0}rip @42`*
+    '''
+
+    try:
+        with open('configs/pronouns.json') as datastream:
+            optin = json.load(datastream)
+    except FileNotFoundError:
+        with open('configs/pronouns.json', 'w') as datastream:
+            datastream.write('{}')
+        optin = {}
+
+    params = message.content.split()
+    name = message.content.split(None, 1)
+    if len(name) > 1:
+        name = name[1]
+
+    pronouns = {'%g':'they', '%h':'them', '%p': 'their'}
+
+    if message.mentions and message.mentions[0].id in optin:
+        pronouns = optin[message.mentions[0].id]
+    else:
+        if len(message.content.split()) > 1:
+            name2member = discord.utils.get(message.server.members, name=name)
+            if name2member and name2member.id in optin:
+                pronouns = optin[name2member.id]
+        elif message.author.id in optin:
+            pronouns = optin[message.author.id]
+
+    if len(params) < 2:
+        await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
+        return
+
+    if message.mentions and message.mentions[0] == message.author:
+        await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
+        return
+
+    if message.mentions:
+        await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns, suicide=True))
+        return
+
+    if name == message.author.name or name.lower() in ['me', 'myself', 'i']:
+        await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
+        return
+
+    if '@everyone' in message.content:
+        await client.send_message(message.channel, '{}: **Do not use this command to circumvent everyone mention restrictions.**'.format(message.author.name))
+        return
+
+    await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns, suicide=True))
