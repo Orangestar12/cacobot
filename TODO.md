@@ -8,9 +8,9 @@
 
  - First time setup?
 
- - Tags should autocreate on first run.
+ ~~- Tags should autocreate on first run.~~
 
- - OH BOY GET READY FOR OFFICIAL API BECAUSE THAT'S GONNA BREAK A LOOOOOOOOOOT
+ ~~- OH BOY GET READY FOR OFFICIAL API BECAUSE THAT'S GONNA BREAK A LOOOOOOOOOOT~~
 
  - `.later` should fall back to Imgur uploaded versions of the images if the bot can't upload files.
 
@@ -22,13 +22,17 @@
 
  - `.log` should delete the log invoker?
 
- - `.changes` shouldn't show minors. That was a bad idea.
+ ~~- `.changes` shouldn't show minors. That was a bad idea.~~
+
+ - Some system to log user joins and leaves, either publically or privately.
 
 ## Low Priority
 
  - `.cahsim`, which can either create a random winning Cards Against Humanity  pair, or start a single round of CaH with users (by PMing them white cards.)
 
  - `.cipher` to encode and decode ciphers.
+
+ - YOU HAVE A BIG LIST OF ASGORE NAMES YOU BITCH ADD THEM
 
  - SOMETHING ELSE BUT I FORGOT IT RIP
 
