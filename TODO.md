@@ -26,6 +26,8 @@
 
  - Some system to log user joins and leaves, either publically or privately.
 
+ - `.export [ tags | quotes ]` and `.import`: allowing bots to update their tags from the master.
+
 ## Low Priority
 
  - `.cahsim`, which can either create a random winning Cards Against Humanity  pair, or start a single round of CaH with users (by PMing them white cards.)
@@ -33,7 +35,5 @@
  - `.cipher` to encode and decode ciphers.
 
  - YOU HAVE A BIG LIST OF ASGORE NAMES YOU BITCH ADD THEM
-
- - SOMETHING ELSE BUT I FORGOT IT RIP
 
  - bring back CacoRadio!
