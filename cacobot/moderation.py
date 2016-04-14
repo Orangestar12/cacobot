@@ -350,7 +350,7 @@ async def unplug(message, client):
        return
 
     for mention in message.mentions:
-        if message.mention.id in plugs[message.server.id]:
+        if mention.id in plugs[message.server.id]:
             plugs[message.server.id].remove([mention.id])
             await client.send_message(
                 message.channel,
