@@ -20,8 +20,8 @@ async def help(message, client):
     *Example: `{0}help help`*
     '''
 
-    params = message.content.split(" ")
-    if message.content.strip()[len(base.config['invoker']):] == 'help':
+    params = message.content.split()
+    if len(params) == 1:
         msg = 'These are my commands:\n'
 
         dect = {} # Oh god here we go
@@ -52,7 +52,7 @@ async def help(message, client):
                 msg += ' '.join(sorted(dect[x]))
                 msg += '\n\n'
 
-        msg += 'Use `{0}help [`*`command`*`]` to get more information about a command.'.format(
+        msg += 'Use `{0}help [`*`command`*`]` to get more information about a command. **Please look up the help string for a command before using it or asking questions about it. Thank you!**'.format(
             base.config['invoker']
             )
         await client.send_message(message.channel, msg)
