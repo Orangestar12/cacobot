@@ -1,5 +1,8 @@
 import json # to load tags
 import re # to find mentions
+import asyncio # to sleep
+
+import discord # for errors
 
 import cacobot.base as base
 
@@ -35,27 +38,34 @@ async def away(message, client):
         return
 
 
-    msgs[message.author.id] = {'msg' : msg, 'count' : 1}
+    msgs[message.author.id] = {'msg' : msg, 'grossfix' : True, 'cooldown' : False}
 
     with open('configs/away.json', 'w') as z:
         json.dump(msgs, z, indent=4)
 
-    await client.send_message(message.channel, '{}: I will now respond with that message when you are mentioned (plus a little fluff, if you don\'t mind.) I will automatically disable the away when you speak again.'.format(message.author.name))
+    try:
+        await client.delete_message(message)
+    except(discord.errors.NotFound, discord.Forbidden):
+        pass
+
+    await client.send_message(message.author, '{0}: I will now automatically respond with this message when you are mentioned:\n\n{0} is away. This is their set message:\n\n{1}\n\n*This is an automated response. You can set one up yourself with `.away`.*'.format(message.author.name, msg))
 
 @base.postcommand
 async def awayhelper(message, client):
     global msgs # pylint: disable=W0602
 
-    if message.author.id in msgs and msgs[message.author.id]['count'] == 0:
+    if message.author.id in msgs and not msgs[message.author.id]['grossfix']:
         msgs.pop(message.author.id)
 
         with open('configs/away.json', 'w') as z:
             json.dump(msgs, z, indent=4)
 
-        await client.send_message(message.channel, '{}: I have automatically disabled your away. ❤'.format(message.author.name))
-        return
-    elif message.author.id in msgs and msgs[message.author.id]['count'] > 0:
-        msgs[message.author.id]['count'] -= 1
+        if message.channel.is_private:
+            await client.send_message(message.author, '{}: Your away message has been automatically disabled.'.format(message.author.name))
+        else:
+            await client.send_message(message.author, '{}: Your away message has been automatically disabled because you sent a message in #{}'.format(message.author.name, message.channel.name))
+    elif message.author.id in msgs and msgs[message.author.id]['grossfix']:
+        msgs[message.author.id]['grossfix'] = False
         with open('configs/away.json', 'w') as z:
             json.dump(msgs, z, indent=4)
 
@@ -63,4 +73,8 @@ async def awayhelper(message, client):
         respond = [x for x in message.mentions if x.id in msgs]
 
         for x in respond:
-            await client.send_message(message.channel, '{}: {} is currently away. They have left me with this message:\n\n{}\n\n*This is an automated response. You can set one up yourself with `.away`.*'.format(message.author.name, x.name, msgs[x.id]['msg']))
+            if not msgs[x.id]['cooldown']:
+                await client.send_message(message.channel, '{}: {} is away. This is their set message:\n\n{}\n\n*This is an automated response. You can set one up yourself with `.away`.*'.format(message.author.name, x.name, msgs[x.id]['msg']))
+                msgs[x.id]['cooldown'] = True
+                await asyncio.sleep(30)
+                msgs[x.id]['cooldown'] = False
