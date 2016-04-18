@@ -62,6 +62,7 @@ pylintrc
 
 # CacoBot-Specific
 configs/*
+configs - backup/*
 tmp.svg
 tmp.png
 
