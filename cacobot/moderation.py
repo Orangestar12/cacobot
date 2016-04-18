@@ -321,6 +321,9 @@ async def plug(message, client):
                 '✔ {}: {} has been plugged.'.format(message.author.name, x.name)
                 )
 
+    with open('configs/plugs.json', 'w') as z:
+        json.dump(plugs, z, indent=4)
+
 @base.cacofunc
 async def unplug(message, client):
     '''
