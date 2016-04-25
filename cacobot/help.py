@@ -9,10 +9,10 @@ import cacobot.base as base
 
 # Please place the latest date you want the bot to check for commits:
 # format is YYYY-MM-DDTHH:MM:SSZ
-comdate = '2016-03-21'
+comdate = '2016-04-13'
 
 @base.cacofunc
-async def help(message, client):
+async def help(message, client): # pylint: disable=W0622
     '''
     *Cheeky, ain't ya?*
     **{0}help** [*cmd*]
@@ -20,8 +20,8 @@ async def help(message, client):
     *Example: `{0}help help`*
     '''
 
-    params = message.content.split(" ")
-    if message.content.strip()[len(base.config['invoker']):] == 'help':
+    params = message.content.split()
+    if len(params) == 1:
         msg = 'These are my commands:\n'
 
         dect = {} # Oh god here we go
@@ -52,7 +52,7 @@ async def help(message, client):
                 msg += ' '.join(sorted(dect[x]))
                 msg += '\n\n'
 
-        msg += 'Use `{0}help [`*`command`*`]` to get more information about a command.'.format(
+        msg += 'Use `{0}help [`*`command`*`]` to get more information about a command. **Please look up the help string for a command before using it or asking questions about it. Thank you!**'.format(
             base.config['invoker']
             )
         await client.send_message(message.channel, msg)
@@ -69,19 +69,14 @@ async def help(message, client):
             else:
                 await client.send_message(message.channel, ':heavy_exclamation_mark: This command has no docstring! Go tell Orangestar that it\'s broken.')
         else:
+            for x in base.functions:
+                if hasattr(base.functions[x], 'server') and params[1].lower() == base.functions[x].server.lower():
+                    await client.send_message(message.channel, '{}: ...Why did you just try to look up the help for a command category? I tried to split up the help message into categories so they could be read easier. Those big headers with the underlines and everything? Those are *categories*. There isn\'t a command called {}. (Why do so many people get this wrong? It\'s infuriating.)\n\n*~Orangestar, Bot maintainer.*'.format(
+                        message.author.name,
+                        params[1]
+                        ))
+                    return
             await client.send_message(message.channel, ':no_entry_sign: That command does not exist.')
-
-#@base.cacofunc
-# async def welcome(message, client):
-    # '''
-    # **{0}welcome**
-    # Displays a helpful message about how to use CacoBot!
-    # *Example: `{0}welcome`*
-    # '''
-
-    # You should customize this message to meet the standards of your own bot.
-
-    # await client.send_message(message.author, 'HISSSSSSS! I\'m **CacoBot** r22! I was made by **Orangestar** to help out with a Doom-related server, but now I roam Discord checking out the servers available. My purpose is to act as a *supplementary* bot to existing bots on your server. I\'m packing a bunch of weird, superfluous commands that keep me lightweight and don\'t obsolete other bots. You can check them out with the `.help` command! Some stuff you might be interested:\n\nUse `.log` to get a nice, copy-pastable copy of the last few messages in a channel to add to quotes or share with a friend.\n\nCheck out my Github repo and personal server with `.git`.\n\nI have a set of commands for saving hilarious quotes from other users! Log is perfect for adding quotes to this database. If you ever need a pick-me-up, call `.quote`!\n\nFor everything else, you should call `.help` for a list of commands and `.help [`*`command`*`]` for specific information about a specific command. Have fun!')
 
 # provide short information if mentioned.
 @base.postcommand
@@ -89,8 +84,9 @@ async def welcome(message, client):
     if not message.channel.is_private and message.server.me in message.mentions:
         await client.send_message(
             message.channel,
-            '{}: For information on this bot, type `.help`. I don\'t log messages. Also, check out the `.git` command for my TOS and code.'.format(
-                message.author.name
+            '{0}: For information on this bot, type `{1}help`. I don\'t log messages unless asked. Also, check out the `{1}git` command for my TOS and code.'.format(
+                message.author.name,
+                base.config['invoker']
                 )
             )
 
@@ -119,7 +115,9 @@ async def changes(message, client):
     msgToSend = '__**Recent commits from {} repository on GitHub:**__\n'.format(base.config['git']['repo_name'])
 
     for x in req:
-        commsg = x['commit']['message'].replace('\n', '\n    ')
+        commsg = x['commit']['message'].split('\n')[0]
+        if len(commsg) > 40:
+            commsg = commsg[:40]
         if x['committer']['login'] == base.config['git']['repo_author']:
             msgToSend += '**{}:** {}'.format(x['committer']['login'], commsg)
         else:

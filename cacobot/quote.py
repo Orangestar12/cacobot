@@ -6,7 +6,7 @@ import asyncio # to sleep in log
 import discord
 import cacobot.base as base
 
-mention_syntax = re.compile(r'(<@([0-9]*?)>)')
+mention_syntax = re.compile(r'(<@([0-9#]*?)>)')
 
 @base.cacofunc
 async def quote(message, client):
@@ -30,7 +30,7 @@ async def quote(message, client):
         try:
             r = int(message.content.split()[1])
         except ValueError:
-            if re.match(r'[0-9]*\.[0-9]*', message.content.split(None, 1)[1]):
+            if re.match(r'^[0-9]*\.[0-9]*$', message.content.split(None, 1)[1]):
                 await client.send_message(
                     message.channel,
                     '2:23 AM - 🎮 Mr McPowned: @KeksGiven to be fair, he can\'t store floats\n2:23 AM - 🎮 Mr McPowned: And if he did, I\'d call him retarded'

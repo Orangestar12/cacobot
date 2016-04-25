@@ -38,6 +38,10 @@ def postcommand(func):
     posts[func.__name__] = func
     return func
 
+# Set to a stream object when you begin playing stream audio through client.voice
+
+stream = None
+
 # This is a global reference to your configuration file.
 with open('configs/config.json') as data:
     config = json.load(data)

@@ -1,6 +1,8 @@
+# pylint: disable=c0302
 import random
 import json
-import asyncio
+
+import discord
 
 import cacobot.base as base
 
@@ -248,7 +250,7 @@ suicides = [
     '%k got @\u2060everyone pinged.',
     '%k was torn to shreds by an angry mob by pinging @\u2060everyone.\n\"To shreds, you say?\"',
     'Good news, everyone! %k has died!',
-    '%k was destroyed by a \*\*\*\*\*\*\*\*\*\*\*\*\* chainsaw! Wait, did I say chainsaw? What?',
+    r'%k was destroyed by a \*\*\*\*\*\*\*\*\*\*\*\*\* chainsaw! Wait, did I say chainsaw? What?',
     '%k got censored.',
     '%k ate an echo roll.',
     '%k had ████████████ done to %p █████████ while ██████ got a ███████████████ and decided ████████████ was an elephant version of █████████████████ candy.',
@@ -275,13 +277,42 @@ suicides = [
     '%k tried to eat a spoonful of ground cinnamon.',
     '%k died. Riphaghetti in Spaghetti, never forghetti,',
     '%k was portaled into space by GLaDOS.',
-    '%k got mashy-spike-plated by %o.',
     '"Oh, %k! You came back! Didn\'t actually plan... for that. Can\'t actually reset the death trap. So. Ah. Could you jump into that pit, there? Would you just jump into that pit for me?"\n"Could you just jump into that pit? There. That deadly pit."\n"You\'re saying to yourself, why should I jump into the pit? I\'ll tell you why. Guess who\'s down there? Your parents! You\'re not adopted after all! It\'s your natural parents down there in the pit. Should have mentioned it before. But I didn\'t. So jump on down and reunite with mommy and daddy."\n"Oh I\'ll tell you what\'s also down there. Your parents and... There\'s also an escape elevator!. Down there. Funny. I should have mentioned it before. But so it\'s down there. So pop down. Jump down. You\'ve got your folks down there and an escape elevator"\n"And what else is down there... Tell you what, it\'s only a new jumpsuit. A very trendy designer jumpsuit from France. Down there. Which is exactly your size. And if it\'s a bit baggy, we got a tailor down there as well who can take it in for you"\n"And what\'s this, a lovely handbag? And the three portal device! It\'s all down there!"\n"Um. You\'ve got a yacht. And... Boys! Loads of fellas. Hunky guys down there. Possibly even a boyfriend! Who\'s to say at this stage. But, a lot of good looking fellas down there. And, ah, a boy band as well! That haven\'t seen a woman in years. And they\'re not picky at all. They don\'t care if you\'ve got a bit of brain damage. If you\'ve been running around sweating. And... A farm! A pony farm! And... Just jump down, would ya?"\n"Oh! Wow! Good! I didn\'t think that was going to work."',
-    '%k shoulda rolled.'
+    '%k shoulda rolled.',
+    '%k tried to swooce right in.',
+    '%k elected not to see The Strongman.',
+    '%k got messed up by those Golden Rhino thugs!', # This one's for you, Ham.
+    '%k likes hurting other people.',
+    '%k HAS BEEN TAKEN INTO CUSTODY!',
+    '%k was bleeding on the ground, but then a Texan yelled "Get the fuck up" to them and they got back up.',
+    '%k was spooked solid.',
+    '%k forgot a pair of bolt cutters.',
+    '%k almost made it to Elysium, but plummeted back to Deponia instead.',
+    '%k almost made it to Elysium, but plummeted back to the nondenominational Middle Eastern area instead.',
+    '%k began development of "%k Forever".',
+    '%k forgot how %p uncle\'s grappling device worked.',
+    '%k saw the numbers and tasted the violence.',
+    '%k is now half the man he used to be!',
+    '%k was purged.',
+    '%k was declared a heretic.',
+    '%k was mashed by a bigger and stronger ork.'
     ]
 
 killmsgs = [
+    '%k has the chainsaw! %k has the Murderbrawl chainsaw! Oh, and down goes %o!',
+    '%k ganked %o.',
+    '%k purged %o.',
+    '%k declared %o a heretic.',
+    '%k squished %o the grot.',
+    '%k tied %o to the back of the truck and dragged %h through the streets of Stillwater.',
+    '%o gets a regularly-affected-by-gravity ball upside his head. %k gains a point.',
+    '%o gets an anti-gravity big ball upside his head. %k gains a point.',
+    '%o gets an anti-gravity ball upside his head. %k gains a point.',
+    '%k didn\'t realize this level gave him the option of sparing %o.',
+    "%k put a bangin' donk on %o.",
+    '%o was plastered by a B.O.S.C.O. round. %k gains Brozouf.'
     "%o was spoon fed by %k.",
+    '%k got mashy-spike-plated by %o.',
     '%k tried PK Fire Ω!\n%o took mortal damage!',
     "%o was thouroughly mixed with %k's bootspork.",
     "%o was zorched by %k.",
@@ -602,10 +633,10 @@ killmsgs = [
     '%k charbroiled %o.',
     '%k despawned %o.',
     '%k bushwacked %o.',
-    '%k sneezed on %k.',
+    '%k sneezed on %o.',
     '%k heckled at %o.',
     '%k coughed at %o.',
-    '%k signed out %k.',
+    '%k signed out %o.',
     '%k sandwiched %o.',
     '%k swagged on %o.',
     '%k dank memed %o.',
@@ -723,7 +754,7 @@ killmsgs = [
     '%k erased %o from time.',
     '%k Gamma Ray Filtered %o.',
     '%k Tardised %o.',
-    '%k Lapissed on by %o.',
+    '%k Lapissed on %o.',
     '%k got\nB L A Z E D\nL\nA\nZ\nE\nD\nby %o.',
     '%k sponged on %o.',
     '%k sponged %o.',
@@ -747,7 +778,7 @@ killmsgs = [
     '%k tried to tell %o to be sensible, but %g didn\'t listen!',
     'Actually, %k snaps %o in two. **Just kidding!**',
     '%k fillered %o.',
-    '%k showed %o %p code pen.',
+    '%k showed %o a lethal Codepen.',
     '%o lost to %k at Cards Against Humanity.',
     '%k Oldbagged %o.',
     '%k took %o to the Mystery Shack.',
@@ -843,9 +874,21 @@ killmsgs = [
     '%k randomverbed %o.'
 ]
 
-def postify(phrase, message, pronouns):
+def postify(phrase, message, pronouns, suicide=False, *args):
+    w = phrase
+
+    if suicide:
+        if message.mentions:
+            w = w.replace(
+                '%k', message.mentions[0].name
+                )
+        elif len(message.content.split()) > 1:
+            w = w.replace(
+                '%k', message.content.split(None, 1)[1]
+            )
+
     #lower case
-    w = phrase.replace(
+    w = w.replace(
         '%k', message.author.name
         ).replace(
             '%g', pronouns['%g']
@@ -864,6 +907,23 @@ def postify(phrase, message, pronouns):
                 '%P', pronouns['%p'].capitalize()
                 )
 
+    if args:
+        print(args)
+        w = phrase.replace(
+            '%v', args[0]['%g']
+            ).replace(
+                '%b', args[0]['%h']
+                ).replace(
+                    '%l', args[0]['%p']
+                    ).replace(
+                        '%V', args[0]['%g'].capitalize()
+                        ).replace(
+                            '%B', args[0]['%h'].capitalize()
+                            ).replace(
+                                '%L', args[0]['%p'].capitalize()
+                                )
+
+
     if message.mentions:
         w = w.replace(
             '%o', message.mentions[0].name
@@ -875,18 +935,14 @@ def postify(phrase, message, pronouns):
 
     return w
 
-# cooldown = False
-
 @base.cacofunc
 async def kill(message, client):
     '''
-    **{0}kill** [ mention ]
+    **{0}kill** [ mention | string ]
     **{0}kill** [ optin ] [ he/she/they ] [ him/her/them ] [ his/her/their ]
-    Prints an obituary for the mentioned party. By default, will use "They" pronouns. You can do `{0}kill optin 1 2 3` to opt into replacing your pronouns with 3 of your choice. The syntax is posted above. This is agnostic: You can use any word you want for a pronoun.
+    Prints an obituary for the mentioned party as though you had killed it. By default, will use "They" pronouns. You can do `{0}kill optin 1 2 3` to opt into replacing your pronouns with 3 of your choice. The syntax is posted above. This is agnostic: You can use any word you want for a pronoun.
     *Examples: `{0}kill @BooBot`, `{0}kill optin schlee schlim schleir`*
     '''
-    # global cooldown
-    cooldown = False
 
     try:
         with open('configs/pronouns.json') as datastream:
@@ -897,7 +953,12 @@ async def kill(message, client):
         optin = {}
 
     params = message.content.split()
+    name = message.content.split(None, 1)
+    if len(name) > 1:
+        name = name[1]
+
     pronouns = {'%g':'they', '%h':'them', '%p': 'their'}
+    killerpronouns = {'%g':'they', '%h':'them', '%p': 'their'}
 
     if message.content.lower() == '{}kill la kill'.format(base.config['invoker']):
         await client.send_message(message.channel, '{} tried to make a shitty anime joke and was victimized because of it.'.format(message.author.name))
@@ -905,57 +966,124 @@ async def kill(message, client):
 
     if message.mentions and message.mentions[0].id in optin:
         pronouns = optin[message.mentions[0].id]
-    elif len(message.content.split()) > 1 and [x for x in message.server.members if x.name == message.content.split(None, 1)[1]] and [x.id for x in message.server.members if x.name == message.content.split(None, 1)[1]][0] in optin:
-        pronouns = optin[[x.id for x in message.server.members if x.name == message.content.split(None, 1)[1]][0]]
-    elif message.author.id in optin:
-        pronouns = optin[message.author.id]
+    else:
+        if len(message.content.split()) > 1:
+            name2member = discord.utils.get(message.server.members, name=name)
+            if name2member and name2member.id in optin:
+                pronouns = optin[name2member.id]
+        elif message.author.id in optin:
+            pronouns = optin[message.author.id]
+
+    if message.author.id in optin:
+        killerpronouns = optin[message.author.id]
 
     if len(params) < 2:
-        if not cooldown:
-            await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
-            cooldown = True
-            await asyncio.sleep(5)
-            cooldown = False
-    elif message.mentions and message.mentions[0] == message.author:
-        if not cooldown:
-            await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
-            cooldown = True
-            await asyncio.sleep(5)
-            cooldown = False
-    elif message.mentions:
-        if not cooldown:
-            await client.send_message(message.channel, postify(random.choice(killmsgs), message, pronouns))
-            cooldown = True
-            await asyncio.sleep(5)
-            cooldown = False
-    elif params[1] == 'optin':
+        await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
+        return
+
+    if message.mentions and message.mentions[0] == message.author:
+        await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
+        return
+
+    if message.mentions:
+        await client.send_message(message.channel, postify(random.choice(killmsgs), message, pronouns, killerpronouns))
+        return
+
+    if params[1] == 'optin':
+        if len(params) == 3 and params[2] == 'check':
+            await client.send_message(
+                message.channel,
+                'Your pronouns are set to:\nHe/She/They: {}\nHim/Her/Them: {}\nHis/Her/Their: {}.'.format(
+                    optin[message.author.id]['%g'],
+                    optin[message.author.id]['%h'],
+                    optin[message.author.id]['%p']
+                    )
+                )
+            return
+
         try:
             optin[message.author.id] = {
                 '%g' : params[2],
                 '%h' : params[3],
                 '%p' : params[4]
             }
+
             with open('configs/pronouns.json', 'w') as datastream:
                 json.dump(optin, datastream, indent=4)
+
             await client.send_message(message.channel, '{}: I have successfully updated your pronouns to {}/{}/{}.'.format(
                 message.author.name,
                 params[2],
                 params[3],
                 params[4]
                 ))
+
         except IndexError:
             await client.send_message(message.channel, '{}: You must provide 3 pronouns as an analogue to "he/she/they", "him/her/them", and "his/her/their", in that order.'.format(message.author.name))
-    elif [x for x in message.server.members if x.name == message.content.split(None, 1)[1]] and [x for x in message.server.members if x.name == message.content.split(None, 1)[1]][0] == message.author:
-        if not cooldown:
-            await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
-            cooldown = True
-            await asyncio.sleep(5)
-            cooldown = False
-    elif '@everyone' in message.content:
+
+        return
+
+    if name == message.author.name or name.lower() in ['me', 'myself', 'i']:
+        await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
+        return
+
+    if '@everyone' in message.content:
         await client.send_message(message.channel, '{}: **Do not use this command to circumvent everyone mention restrictions.**'.format(message.author.name))
+        return
+
+    await client.send_message(message.channel, postify(random.choice(killmsgs), message, pronouns, killerpronouns))
+
+@base.cacofunc
+async def rip(message, client):
+    '''
+    **{0}rip** [ mention | string ]
+    Prints an obituary for the mentioned party as though they had died from either their own means or an outside party. Pronouns are taken from the `{0}kill` command. See it's help file for more information.
+    *Example: `{0}rip @42`*
+    '''
+
+    try:
+        with open('configs/pronouns.json') as datastream:
+            optin = json.load(datastream)
+    except FileNotFoundError:
+        with open('configs/pronouns.json', 'w') as datastream:
+            datastream.write('{}')
+        optin = {}
+
+    params = message.content.split()
+    name = message.content.split(None, 1)
+    if len(name) > 1:
+        name = name[1]
+
+    pronouns = {'%g':'they', '%h':'them', '%p': 'their'}
+
+    if message.mentions and message.mentions[0].id in optin:
+        pronouns = optin[message.mentions[0].id]
     else:
-        if not cooldown:
-            await client.send_message(message.channel, postify(random.choice(killmsgs), message, pronouns))
-            cooldown = True
-            await asyncio.sleep(5)
-            cooldown = False
+        if len(message.content.split()) > 1:
+            name2member = discord.utils.get(message.server.members, name=name)
+            if name2member and name2member.id in optin:
+                pronouns = optin[name2member.id]
+        elif message.author.id in optin:
+            pronouns = optin[message.author.id]
+
+    if len(params) < 2:
+        await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
+        return
+
+    if message.mentions and message.mentions[0] == message.author:
+        await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
+        return
+
+    if message.mentions:
+        await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns, suicide=True))
+        return
+
+    if name == message.author.name or name.lower() in ['me', 'myself', 'i']:
+        await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
+        return
+
+    if '@everyone' in message.content:
+        await client.send_message(message.channel, '{}: **Do not use this command to circumvent everyone mention restrictions.**'.format(message.author.name))
+        return
+
+    await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns, suicide=True))
