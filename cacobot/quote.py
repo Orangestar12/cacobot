@@ -145,8 +145,7 @@ async def addquote(message, client):
                         '@invalid_user'
                     )
 
-            while '@everyone' in cmd:
-                cmd.replace('@everyone', '(everyone)')
+            cmd = cmd.replace('@everyone', '@\u2020everyone').replace('@here', '@\u2020here')
 
             quotes.append([cmd, message.author.id])
 
@@ -453,8 +452,7 @@ async def logquote(message, client):
                 '@invalid_user'
             )
 
-    while '@everyone' in msgToAdd:
-        msgToAdd.replace('@everyone', '(everyone)')
+    cmd = msgToAdd.replace('@everyone', '@\u2020everyone').replace('@here', '@\u2020here')
 
     if not msgToAdd:
         await client.send_message(message.channel, ':no_entry_sign: I ended up logging nothing, so I added nothing to my quotes.')
@@ -642,7 +640,7 @@ async def sendmemo(message, client):
                 await client.send_message(mention, msgToSend[:1980]) # Really shitty way of making sure it's beneath 2k characters but IT WORKS, SO CAN IT
                 asyncio.sleep(5)
 
-    if message.mention_everyone: # @everyone
+    if '@everyone' in message.content and message.channel.permissions_for(message.author).mention_everyone:
 
         # Load memo list
         memos = {}

@@ -964,6 +964,14 @@ async def kill(message, client):
         await client.send_message(message.channel, '{} tried to make a shitty anime joke and was victimized because of it.'.format(message.author.name))
         return
 
+    if message.content.lower() == '{}kill the noise'.format(base.config['invoker']):
+        await client.send_message(message.channel, '{} did that shit.'.format(message.author.name))
+        return
+
+    if message.content.lower() == '{}kill your heroes'.format(base.config['invoker']):
+        await client.send_message(message.channel, 'No need to worry, {}, because everybody will die.'.format(message.author.name))
+        return
+
     if message.mentions and message.mentions[0].id in optin:
         pronouns = optin[message.mentions[0].id]
     else:
@@ -1027,7 +1035,7 @@ async def kill(message, client):
         await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
         return
 
-    if '@everyone' in message.content:
+    if '@everyone' in message.content or '@here' in message.content:
         await client.send_message(message.channel, '{}: **Do not use this command to circumvent everyone mention restrictions.**'.format(message.author.name))
         return
 
@@ -1082,7 +1090,7 @@ async def rip(message, client):
         await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
         return
 
-    if '@everyone' in message.content:
+    if '@everyone' in message.content or '@here' in message.content:
         await client.send_message(message.channel, '{}: **Do not use this command to circumvent everyone mention restrictions.**'.format(message.author.name))
         return
 

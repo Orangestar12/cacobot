@@ -31,7 +31,7 @@ async def away(message, client):
         await client.send_message(message.channel, '{}: Please provide a message that I will respond with when you are mentioned.'.format(message.author.name))
         return
 
-    msg = message.content.split(None, 1)[1].replace('@everyone', '@\u2020everyone')
+    msg = message.content.split(None, 1)[1].replace('@everyone', '@\u2020everyone').replace('@here', '@\u2020here')
 
     if mention_syntax.search(msg):
         await client.send_message(message.channel, '{}: To prevent abuse, you are not allowed to provide mentions in your away messages.'.format(message.author.name))

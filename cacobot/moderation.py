@@ -236,7 +236,7 @@ async def debug(message, client):
     else:
         await client.send_message(
             message.channel,
-            '🚫 You are not authorized to perform that command.'
+            '\U0001F6AB You are not authorized to perform that command.'
             )
 debug.server = 'Debug'
 
