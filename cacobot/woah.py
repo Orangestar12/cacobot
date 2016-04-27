@@ -877,7 +877,7 @@ killmsgs = [
 def postify(phrase, message, pronouns, suicide=False, *args):
     w = phrase
 
-    if suicide:
+    if suicide is True:
         if message.mentions:
             w = w.replace(
                 '%k', message.mentions[0].name
@@ -967,7 +967,7 @@ async def kill(message, client):
     if message.mentions and message.mentions[0].id in optin:
         pronouns = optin[message.mentions[0].id]
     else:
-        if len(message.content.split()) > 1:
+        if len(params) > 1:
             name2member = discord.utils.get(message.server.members, name=name)
             if name2member and name2member.id in optin:
                 pronouns = optin[name2member.id]
