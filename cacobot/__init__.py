@@ -20,6 +20,7 @@ import cacobot.helper as helper
 import cacobot.dice as dice
 import cacobot.stats as stats
 import cacobot.woah as woah
+import cacobot.radio as radio
 
 #server-specific
 import cacobot.doom as doom

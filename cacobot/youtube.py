@@ -1,6 +1,5 @@
 import re
 import json
-import os
 
 from random import choice
 
@@ -70,17 +69,6 @@ doommuse = [
     'https://youtu.be/104GjEBZt1k',
     'https://youtu.be/SzI7DLR0DPU',
     'https://youtu.be/VghIvkUd_nY'
-]
-
-doomsnark = [
-    'THE SOUNDTRACK TO MY NIGHTMARES',
-    'HISSING INTENSIFIES',
-    'AND THEN WE WERE ALL SHOT TO DEATH',
-    'YOU GOT THE SHOTGUN',
-    'PICKED UP A CLIP',
-    'PICK ED UP A CLIP',
-    'CHAINSAW! THE GREAT COMMUNICATOR!',
-    '"BERSERK" IS A FUNNY WORD'
 ]
 
 @base.cacofunc
@@ -191,75 +179,3 @@ async def ytadd(message, client):
                 await client.send_message(message.channel, 'Please say **Y**es, **N**o, or **A**bort.')
 
     await client.send_message(message.channel, '🚫 {}: You have exhausted my allotment of 5 results per search. Consider providing a more detailed query.'.format(message.author.name))
-
-def resetstream():
-    base.stream.stop()
-    base.stream = None
-
-@base.cacofunc
-async def doommus(message, client):
-    '''
-    **{0}doommus** [ vc ]
-    Sends a random DOOM song. If your command ends in `vc`, CacoBot will begin playing the song in the channel you are in.
-    *Example: `{0}doommus vc`*
-    '''
-    song = choice(doommuse)
-
-    if message.content.endswith('vc'):
-        if base.stream:
-            await client.send_message(message.channel, '🚫 {}: I\'m already playing some music in a voice channel. Please try again later.'.format(message.author.name))
-            return
-
-        if not message.author.voice_channel:
-            await client.send_message(message.channel, '🚫 {}: You are not in a voice channel.'.format(message.author.name))
-            return
-
-        if client.voice and client.voice.channel != message.author.voice_channel:
-            await client.voice.disconnect()
-            await client.join_voice_channel(message.author.voice_channel)
-
-        if not client.voice:
-            await client.join_voice_channel(message.author.voice_channel)
-
-        base.stream = await client.voice.create_ytdl_player(song, after=resetstream)
-
-        base.stream.start()
-
-    await client.send_message(message.channel, '{}: **{}**\n{}'.format(message.author.name, choice(doomsnark), song))
-doommus.server = 'hidden'
-
-
-@base.cacofunc
-async def play(message, client):
-    '''
-    **{0}play** [ filename ]
-    Plays a filename off my PC. Good fucking luck.
-    *Example: `{0}play /mnt/sda2/Users/Orangestar/Music/Music/Truxton/Panic Protocol/01 Alexandrian Ricochet Sphere.mp3`*
-    '''
-    if base.stream:
-        await client.send_message(message.channel, '🚫 {}: I\'m already playing some music in a voice channel. Please try again later.'.format(message.author.name))
-        return
-
-    if not message.author.voice_channel:
-        await client.send_message(message.channel, '🚫 {}: You are not in a voice channel.'.format(message.author.name))
-        return
-
-    song = message.content.split(None, 1)[1]
-
-    if not os.path.isfile(song):
-        await client.send_message(message.channel, '🚫 {}: That file was not found.'.format(message.author.name))
-        return
-
-    if client.voice and client.voice.channel != message.author.voice_channel:
-        await client.voice.disconnect()
-        await client.join_voice_channel(message.author.voice_channel)
-
-    if not client.voice:
-        await client.join_voice_channel(message.author.voice_channel)
-
-    base.stream = client.voice.create_ffmpeg_player(song, after=resetstream)
-
-    base.stream.start()
-
-    await client.send_message(message.channel, '{}: Now playing **{}** in {}'.format(message.author.name, song[song.rfind('/') + 1:], message.author.voice_channel))
-doommus.server = 'hidden'
