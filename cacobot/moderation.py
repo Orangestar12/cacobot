@@ -50,7 +50,7 @@ async def hush(message, client):
     else:
         await client.send_message(
             message.channel,
-            '🚫 {} You do not have permission to call this command.'.format(
+            '\U0001F6AB {} You do not have permission to call this command.'.format(
                 message.author.mention
                 )
             )
@@ -118,7 +118,7 @@ async def listen(message, client):
 
     await client.send_message(
         message.channel,
-        '🚫 I am not hushed in this channel.'
+        '\U0001F6AB I am not hushed in this channel.'
         )
 
 # People be like "Hey why can't we mention specific roles like mods?" and I add
@@ -135,7 +135,7 @@ async def call(message, client):
 
     roleToMention = message.content.split(None, 1)[1].lower()
 
-    if roleToMention != '@everyone':
+    if roleToMention != '@everyone' and roleToMention != '@here':
         mentions = [] # holds mention strings
         for x in message.server.roles:
             if x.name.lower() == roleToMention:
@@ -261,7 +261,7 @@ async def plug(message, client):
      not message.channel.permissions_for(message.author).kick_members:
         await client.send_message(
             message.channel,
-             '🚫 {}: You are not authorized to perform that command.'.format(
+             '\U0001F6AB {}: You are not authorized to perform that command.'.format(
                 message.author.name
                 )
             )
@@ -271,7 +271,7 @@ async def plug(message, client):
         if message.author.id != base.config['owner_id']:
             await client.send_message(
                message.channel,
-                '🚫 {}: You are not authorized to plug users globally.'.format(
+                '\U0001F6AB {}: You are not authorized to plug users globally.'.format(
                    message.author.name
                    )
                )
@@ -292,13 +292,13 @@ async def plug(message, client):
         if x.id == client.user.id:
             await client.send_message(
                 message.channel,
-                '🚫 {}: You cannot plug me from my own commands.'.format(message.author.name, x.name)
+                '\U0001F6AB {}: You cannot plug me from my own commands.'.format(message.author.name, x.name)
                 )
 
         elif x.id in plugs['GLOBAL']:
             await client.send_message(
                 message.channel,
-                '🚫 {}: {} is globally plugged. You do not have to plug him locally.'.format(message.author.name, x.name)
+                '\U0001F6AB {}: {} is globally plugged. You do not have to plug him locally.'.format(message.author.name, x.name)
                 )
 
         elif message.server.id not in plugs:
@@ -311,7 +311,7 @@ async def plug(message, client):
         elif x.id in plugs[message.server.id]:
             await client.send_message(
                 message.channel,
-                '🚫 {}: {} is already plugged.'.format(message.author.name, x.name)
+                '\U0001F6AB {}: {} is already plugged.'.format(message.author.name, x.name)
                 )
 
         else:
@@ -337,7 +337,7 @@ async def unplug(message, client):
      not message.channel.permissions_for(message.author).kick_members:
         await client.send_message(
             message.channel,
-             '🚫 {}: You are not authorized to perform that command.'.format(
+             '\U0001F6AB {}: You are not authorized to perform that command.'.format(
                 message.author.name
                 )
             )
@@ -346,7 +346,7 @@ async def unplug(message, client):
     if message.server.id not in plugs:
        await client.send_message(
            message.channel,
-            '🚫 {}: There are no users plugged in this server.'.format(
+            '\U0001F6AB {}: There are no users plugged in this server.'.format(
                message.author.name
                )
            )
@@ -364,7 +364,7 @@ async def unplug(message, client):
             if message.author.id != base.config['owner_id']:
                 await client.send_message(
                     message.channel,
-                    '🚫 {}: {} has been plugged globally, and cannot be unplugged by you.'.format(message.author.name, mention.name)
+                    '\U0001F6AB {}: {} has been plugged globally, and cannot be unplugged by you.'.format(message.author.name, mention.name)
                     )
             else:
                 plugs['GLOBAL'].remove([mention.id])
@@ -386,7 +386,7 @@ async def checkForPlug(message, client):
 
     if message.channel.is_private:
         if message.author.id in plugs['GLOBAL']:
-            await client.send_message(message.channel, '🚫 {}: Sorry, but you have been plugged.'.format(message.author.name))
+            await client.send_message(message.channel, '\U0001F6AB {}: Sorry, but you have been plugged.'.format(message.author.name))
             return False
         return True
 
@@ -463,14 +463,14 @@ async def nuke(message, client):
     if not message.channel.permissions_for(message.author).manage_messages:
         await client.send_message(
             message.channel,
-            '🚫 {}: Sorry, but I can\'t let you delete messages if you don\'t have the permission to.'.format(message.author.name)
+            '\U0001F6AB {}: Sorry, but I can\'t let you delete messages if you don\'t have the permission to.'.format(message.author.name)
             )
         return
 
     if not message.channel.permissions_for(message.server.me).manage_messages:
             await client.send_message(
                 message.channel,
-                '🚫 I do not have permissions to delete messages yet, so I cannot perform this command.'
+                '\U0001F6AB I do not have permissions to delete messages yet, so I cannot perform this command.'
                 )
             return
 
@@ -521,11 +521,11 @@ async def cleanup(message, client):
         else:
             await client.send_message(
                 message.channel,
-                '🚫 I do not have permissions to delete messages yet, so I cannot perform this command.'
+                '\U0001F6AB I do not have permissions to delete messages yet, so I cannot perform this command.'
                 )
     else:
         await client.send_message(
-            message.channel, '🚫 Sorry, but I can\'t let you delete messages if you don\'t have the permission to.'
+            message.channel, '\U0001F6AB Sorry, but I can\'t let you delete messages if you don\'t have the permission to.'
             )
 
 # @base.cacofunc
@@ -540,7 +540,7 @@ async def chanuke(message, client):
     else:
         await client.send_message(
             message.channel,
-            "🚫 You do not have the proper permissions to manage channels in this server."
+            "\U0001F6AB You do not have the proper permissions to manage channels in this server."
             )
 chanuke.server = 'hidden'
 
@@ -570,3 +570,23 @@ async def ssg(message, client):
         await client.send_message(message.channel, '*Cacodemon death gurgle.*')
         await client.close()
 ssg.server = 'Debug'
+
+@base.cacofunc
+async def give(message, client):
+    params = message.content.split(None, 2)
+    if len(params) < 3:
+        return
+
+    if message.server.id == '120330239996854274' and message.channel.permissions_for(message.author).kick_members:
+        try:
+            role2give = discord.utils.get(message.server.roles, name=params[2])
+            if role2give:
+                for ment in message.mentions:
+                    await client.add_roles(ment, role2give)
+                    await client.send_message(message.channel, '{}: {} has been given that role.'.format(message.author.name, ment.name))
+            else:
+                await client.send_message(message.channel, '{}: I couldn\'t find a role with that name.'.format(message.author.name))
+        except discord.Forbidden:
+            await client.send_message(message.channel, '{}: I do not have the permission to perform this command yet.'.format(message.author.name))
+    else:
+        await client.send_message(message.channel, '{}: You do not have the permission to ban.'.format(message.author.name))

@@ -83,25 +83,25 @@ async def ytadd(message, client):
     params = message.content.split()
 
     if len(params) == 1:
-        await client.send_message(message.channel, '🚫 {}: You must provide either a YouTube search query or a setup string for your bot. Use `{}help ytadd` for more information.'.format(message.author.name, base.config['invoker']))
+        await client.send_message(message.channel, '\U0001F6AB {}: You must provide either a YouTube search query or a setup string for your bot. Use `{}help ytadd` for more information.'.format(message.author.name, base.config['invoker']))
         return
 
     # set up music bot
     if params[1].lower() == '{}setup'.format(base.config['invoker']):
         if not message.channel.permissions_for(message.author).manage_server:
-            await client.send_message(message.channel, '🚫 {0}: You must have the permission to manage the server to set or update the music bot for this server.'.format(message.author.name))
+            await client.send_message(message.channel, '\U0001F6AB {0}: You must have the permission to manage the server to set or update the music bot for this server.'.format(message.author.name))
             return
 
         if len(params) < 4:
-            await client.send_message(message.channel, '🚫 {}: The setup for a music bot must contain exactly two additional parameters: the mention representing the music bot in question, and the invoker for that music bot.'.format(message.author.name))
+            await client.send_message(message.channel, '\U0001F6AB {}: The setup for a music bot must contain exactly two additional parameters: the mention representing the music bot in question, and the invoker for that music bot.'.format(message.author.name))
             return
 
         if not message.mentions:
-            await client.send_message(message.channel, '🚫 {}: You must *mention* the bot you are trying to set up. (i.e. put an @ symbol before it.)'.format(message.author.name))
+            await client.send_message(message.channel, '\U0001F6AB {}: You must *mention* the bot you are trying to set up. (i.e. put an @ symbol before it.)'.format(message.author.name))
             return
 
         if not mention_syntax.match(params[2]):
-            await client.send_message(message.channel, '🚫 {0}: Please make sure the bot mention in your command is the third parameter. (i.e. `{1}ytadd {1}setup @musicbot ;play`)'.format(message.author.name, base.config['invoker']))
+            await client.send_message(message.channel, '\U0001F6AB {0}: Please make sure the bot mention in your command is the third parameter. (i.e. `{1}ytadd {1}setup @musicbot ;play`)'.format(message.author.name, base.config['invoker']))
             return
 
         msgbot = message.mentions[0].id
@@ -121,18 +121,18 @@ async def ytadd(message, client):
     # end bot setup
 
     if base.stream:
-        await client.send_message(message.channel, '🚫 {}: Sorry, I\'m currently playing music in another channel. (Someday discord.py will let me connect to multiple channels!!)'.format(message.author.name))
+        await client.send_message(message.channel, '\U0001F6AB {}: Sorry, I\'m currently playing music in another channel. (Someday discord.py will let me connect to multiple channels!!)'.format(message.author.name))
         return
 
 
     if message.server.id not in musicbots:
-        await client.send_message(message.channel, '🚫 {}: There is no musicbot set for this server. Please have a server administrator set one up. Use `{}help ytadd` for more details.'.format(message.author.name, base.config['invoker']))
+        await client.send_message(message.channel, '\U0001F6AB {}: There is no musicbot set for this server. Please have a server administrator set one up. Use `{}help ytadd` for more details.'.format(message.author.name, base.config['invoker']))
         return
 
     vcuser = discord.utils.get(message.server.members, id=musicbots[message.server.id]['bot_id'])
 
     if not vcuser:
-        await client.send_message(message.channel, '🚫 {0}: **An unexpected error occurred:** The music bot for this server was not found. Please try again or change the music bot\'s id with `{1}ytadd {1}setup`. Use `{1}help ytadd` for more information.'.format(
+        await client.send_message(message.channel, '\U0001F6AB {0}: **An unexpected error occurred:** The music bot for this server was not found. Please try again or change the music bot\'s id with `{1}ytadd {1}setup`. Use `{1}help ytadd` for more information.'.format(
             message.author.name,
             base.config['invoker']
             ))
@@ -141,11 +141,11 @@ async def ytadd(message, client):
     vcchannel = vcuser.voice_channel
 
     if not vcchannel:
-        await client.send_message(message.channel, '🚫 {}: The music bot is not connected to any voice channels.'.format(message.author.name))
+        await client.send_message(message.channel, '\U0001F6AB {}: The music bot is not connected to any voice channels.'.format(message.author.name))
         return
 
     if message.author.voice_channel != vcchannel:
-        await client.send_message(message.channel, '🚫 {}: I cannot allow you to queue music to the music bot unless you are in the channel it is in as well.'.format(message.author.name))
+        await client.send_message(message.channel, '\U0001F6AB {}: I cannot allow you to queue music to the music bot unless you are in the channel it is in as well.'.format(message.author.name))
         return
 
     query = message.content.split(None, 1)[1]
@@ -178,4 +178,4 @@ async def ytadd(message, client):
             else:
                 await client.send_message(message.channel, 'Please say **Y**es, **N**o, or **A**bort.')
 
-    await client.send_message(message.channel, '🚫 {}: You have exhausted my allotment of 5 results per search. Consider providing a more detailed query.'.format(message.author.name))
+    await client.send_message(message.channel, '\U0001F6AB {}: You have exhausted my allotment of 5 results per search. Consider providing a more detailed query.'.format(message.author.name))
