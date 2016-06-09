@@ -121,52 +121,6 @@ async def listen(message, client):
         '\U0001F6AB {}: I am not hushed in this channel.'.format(message.author.display_name)
         )
 
-# People be like "Hey why can't we mention specific roles like mods?" and I add
-# it to my bot and then it gets spammed as expected.
-# Boy howdy Discord, aren't you a good community.
-
-# @base.cacofunc # Uncomment this line to add it back.
-async def call(message, client):
-    '''
-    **{0}call** [*role*]
-    Mentions everyone in the role [*role*]. This is primarily for notifying mods that are away.
-    *Example: `{0}call Mods`*
-    '''
-
-    roleToMention = message.content.split(None, 1)[1].lower()
-
-    if roleToMention != '@everyone' and roleToMention != '@here':
-        mentions = [] # holds mention strings
-        for x in message.server.roles:
-            if x.name.lower() == roleToMention:
-                for y in message.server.members:
-                    if discord.utils.find(lambda m: m == x, y.roles) != None:
-                        mentions.append(y.mention)
-        # Yeah, that *is* a shitty way of doing it.
-
-        if mentions:
-            await client.send_message(
-                message.channel,
-                '{}, you have been mentioned by {}!'.format(
-                    ', '.join(mentions),
-                    message.author.mention
-                    )
-                )
-        else:
-            await client.send_message(
-                message.channel,
-                '{}: Nobody in this server has that role.'.format(
-                    message.author.mention
-                    )
-                )
-    else:
-        await client.send_message(
-            message.channel,
-            '{}: You have already mentioned everyone in that role.'.format(
-                message.author.mention
-                )
-            )
-
 @base.cacofunc
 async def connect(message, client):
     '''
