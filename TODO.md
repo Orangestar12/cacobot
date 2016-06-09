@@ -46,7 +46,7 @@
 
  - Add unrolebanning command.
 
-- BUG: Commands can be invoked even if there's a space between the invoker and the command.
+- ~~BUG: Commands can be invoked even if there's a space between the invoker and the command.~~
 
 - Make a website for describing CacoBot commands in more detail because if stuff goes right some of these commands will end up being rather complicated.
 

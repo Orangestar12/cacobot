@@ -305,6 +305,12 @@ async def log(message, client):
 
     messages = list(reversed(msg_iter))
 
+    # Messages collected, try deleting invoker.
+    try:
+        await client.delete_message(message)
+    except(discord.errors.NotFound, discord.Forbidden):
+        pass
+
     # This string will hold the log we are going to send in each message, and will be blanked after each message.
     msgToSend = ''
     # This string will hold the message we are adding to msgToSend, and will be used to test if the length of msgToSend will be >2000 characters if we add it.
