@@ -191,7 +191,7 @@ async def fortune(message, client):
         'Remember, ironic shitposting is still shitposting.',
         'Behold, I have created the smith that bloweth the coals in the fire and that bringeth forth an instrument for this work; and I have created the waster, to destroy.',
         'I looked, and there was a pale horse! Its rider\'s name was Death, and Hell followed him. They were given authority over one-fourth of the earth to kill people using wars, famines, plagues, and the wild animals of the earth.',
-        'DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO',
+        '**DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO**',
         'The only thing better than a delicious cake is a delicious cake on fire.',
         'Your difficulties will strengthen you. Or break you. One of the two.',
         'Remember your love, for hate is never conquered by hate; hate is conquered by love. Both are kind of flimsy against a .45, though.',

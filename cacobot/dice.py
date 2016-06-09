@@ -46,7 +46,7 @@ async def d(message, client, *args, **kwargs):
         await client.send_message(message.channel, '{}: You must specify the number of dice and the faces each dice has seperated with a d. For example: .d 1d6 rolls one six-sided die. .d 5d2 rolls 5 2-sided die.'.format(message.author.display_name))
 
 @base.cacofunc
-async def choice(message, client, *args, **kwargs):
+async def choice(message, client):
     '''
     **{0}choice** [*one*; *two*...]
     Randomly choses an option from a semicolon-seperated list.
