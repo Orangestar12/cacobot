@@ -254,11 +254,15 @@ async def fortune(message, client):
         'I am a nihilist I believe in nothing.',
         'Killing me won\'t bring back your honey.',
         'Go Team Edward!',
+        'Go Team Jacob!',
         r'\*dramatic pause\*',
         'Better not tell you now.',
         'Outlook good.',
         'Good luck.',
-        'Guys, the thermal drill, go get it.'
+        'Guys, the thermal drill, go get it.',
+        '\U0001F346', # Suggested by Zero#8516
+        'ROLLING AROUND AT THE SPEED OF SOUND',
+        'discord.errors.HTTPException: BAD REQUEST (status code: 400)'
     ]
     # most of these are from https://github.com/TerminusEst13/Folded1000Times/blob/940b824a071f4a8298d6426be406725374355825/pk3/acs/weeb_const.h
 
