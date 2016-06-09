@@ -22,7 +22,7 @@
 
  - Reference.com does not have an API. FFs.
 
-- `.log` should delete the log invoker?
+- ~~`.log` should delete the log invoker?~~
 
 - ~~`.changes` shouldn't show minors. That was a bad idea.~~
 
