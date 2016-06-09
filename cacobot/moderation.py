@@ -545,3 +545,41 @@ async def give(message, client):
             await client.send_message(message.channel, '{}: I do not have the permission to perform this command yet.'.format(message.author.display_name))
     else:
         await client.send_message(message.channel, '{}: You do not have the permission to ban.'.format(message.author.display_name))
+
+@base.cacofunc
+async def massivelog(message, client):
+    with open('HUGE LOG.txt', 'w') as data:
+
+        p = message.content.split(None, 2)
+
+        amount = int(p[1])
+        query = p[2]
+
+        first_instance = None
+        last_instance = None
+
+        msg_iter = []
+        async for x in client.logs_from(message.channel, amount):
+            msg_iter.append(x)
+
+        messages = list(reversed(msg_iter))
+        for i, x in enumerate(messages):
+            data.write(x.author.display_name + ': ' + x.clean_content + '\n')
+            if query in x.clean_content:
+                if not first_instance:
+                    first_instance = i + 1
+                if x != message:
+                    last_instance = i + 1
+
+        messageToSend = 'I have logged {} messages for you.'.format(len(messages))
+        if not first_instance:
+            messageToSend += ' Your query was not found in any of the messages.'
+        elif first_instance and not last_instance:
+            messageToSend += ' Your query was found {} messages ago.'.format(len(messages) - first_instance)
+        else:
+            messageToSend += ' The first message containing your query was {} messages ago, and the last message containing your query was {} messages ago.'.format(len(messages) - first_instance, len(messages) - last_instance)
+
+        if first_instance == 1:
+            messageToSend += ' Since the first instance of your query was the first message, it may be even further behind than what you searched for.'
+
+    await client.send_file(message.author, "HUGE LOG.txt", content=messageToSend)
