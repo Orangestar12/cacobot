@@ -9,7 +9,7 @@ import cacobot.base as base
 
 # Please place the latest date you want the bot to check for commits:
 # format is YYYY-MM-DDTHH:MM:SSZ
-comdate = '2016-04-13'
+comdate = '2016-06-09'
 
 @base.cacofunc
 async def help(message, client): # pylint: disable=W0622
