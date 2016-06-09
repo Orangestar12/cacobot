@@ -72,3 +72,29 @@ async def later(message, client, *args, **kwargs):
     '''
     pics = os.listdir('later')
     await client.send_file(message.channel, 'later/' + random.choice(pics))
+
+@base.postcommand
+async def magicCacoBotBall(message, client):
+    if \
+     (message.content.lower().startswith('cacobot, ') or \
+     not message.channel.is_private and (message.clean_content.startswith('@{}, '.format(message.server.me.display_name)) or\
+     message.content.lower().startswith(message.server.me.display_name.lower() + ', '))):
+        if message.content.lower().endswith('milk gone bad?'):
+            # and msg.server.id == '120330239996854274'
+            await client.send_message(
+                message.channel, '{}: It is official. Milk has gone bad.'.format(
+                    message.author.display_name
+                    )
+                )
+
+        elif message.content.endswith('?'):
+            await client.send_message(
+                message.channel, '{}: {}'.format(
+                    message.author.display_name, random.choice(
+                        [
+                            '\u2714 Yes.',
+                            '\u2716 No.'
+                            ]
+                        )
+                    )
+                )
