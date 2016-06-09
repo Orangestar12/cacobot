@@ -106,13 +106,13 @@ async def addquote(message, client):
     if cmd.startswith(base.config['invoker'] + 'addquote'):
         await client.send_message(
             message.channel,
-            '{}: Hah hah, very funny, but that wouldn\'t work anyway.'.format(message.author)
+            '{}: Hah hah, very funny, but that wouldn\'t work anyway.'.format(message.author.display_name)
             )
 
     elif cmd.startswith(base.config['invoker'] + 'quote'):
         await client.send_message(
             message.channel,
-            '{}: Not only would that not work, but that\'s really annoying. Stop that shit.'.format(message.author)
+            '{}: Not only would that not work, but that\'s really annoying. Stop that shit.'.format(message.author.display_name)
             )
 
     else: # Actually add a quote
@@ -156,8 +156,8 @@ async def addquote(message, client):
             if cmd.startswith('http://') or cmd.startswith('https://'):
                 await client.send_message(
                     message.channel,
-                    '{}: :warning: I have added that quote successfully as number {}, but couldn\'t help noticing it starts with a link. If this is an image of a Discord chat log, consider providing your quotes as text next time, or using my `{}log` function.'.format(
-                        message.author.name,
+                    ':warning: {}: I have added that quote successfully as number {}, but couldn\'t help noticing it starts with a link. If this is an image of a Discord chat log, consider providing your quotes as text next time, or using my `{}log` function.'.format(
+                        message.author.display_name,
                         len(quotes),
                         base.config['invoker']
                         )
@@ -165,15 +165,15 @@ async def addquote(message, client):
             else:
                 await client.send_message(
                     message.channel,
-                    '{}: :heavy_check_mark: Successfully added that to my quote database as quote number {}.'.format(
-                        message.author.name,
+                    ':heavy_check_mark: {}: Successfully added that to my quote database as quote number {}.'.format(
+                        message.author.display_name,
                         len(quotes)
                         )
                     )
         else:
             await client.send_message(
                 message.channel,
-                '{}: :no_entry_sign: I already have that exact quote in my database.'.format(message.author))
+                ':no_entry_sign: {}: I already have that exact quote in my database.'.format(message.author.display_name))
 addquote.server = 'Quotes'
 
 @base.cacofunc
@@ -192,7 +192,7 @@ async def delquote(message, client):
         except ValueError:
             await client.send_message(
                 message.channel,
-                ':no_entry_sign: {}: Please specify an integer next time.'.format(message.author.name)
+                ':no_entry_sign: {}: Please specify an integer next time.'.format(message.author.display_name)
                 )
             cont = False
     else:
@@ -217,7 +217,7 @@ async def delquote(message, client):
             await client.send_message(
                 message.channel,
                 ':heavy_check_mark: {}: Quote #{} has been removed.'.format(
-                    message.author.name,
+                    message.author.display_name,
                     r
                 )
             )
@@ -378,7 +378,7 @@ async def logquote(message, client):
                     await client.send_message(
                         message.channel,
                         '{}: Please provide an integer to slice.'.format(
-                            message.author.name
+                            message.author.display_name
                         )
                     )
                     return

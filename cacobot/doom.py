@@ -30,7 +30,7 @@ async def wadidea(message, client):
     #Next, we remove all <br>s and line breaks.
     result = result.replace('<br>\n', ' ')
 
-    await client.send_message(message.channel, '{}: {}\n\n*Provided by boris.slipgate.org/?a=mapgen*'.format(message.author.name, result))
+    await client.send_message(message.channel, '{}: {}\n\n*Provided by boris.slipgate.org/?a=mapgen*'.format(message.author.display_name, result))
     return
 wadidea.server = 'Doom'
 
@@ -262,7 +262,7 @@ async def fortune(message, client):
     ]
     # most of these are from https://github.com/TerminusEst13/Folded1000Times/blob/940b824a071f4a8298d6426be406725374355825/pk3/acs/weeb_const.h
 
-    await client.send_message(message.channel, '{}: **FORTUNE SAY**:\n{}'.format(message.author.mention, random.choice(fortunes)))
+    await client.send_message(message.channel, '{}: **FORTUNE SAY**:\n{}'.format(message.author.display_name, random.choice(fortunes)))
 fortune.server = 'Doom'
 
 @base.postcommand

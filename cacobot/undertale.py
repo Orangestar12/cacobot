@@ -73,7 +73,7 @@ async def goatnick(message, client):
         'My kids an hero\'ed so I went 6/0',
         'I don\'t have a car in my garage'
     ]
-    await client.send_message(message.channel, '{}: Asgore "{}" Dreemurr'.format(message.author.mention, random.choice(asgore_nicks)))
+    await client.send_message(message.channel, '{}: Asgore "{}" Dreemurr'.format(message.author.display_name, random.choice(asgore_nicks)))
 goatnick.server = 'Undertale'
 
 @base.cacofunc

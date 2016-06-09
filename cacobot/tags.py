@@ -41,7 +41,7 @@ async def sub(msg, message, client):
         await client.send_message(
             message.channel,
             '*\u2139 {}: Your tag name was stripped to `{}`.*'.format(
-                message.author.name,
+                message.author.display_name,
                 x
                 )
             )
@@ -87,7 +87,7 @@ async def totalparams(name, req, num, message, client):
         await client.send_message(
             message.channel,
             '\U0001F6AB {0}: You must provide at least 4 parameters for `{1}`. Use `{2}tag help {1}` for more information.'.format(
-                message.author.name,
+                message.author.display_name,
                 name,
                 base.config['invoker']
                 )
@@ -106,7 +106,7 @@ async def sendorphan(existing, message, client):
                         '\U0001F467'  # :girl:
                     ]
                     ),
-                message.author.name,
+                message.author.display_name,
                 base.config['invoker'],
                 existing
                 )
@@ -135,11 +135,11 @@ async def reloadtags(message, client):
         with open('configs/tags.json') as z:
             tags = json.load(z)
         await client.send_message(message.channel, '✔ {}: Successfully reloaded `tags.json`.'.format(
-            message.author.name
+            message.author.display_name
             ))
         return
     await client.send_message(message.channel, '\U0001F6AB {}: You are not allowed to use this command.'.format(
-        message.author.name
+        message.author.display_name
         ))
 reloadtags.server = 'hidden'
 
@@ -163,7 +163,7 @@ async def tag(message, client):
         await client.send_message(
             message.channel,
             '\U0001F6AB {}: You are not allowed to provide mentions, "@\u2060everyone", or "@\u2020here" in your messages.'.format(
-                message.author.name
+                message.author.display_name
                 )
             )
         return
@@ -177,7 +177,7 @@ async def tag(message, client):
         await client.send_message(
             message.channel,
             '\U0001F6AB {0}: You did not specify any options. Please use `{1}help tag` or `{1}tag help option` for more information.'.format(
-                message.author.name,
+                message.author.display_name,
                 base.config['invoker']
                 )
             )
@@ -188,7 +188,7 @@ async def tag(message, client):
         await client.send_message(
             message.channel,
             '{}: `{}tag` uses `create` and `delete` instead of `add` and `remove`.'.format(
-                message.author.name,
+                message.author.display_name,
                 base.config['invoker']
                 )
             )
@@ -207,7 +207,7 @@ async def tag(message, client):
                 await client.send_message(
                     message.channel,
                     '{}: `{}tag` uses `create` and `delete`, not `add` and `remove`.'.format(
-                        message.author.name,
+                        message.author.display_name,
                         base.config['invoker']
                         )
                     )
@@ -217,7 +217,7 @@ async def tag(message, client):
                 await client.send_message(
                     message.channel,
                     '{}: `{}tag create <tag name> <tag content>`\nCreates a new tag with the name <tag name> and the content <tag content>. Tag names are limited to alphanumeric characters (A-Z and 0-9) and are case sensitive. Tags that contain a user mention, "@\u2060everyone", or "@\u2020here" are automatically rejected at face value.'.format(
-                        message.author.name,
+                        message.author.display_name,
                         base.config['invoker']
                         )
                     )
@@ -227,7 +227,7 @@ async def tag(message, client):
                 await client.send_message(
                     message.channel,
                     '{}: `{}tag delete <tag name>`\nDeletes the tag <tag name>, so long as you are the owner.'.format(
-                        message.author.name,
+                        message.author.display_name,
                         base.config['invoker']
                         )
                     )
@@ -237,7 +237,7 @@ async def tag(message, client):
                 await client.send_message(
                     message.channel,
                     '{}: `{}tag edit <tag name> <tag content>`\nReplaces the contents of the tag <tag name>, so long as you are the owner.'.format(
-                        message.author.name,
+                        message.author.display_name,
                         base.config['invoker']
                         )
                     )
@@ -247,7 +247,7 @@ async def tag(message, client):
                 await client.send_message(
                     message.channel,
                     '{}: `{}tag rename <old id> <new id>`\nChanges the tag id of <old id> to <new id>, so long as you are the owner.'.format(
-                        message.author.name,
+                        message.author.display_name,
                         base.config['invoker']
                         )
                     )
@@ -257,7 +257,7 @@ async def tag(message, client):
                 await client.send_message(
                     message.channel,
                     '{}: `{}tag list [all]`\nSends you a list of all tags you own. Send `.tag list all` to see every tag.'.format(
-                        message.author.name,
+                        message.author.display_name,
                         base.config['invoker']
                         )
                     )
@@ -267,7 +267,7 @@ async def tag(message, client):
                 await client.send_message(
                     message.channel,
                     '{}: `{}tag recall <tag name>`\nCalls the tag <tag name>, and informs you why it cannot be used in standard channels. Input is not stripped or substituted for this command.\n*This option only works in Direct Messages.*'.format(
-                        message.author.name,
+                        message.author.display_name,
                         base.config['invoker']
                         )
                     )
@@ -277,7 +277,7 @@ async def tag(message, client):
             await client.send_message(
                 message.channel,
                 '{}: Sorry, I don\'t have a help entry for this yet. I wanted to get the command finished and rolled out before I did the fluff like this.'.format(
-                    message.author.name
+                    message.author.display_name
                     )
                 )
             return
@@ -287,7 +287,7 @@ async def tag(message, client):
             await client.send_message(
                 message.channel,
                 '{}: That is not a valid option for `{}tag`.'.format(
-                    message.author.name,
+                    message.author.display_name,
                     base.config['invoker']
                     )
                 )
@@ -318,7 +318,7 @@ async def tag(message, client):
             await client.send_message(
                 message.channel,
                 '\U0001F6AB {}: That string is reserved.'.format(
-                    message.author.name
+                    message.author.display_name
                     )
                 )
             return
@@ -328,7 +328,7 @@ async def tag(message, client):
             await client.send_message(
                 message.channel,
                 '\U0001F6AB {}: The tag `{}` already exists. (It looks like this:)\n{}'.format(
-                    message.author,
+                    message.author.display_name,
                     params[2],
                     tags[params[2]]['tag']
                     )
@@ -351,7 +351,7 @@ async def tag(message, client):
         await client.send_message(
             message.channel,
             '✔ {}: Successfully created the tag `{}`.'.format(
-                message.author.name,
+                message.author.display_name,
                 params[2]
                 )
             )
@@ -383,7 +383,7 @@ async def tag(message, client):
             await client.send_message(
                 message.channel,
                 '✔ {}: Successfully deleted the tag `{}`.'.format(
-                    message.author.name,
+                    message.author.display_name,
                     params[2]
                     )
                 )
@@ -397,7 +397,7 @@ async def tag(message, client):
             await client.send_message(
                 message.channel,
                 '✔ {}: Successfully deleted the tag `{}`. (Owner ID: {})'.format(
-                    message.author.name,
+                    message.author.display_name,
                     params[2],
                     tagid
                     )
@@ -413,7 +413,7 @@ async def tag(message, client):
             await client.send_message(
                 message.channel,
                 '✔ {}: Successfully deleted the tag `{}`.'.format(
-                    message.author.name,
+                    message.author.display_name,
                     params[2]
                     )
                 )
@@ -427,7 +427,7 @@ async def tag(message, client):
         await client.send_message(
             message.channel,
             '\U0001F6AB {}: You do not have permission to modify this tag.'.format(
-                message.author.name
+                message.author.display_name
                 )
             )
         return
@@ -456,7 +456,7 @@ async def tag(message, client):
             await client.send_message(
                 message.channel,
                 '✔ {}: Successfully updated the tag `{}`.'.format(
-                    message.author.name,
+                    message.author.display_name,
                     params[2]
                     )
                 )
@@ -465,7 +465,7 @@ async def tag(message, client):
         await client.send_message(
             message.channel,
             '\U0001F6AB {}: You do not have permission to modify this tag.'.format(
-                message.author.name
+                message.author.display_name
                 )
             )
         return
@@ -479,7 +479,7 @@ async def tag(message, client):
             await client.send_message(
                 message.channel,
                 '\U0001F6AB {}: That tag does not exist.\n*For now, `rename` requires exact case. Double-check your typing.*'.format(
-                    message.author.name
+                    message.author.display_name
                     )
                 )
             return
@@ -488,7 +488,7 @@ async def tag(message, client):
             await client.send_message(
                 message.channel,
                 '\U0001F6AB {}: You do not have permission to modify this tag.'.format(
-                    message.author.name
+                    message.author.display_name
                     )
                 )
             return
@@ -499,7 +499,7 @@ async def tag(message, client):
             await client.send_message(
                 message.channel,
                 '\U0001F6AB {}: A tag already exists with the name {}.'.format(
-                    message.author.name,
+                    message.author.display_name,
                     params[3]
                     )
                 )
@@ -511,7 +511,7 @@ async def tag(message, client):
         await client.send_message(
             message.channel,
             '✔ {}: Successfully renamed that tag to `{}`.'.format(
-                message.author.name,
+                message.author.display_name,
                 params[3]
                 )
             )
@@ -528,7 +528,7 @@ async def tag(message, client):
                 await client.send_message(
                     message.channel,
                     '\U0001F6AB {}: The syntax for this command has changed. `.tag list` will get your tags and orphaned tags. `.tag list all` will get all tags.'.format(
-                        message.author.name
+                        message.author.display_name
                         )
                     )
                 return
@@ -537,7 +537,7 @@ async def tag(message, client):
                 await client.send_message(
                     message.channel,
                     '\U0001F6AB {}: The syntax for this command has changed. `.tag list` will get your tags and orphaned tags. `.tag list all` will get all tags.'.format(
-                        message.author.name
+                        message.author.display_name
                         )
                     )
                 return
@@ -615,7 +615,7 @@ async def tag(message, client):
                 await client.send_message(
                     message.channel,
                     '\u2139 {}: I automatically moved {} tags into DMs. Of those, {} tags were orphaned.'.format(
-                        message.author.name,
+                        message.author.display_name,
                         dms,
                         orphans
                         )
@@ -624,7 +624,7 @@ async def tag(message, client):
                 await client.send_message(
                     message.channel,
                     '\u2139 {}: I automatically moved {} tags into DMs.'.format(
-                        message.author.name,
+                        message.author.display_name,
                         dms
                         )
                     )
@@ -643,7 +643,7 @@ async def tag(message, client):
             await client.send_message(
                 message.channel,
                 '\U0001F6AB {}: I could not find a tag with that name.'.format(
-                    message.author.name
+                    message.author.display_name
                     )
                 )
             return
@@ -655,7 +655,7 @@ async def tag(message, client):
             await client.send_message(
                 message.channel,
                 '\U0001F6AB {}: You do not have permission to modify this tag.'.format(
-                    message.author.name
+                    message.author.display_name
                     )
                 )
             return
@@ -673,7 +673,7 @@ async def tag(message, client):
             # no users with that name found
             if not members:
                 await client.send_message(message.channel, '\U0001F6AB {}: I couldn\'t find a user by that name. Please either provide a mention for the member you would like to gift a tag to, or provide the user\'s whole name, case-sensitive.'.format(
-                    message.author.name
+                    message.author.display_name
                     ))
                 return
 
@@ -686,7 +686,7 @@ async def tag(message, client):
                 for i, x in enumerate(members):
                     msg += '\n{}: {}#{}'.format(i, x.name, x.discriminator)
                 await client.send_message(message.channel, '\u2139 {}: I found multiple members with that name. Please type the number of the user with the correct discriminator:{}'.format(
-                    message.author.name,
+                    message.author.display_name,
                     msg
                     ))
 
@@ -698,7 +698,7 @@ async def tag(message, client):
                     # no message after 30 seconds: timeout
                     if not response:
                         await client.send_message(message.channel, '\U0001F6AB {}: You have taken too long to provide an answer. Please try again later.'.format(
-                            message.author.name
+                            message.author.display_name
                             ))
                         return
 
@@ -709,7 +709,7 @@ async def tag(message, client):
                         # int out of range
                         if p > len(members) or p < 1:
                             await client.send_message(message.channel, '\u2139 {}: You must provide a number between 1 or {}'.format(
-                                message.author.name,
+                                message.author.display_name,
                                 len(members)
                                 ))
 
@@ -726,7 +726,7 @@ async def tag(message, client):
         # catch obscure error
         if not member:
             await client.send_message(message.channel, '\U0001F6AB {}: **An unexpected error occurred:** No member object was assigned. Please try again.'.format(
-                message.author.name
+                message.author.display_name
                 ))
 
         # tag is orphaned: notify user
@@ -744,13 +744,13 @@ async def tag(message, client):
         updatetags()
         if update:
             await client.send_message(message.channel, '❤ {}: You have successfully given the tag {} to {}. I have also taken the liberty to update the tag\'s server location to this server.'.format(
-                message.author.name,
+                message.author.display_name,
                 params[2],
                 member.name
                 ))
         else:
             await client.send_message(message.channel, '❤ {}: You have successfully given the tag {} to {}.'.format(
-                message.author.name,
+                message.author.display_name,
                 params[2],
                 member.name
                 ))
@@ -765,7 +765,7 @@ async def tag(message, client):
             await client.send_message(
                 message.channel,
                 '\U0001F6AB {}: I could not find a tag with that name.\n*(In order to prevent orphaned tags with invalid names from being stuck, you must type the exact name of the tag. Substitution does not occur for this command.)*'.format(
-                    message.author.name
+                    message.author.display_name
                     )
                 )
             return
@@ -774,7 +774,7 @@ async def tag(message, client):
             await client.send_message(
                 message.channel,
                 '\U0001F6AB {}: That tag is not orphaned.'.format(
-                    message.author.name
+                    message.author.display_name
                     )
                 )
             return
@@ -784,7 +784,7 @@ async def tag(message, client):
 
         updatetags()
         await client.send_message(message.channel, '🚸 {}: You now own the tag {}.'.format(
-            message.author.name,
+            message.author.display_name,
             params[2]
             ))
     #end claim
@@ -799,7 +799,7 @@ async def tag(message, client):
             await client.send_message(
                 message.channel,
                 '\U0001F6AB {}: I could not find a tag with that name.'.format(
-                    message.author.name
+                    message.author.display_name
                     )
                 )
             return
@@ -808,7 +808,7 @@ async def tag(message, client):
             await client.send_message(
                 message.channel,
                 '\U0001F6AB {}: You do not have permission to modify this tag.'.format(
-                    message.author.name
+                    message.author.display_name
                     )
                 )
             return
@@ -826,7 +826,7 @@ async def tag(message, client):
                         '\U0001F467'  # :girl:
                     ]
                     ),
-                message.author.name,
+                message.author.display_name,
                 params[2]
                 )
             )
@@ -838,7 +838,7 @@ async def tag(message, client):
             await client.send_message(
                 message.channel,
                 '\U0001F6AB {}: This option can only be used in direct messages.'.format(
-                    message.author.name
+                    message.author.display_name
                     )
                 )
             return
@@ -850,7 +850,7 @@ async def tag(message, client):
             await client.send_message(
                 message.channel,
                 '\U0001F6AB {}: The tag `{}` does not exist.'.format(
-                    message.author.name,
+                    message.author.display_name,
                     params[2]
                     )
                 )
@@ -877,7 +877,7 @@ async def tag(message, client):
         await client.send_message(
             message.channel,
             '\u2139 {}: This is the tag `{}`.\n{}'.format(
-                message.author.name,
+                message.author.display_name,
                 params[2],
                 tags[params[2]]['tag']
                 )
@@ -899,7 +899,7 @@ async def tag(message, client):
         await client.send_message(
             message.channel,
             '\U0001F6AB {}: I could not find a tag with that name.\n*(Implicit creation is currently unavailable. Please use `create`.)*'.format(
-                message.author.name
+                message.author.display_name
                 )
             )
         return
@@ -908,7 +908,7 @@ async def tag(message, client):
         await client.send_message(
             message.channel,
             '\U0001F6AB {}: This tag currently features invalidations that must be remedied. Please use `{}tag recall <tag name>` in a direct message with me.'.format(
-                message.author.name,
+                message.author.display_name,
                 base.config['invoker']
                 )
             )

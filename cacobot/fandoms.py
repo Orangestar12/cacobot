@@ -18,13 +18,13 @@ async def limbo(message, client):
             if foreboden != None:
                 for ment in message.mentions:
                     await client.replace_roles(ment, foreboden)
-                    await client.send_message(message.channel, '{}: {} has been Limbo\'d.'.format(message.author.mention, ment.name))
+                    await client.send_message(message.channel, '{}: {} has been Limbo\'d.'.format(message.author.display_name, ment.name))
             else:
-                await client.send_message(message.channel, '{}: You must create a role named \'Limbo\' before you can use this command.'.format(message.author.mention))
+                await client.send_message(message.channel, '{}: You must create a role named \'Limbo\' before you can use this command.'.format(message.author.display_name))
         except discord.Forbidden:
-            await client.send_message(message.channel, '{}: I do not have the permission to perform this command yet.'.format(message.author.mention))
+            await client.send_message(message.channel, '{}: I do not have the permission to perform this command yet.'.format(message.author.display_name))
     else:
-        await client.send_message(message.channel, '{}: You do not have the permission to manage roles.'.format(message.author.mention))
+        await client.send_message(message.channel, '{}: You do not have the permission to manage roles.'.format(message.author.display_name))
 
 
 
