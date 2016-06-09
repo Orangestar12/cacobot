@@ -308,7 +308,7 @@ async def unplug(message, client):
 
     for mention in message.mentions:
         if mention.id in plugs[message.server.id]:
-            plugs[message.server.id].remove([mention.id])
+            plugs[message.server.id].remove(mention.id)
             await client.send_message(
                 message.channel,
                 '✔ {}: {} has been unplugged.'.format(message.author.display_name, mention.display_name)
@@ -321,7 +321,7 @@ async def unplug(message, client):
                     '\U0001F6AB {}: {} has been plugged globally, and cannot be unplugged by you.'.format(message.author.display_name, mention.display_name)
                     )
             else:
-                plugs['GLOBAL'].remove([mention.id])
+                plugs['GLOBAL'].remove(mention.id)
                 await client.send_message(
                     message.channel,
                     '✔ {}: {} has been unplugged.'.format(message.author.display_name, mention.display_name)
@@ -345,12 +345,12 @@ async def checkForPlug(message, client):
 
         return True
 
+    if message.author.id in plugs['GLOBAL']:
+        return False
+
     if message.server.id in plugs:
         if message.author.id in plugs[message.server.id]:
             return False
-
-    if message.author.id in plugs['GLOBAL']:
-        return False
 
     return True
 
