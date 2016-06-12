@@ -429,11 +429,7 @@ async def nuke(message, client):
                 )
             return
 
-    try:
-        async for msg in client.logs_from(message.channel, r):
-            await client.delete_message(msg)
-    except discord.errors.NotFound:
-        pass
+    await client.purge_from(message.channel, limit=r):
 
 @base.cacofunc
 async def cleanup(message, client):
