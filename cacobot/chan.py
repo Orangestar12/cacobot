@@ -18,9 +18,9 @@ async def roll(message, client):
     # This was written by @NoKeksGiven. Give that guy a shout-out!
     num = str(round(int(round(time.time() * 100) % 100000000)))
     if num[-1] == num[-2]:
-        await client.send_message(message.channel, '{}: {}, check \'em!'.format(message.author.mention, num))
+        await client.send_message(message.channel, '{}: {}, check \'em!'.format(message.author.display_name, num))
     else:
-        await client.send_message(message.channel, '{}: {}'.format(message.author.mention, num))
+        await client.send_message(message.channel, '{}: {}'.format(message.author.display_name, num))
 roll.server = '/g/'
 
 @base.postcommand

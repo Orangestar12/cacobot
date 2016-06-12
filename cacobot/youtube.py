@@ -1,6 +1,5 @@
 import re
 import json
-import os
 
 from random import choice
 
@@ -72,17 +71,6 @@ doommuse = [
     'https://youtu.be/VghIvkUd_nY'
 ]
 
-doomsnark = [
-    'THE SOUNDTRACK TO MY NIGHTMARES',
-    'HISSING INTENSIFIES',
-    'AND THEN WE WERE ALL SHOT TO DEATH',
-    'YOU GOT THE SHOTGUN',
-    'PICKED UP A CLIP',
-    'PICK ED UP A CLIP',
-    'CHAINSAW! THE GREAT COMMUNICATOR!',
-    '"BERSERK" IS A FUNNY WORD'
-]
-
 @base.cacofunc
 async def ytadd(message, client):
     '''
@@ -95,25 +83,25 @@ async def ytadd(message, client):
     params = message.content.split()
 
     if len(params) == 1:
-        await client.send_message(message.channel, '🚫 {}: You must provide either a YouTube search query or a setup string for your bot. Use `{}help ytadd` for more information.'.format(message.author.name, base.config['invoker']))
+        await client.send_message(message.channel, '\U0001F6AB {}: You must provide either a YouTube search query or a setup string for your bot. Use `{}help ytadd` for more information.'.format(message.author.name, base.config['invoker']))
         return
 
     # set up music bot
     if params[1].lower() == '{}setup'.format(base.config['invoker']):
         if not message.channel.permissions_for(message.author).manage_server:
-            await client.send_message(message.channel, '🚫 {0}: You must have the permission to manage the server to set or update the music bot for this server.'.format(message.author.name))
+            await client.send_message(message.channel, '\U0001F6AB {0}: You must have the permission to manage the server to set or update the music bot for this server.'.format(message.author.name))
             return
 
         if len(params) < 4:
-            await client.send_message(message.channel, '🚫 {}: The setup for a music bot must contain exactly two additional parameters: the mention representing the music bot in question, and the invoker for that music bot.'.format(message.author.name))
+            await client.send_message(message.channel, '\U0001F6AB {}: The setup for a music bot must contain exactly two additional parameters: the mention representing the music bot in question, and the invoker for that music bot.'.format(message.author.name))
             return
 
         if not message.mentions:
-            await client.send_message(message.channel, '🚫 {}: You must *mention* the bot you are trying to set up. (i.e. put an @ symbol before it.)'.format(message.author.name))
+            await client.send_message(message.channel, '\U0001F6AB {}: You must *mention* the bot you are trying to set up. (i.e. put an @ symbol before it.)'.format(message.author.name))
             return
 
         if not mention_syntax.match(params[2]):
-            await client.send_message(message.channel, '🚫 {0}: Please make sure the bot mention in your command is the third parameter. (i.e. `{1}ytadd {1}setup @musicbot ;play`)'.format(message.author.name, base.config['invoker']))
+            await client.send_message(message.channel, '\U0001F6AB {0}: Please make sure the bot mention in your command is the third parameter. (i.e. `{1}ytadd {1}setup @musicbot ;play`)'.format(message.author.name, base.config['invoker']))
             return
 
         msgbot = message.mentions[0].id
@@ -133,18 +121,18 @@ async def ytadd(message, client):
     # end bot setup
 
     if base.stream:
-        await client.send_message(message.channel, '🚫 {}: Sorry, I\'m currently playing music in another channel. (Someday discord.py will let me connect to multiple channels!!)'.format(message.author.name))
+        await client.send_message(message.channel, '\U0001F6AB {}: Sorry, I\'m currently playing music in another channel. (Someday discord.py will let me connect to multiple channels!!)'.format(message.author.name))
         return
 
 
     if message.server.id not in musicbots:
-        await client.send_message(message.channel, '🚫 {}: There is no musicbot set for this server. Please have a server administrator set one up. Use `{}help ytadd` for more details.'.format(message.author.name, base.config['invoker']))
+        await client.send_message(message.channel, '\U0001F6AB {}: There is no musicbot set for this server. Please have a server administrator set one up. Use `{}help ytadd` for more details.'.format(message.author.name, base.config['invoker']))
         return
 
     vcuser = discord.utils.get(message.server.members, id=musicbots[message.server.id]['bot_id'])
 
     if not vcuser:
-        await client.send_message(message.channel, '🚫 {0}: **An unexpected error occurred:** The music bot for this server was not found. Please try again or change the music bot\'s id with `{1}ytadd {1}setup`. Use `{1}help ytadd` for more information.'.format(
+        await client.send_message(message.channel, '\U0001F6AB {0}: **An unexpected error occurred:** The music bot for this server was not found. Please try again or change the music bot\'s id with `{1}ytadd {1}setup`. Use `{1}help ytadd` for more information.'.format(
             message.author.name,
             base.config['invoker']
             ))
@@ -153,11 +141,11 @@ async def ytadd(message, client):
     vcchannel = vcuser.voice_channel
 
     if not vcchannel:
-        await client.send_message(message.channel, '🚫 {}: The music bot is not connected to any voice channels.'.format(message.author.name))
+        await client.send_message(message.channel, '\U0001F6AB {}: The music bot is not connected to any voice channels.'.format(message.author.name))
         return
 
     if message.author.voice_channel != vcchannel:
-        await client.send_message(message.channel, '🚫 {}: I cannot allow you to queue music to the music bot unless you are in the channel it is in as well.'.format(message.author.name))
+        await client.send_message(message.channel, '\U0001F6AB {}: I cannot allow you to queue music to the music bot unless you are in the channel it is in as well.'.format(message.author.name))
         return
 
     query = message.content.split(None, 1)[1]
@@ -190,76 +178,4 @@ async def ytadd(message, client):
             else:
                 await client.send_message(message.channel, 'Please say **Y**es, **N**o, or **A**bort.')
 
-    await client.send_message(message.channel, '🚫 {}: You have exhausted my allotment of 5 results per search. Consider providing a more detailed query.'.format(message.author.name))
-
-def resetstream():
-    base.stream.stop()
-    base.stream = None
-
-@base.cacofunc
-async def doommus(message, client):
-    '''
-    **{0}doommus** [ vc ]
-    Sends a random DOOM song. If your command ends in `vc`, CacoBot will begin playing the song in the channel you are in.
-    *Example: `{0}doommus vc`*
-    '''
-    song = choice(doommuse)
-
-    if message.content.endswith('vc'):
-        if base.stream:
-            await client.send_message(message.channel, '🚫 {}: I\'m already playing some music in a voice channel. Please try again later.'.format(message.author.name))
-            return
-
-        if not message.author.voice_channel:
-            await client.send_message(message.channel, '🚫 {}: You are not in a voice channel.'.format(message.author.name))
-            return
-
-        if client.voice and client.voice.channel != message.author.voice_channel:
-            await client.voice.disconnect()
-            await client.join_voice_channel(message.author.voice_channel)
-
-        if not client.voice:
-            await client.join_voice_channel(message.author.voice_channel)
-
-        base.stream = await client.voice.create_ytdl_player(song, after=resetstream)
-
-        base.stream.start()
-
-    await client.send_message(message.channel, '{}: **{}**\n{}'.format(message.author.name, choice(doomsnark), song))
-doommus.server = 'hidden'
-
-
-@base.cacofunc
-async def play(message, client):
-    '''
-    **{0}play** [ filename ]
-    Plays a filename off my PC. Good fucking luck.
-    *Example: `{0}play /mnt/sda2/Users/Orangestar/Music/Music/Truxton/Panic Protocol/01 Alexandrian Ricochet Sphere.mp3`*
-    '''
-    if base.stream:
-        await client.send_message(message.channel, '🚫 {}: I\'m already playing some music in a voice channel. Please try again later.'.format(message.author.name))
-        return
-
-    if not message.author.voice_channel:
-        await client.send_message(message.channel, '🚫 {}: You are not in a voice channel.'.format(message.author.name))
-        return
-
-    song = message.content.split(None, 1)[1]
-
-    if not os.path.isfile(song):
-        await client.send_message(message.channel, '🚫 {}: That file was not found.'.format(message.author.name))
-        return
-
-    if client.voice and client.voice.channel != message.author.voice_channel:
-        await client.voice.disconnect()
-        await client.join_voice_channel(message.author.voice_channel)
-
-    if not client.voice:
-        await client.join_voice_channel(message.author.voice_channel)
-
-    base.stream = client.voice.create_ffmpeg_player(song, after=resetstream)
-
-    base.stream.start()
-
-    await client.send_message(message.channel, '{}: Now playing **{}** in {}'.format(message.author.name, song[song.rfind('/') + 1:], message.author.voice_channel))
-doommus.server = 'hidden'
+    await client.send_message(message.channel, '\U0001F6AB {}: You have exhausted my allotment of 5 results per search. Consider providing a more detailed query.'.format(message.author.name))

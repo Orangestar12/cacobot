@@ -877,7 +877,7 @@ killmsgs = [
 def postify(phrase, message, pronouns, suicide=False, *args):
     w = phrase
 
-    if suicide:
+    if suicide is True:
         if message.mentions:
             w = w.replace(
                 '%k', message.mentions[0].name
@@ -889,7 +889,7 @@ def postify(phrase, message, pronouns, suicide=False, *args):
 
     #lower case
     w = w.replace(
-        '%k', message.author.name
+        '%k', message.author.display_name
         ).replace(
             '%g', pronouns['%g']
             ).replace(
@@ -940,6 +940,7 @@ async def kill(message, client):
     '''
     **{0}kill** [ mention | string ]
     **{0}kill** [ optin ] [ he/she/they ] [ him/her/them ] [ his/her/their ]
+    **{0}kill** [ optin ] [ check ]
     Prints an obituary for the mentioned party as though you had killed it. By default, will use "They" pronouns. You can do `{0}kill optin 1 2 3` to opt into replacing your pronouns with 3 of your choice. The syntax is posted above. This is agnostic: You can use any word you want for a pronoun.
     *Examples: `{0}kill @BooBot`, `{0}kill optin schlee schlim schleir`*
     '''
@@ -961,14 +962,32 @@ async def kill(message, client):
     killerpronouns = {'%g':'they', '%h':'them', '%p': 'their'}
 
     if message.content.lower() == '{}kill la kill'.format(base.config['invoker']):
-        await client.send_message(message.channel, '{} tried to make a shitty anime joke and was victimized because of it.'.format(message.author.name))
+        await client.send_message(message.channel, '{} tried to make a shitty anime joke and was victimized because of it.'.format(message.author.display_name))
+        return
+
+    if message.content.lower() == '{}kill the noise'.format(base.config['invoker']):
+        await client.send_message(message.channel, '{} did that shit.'.format(message.author.display_name))
+        return
+
+    if message.content.lower() == '{}kill your heroes'.format(base.config['invoker']):
+        await client.send_message(message.channel, 'No need to worry, {}, because everybody will die.'.format(message.author.display_name))
         return
 
     if message.mentions and message.mentions[0].id in optin:
         pronouns = optin[message.mentions[0].id]
     else:
-        if len(message.content.split()) > 1:
-            name2member = discord.utils.get(message.server.members, name=name)
+        if len(params) > 1:
+
+            name2member = None
+
+            names = [x for x in message.server.members if x.name == name]
+            displaynames = [x for x in message.server.members if x.display_name == name]
+
+            if names:
+                name2member = names[0]
+            elif displaynames:
+                name2member = displaynames[0]
+
             if name2member and name2member.id in optin:
                 pronouns = optin[name2member.id]
         elif message.author.id in optin:
@@ -1012,23 +1031,29 @@ async def kill(message, client):
                 json.dump(optin, datastream, indent=4)
 
             await client.send_message(message.channel, '{}: I have successfully updated your pronouns to {}/{}/{}.'.format(
-                message.author.name,
+                message.author.display_name,
                 params[2],
                 params[3],
                 params[4]
                 ))
 
         except IndexError:
-            await client.send_message(message.channel, '{}: You must provide 3 pronouns as an analogue to "he/she/they", "him/her/them", and "his/her/their", in that order.'.format(message.author.name))
+            await client.send_message(message.channel, '{}: You must provide 3 pronouns as an analogue to "he/she/they", "him/her/them", and "his/her/their", in that order.'.format(message.author.display_name))
 
         return
 
-    if name == message.author.name or name.lower() in ['me', 'myself', 'i']:
+    if name.lower() == message.author.display_name.lower() or name.lower() == message.author.name.lower() or name.lower() in ['me', 'myself', 'i']:
         await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
         return
 
-    if '@everyone' in message.content:
-        await client.send_message(message.channel, '{}: **Do not use this command to circumvent everyone mention restrictions.**'.format(message.author.name))
+    if name.lower() in ['us', 'everyone']:
+        await client.send_message(message.channel, postify(random.choice(suicides), 'Everyone', pronouns))
+
+    if name.lower() in ['you', 'yourself']:
+        await client.send_message(message.channel, postify(random.choice(suicides, message.server.me.display_name, pronouns)))
+
+    if '@everyone' in message.content or '@here' in message.content:
+        await client.send_message(message.channel, '{}: **Do not use this command to circumvent everyone mention restrictions.**'.format(message.author.display_name))
         return
 
     await client.send_message(message.channel, postify(random.choice(killmsgs), message, pronouns, killerpronouns))
@@ -1078,12 +1103,18 @@ async def rip(message, client):
         await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns, suicide=True))
         return
 
-    if name == message.author.name or name.lower() in ['me', 'myself', 'i']:
+    if name.lower() == message.author.display_name.lower() or name.lower() == message.author.name.lower() or name.lower() in ['me', 'myself', 'i']:
         await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns))
         return
 
-    if '@everyone' in message.content:
-        await client.send_message(message.channel, '{}: **Do not use this command to circumvent everyone mention restrictions.**'.format(message.author.name))
+    if name.lower() in ['us', 'everyone']:
+        await client.send_message(message.channel, postify(random.choice(suicides), 'Everyone', pronouns))
+
+    if name.lower() in ['you', 'yourself']:
+        await client.send_message(message.channel, postify(random.choice(suicides, message.server.me.display_name, pronouns)))
+
+    if '@everyone' in message.content or '@here' in message.content:
+        await client.send_message(message.channel, '{}: **Do not use this command to circumvent everyone mention restrictions.**'.format(message.author.display_name))
         return
 
     await client.send_message(message.channel, postify(random.choice(suicides), message, pronouns, suicide=True))

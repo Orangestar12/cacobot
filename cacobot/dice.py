@@ -25,12 +25,12 @@ async def d(message, client, *args, **kwargs):
 
             #If the list only has 1 die, just print that number.
             if len(rolls) == 1:
-                await client.send_message(message.channel, '{}: {}'.format(message.author.mention, str(rolls[0])))
+                await client.send_message(message.channel, '{}: {}'.format(message.author.display_name, str(rolls[0])))
 
             #Otherwise, print the list, and the list's sum.
             else:
                 msg = '{}: {} | {} of possible {}'.format(
-                  message.author.mention,
+                  message.author.display_name,
                   str(rolls),
                   str(sum(rolls)),
                   str(dice * sides)
@@ -43,10 +43,10 @@ async def d(message, client, *args, **kwargs):
 
     except (IndexError, ValueError):
         # user did not format command correctly
-        await client.send_message(message.channel, '{}: You must specify the number of dice and the faces each dice has seperated with a d. For example: .d 1d6 rolls one six-sided die. .d 5d2 rolls 5 2-sided die.'.format(message.author.mention))
+        await client.send_message(message.channel, '{}: You must specify the number of dice and the faces each dice has seperated with a d. For example: .d 1d6 rolls one six-sided die. .d 5d2 rolls 5 2-sided die.'.format(message.author.display_name))
 
 @base.cacofunc
-async def choice(message, client, *args, **kwargs):
+async def choice(message, client):
     '''
     **{0}choice** [*one*; *two*...]
     Randomly choses an option from a semicolon-seperated list.
@@ -57,11 +57,11 @@ async def choice(message, client, *args, **kwargs):
     if len(choices) > 1:
         choices = choices[1].split(';')
         if len(choices) > 1:
-            await client.send_message(message.channel, '{}: {}'.format(message.author.mention, random.choice(choices).strip()))
+            await client.send_message(message.channel, '{}: {}'.format(message.author.display_name, random.choice(choices).strip()))
         else:
-            await client.send_message(message.channel, ':no_entry_sign: {}: You have provided only one choice to select from.'.format(message.author.mention))
+            await client.send_message(message.channel, ':no_entry_sign: {}: You have provided only one choice to select from.'.format(message.author.display_name))
     else:
-        await client.send_message(message.channel, ':no_entry_sign: {}: You have provided no choices'.format(message.author.mention))
+        await client.send_message(message.channel, ':no_entry_sign: {}: You have provided no choices'.format(message.author.display_name))
 
 @base.cacofunc
 async def later(message, client, *args, **kwargs):
@@ -72,3 +72,29 @@ async def later(message, client, *args, **kwargs):
     '''
     pics = os.listdir('later')
     await client.send_file(message.channel, 'later/' + random.choice(pics))
+
+@base.postcommand
+async def magicCacoBotBall(message, client):
+    if \
+     (message.content.lower().startswith('cacobot, ') or \
+     not message.channel.is_private and (message.clean_content.startswith('@{}, '.format(message.server.me.display_name)) or\
+     message.content.lower().startswith(message.server.me.display_name.lower() + ', '))):
+        if message.content.lower().endswith('milk gone bad?'):
+            # and msg.server.id == '120330239996854274'
+            await client.send_message(
+                message.channel, '{}: It is official. Milk has gone bad.'.format(
+                    message.author.display_name
+                    )
+                )
+
+        elif message.content.endswith('?'):
+            await client.send_message(
+                message.channel, '{}: {}'.format(
+                    message.author.display_name, random.choice(
+                        [
+                            '\u2714 Yes.',
+                            '\u2716 No.'
+                            ]
+                        )
+                    )
+                )

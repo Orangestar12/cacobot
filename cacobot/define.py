@@ -28,7 +28,7 @@ async def define(message, client):
     *Example: `{0}define demon`*
     '''
     if message.content.strip()[len(base.config['invoker']):] == 'define':
-        await client.send_message(message.channel, '{}: Please provide the word you would like to get the definition from Wiktionary from.'.format(message.author.name))
+        await client.send_message(message.channel, '{}: Please provide the word you would like to get the definition from Wiktionary from.'.format(message.author.display_name))
     else:
         definition = message.content.split(None, 1)[1].lower() # I'm pretty sure all Wiktionary pages are lowercase.
         encoded = urllib.parse.quote(definition, safe='')
@@ -51,7 +51,7 @@ async def define(message, client):
             speech = {}
 
             # and this list will store each definition.
-            definitions = ['{}: **{}**'.format(message.author.name, title)]
+            definitions = ['{}: **{}**'.format(message.author.display_name, title)]
 
             # Find the first instance of 'id='Noun''.
             if result.find('id="Noun"') != -1:
@@ -118,11 +118,11 @@ async def define(message, client):
                 await client.send_message(message.channel, msg)
 
             except ValueError: # If no part of speech was found, then just send this:
-                await client.send_message(message.channel, message.author.name + ': I can\'t get the definition of that word, but it exists. Go here: https://en.wiktionary.org/wiki/{}'.format(encoded))
+                await client.send_message(message.channel, message.author.display_name + ': I can\'t get the definition of that word, but it exists. Go here: https://en.wiktionary.org/wiki/{}'.format(encoded))
                 print(traceback.format_exc())
 
         except urllib.error.HTTPError: # 404 errors mean the word doesn't exist.
-            await client.send_message(message.channel, '{}: That\'s not a word, or Wiktionary doesn\'t have an entry on it.'.format(message.author.name))
+            await client.send_message(message.channel, '{}: That\'s not a word, or Wiktionary doesn\'t have an entry on it.'.format(message.author.display_name))
             print(traceback.format_exc())
 
 @base.cacofunc
@@ -133,7 +133,7 @@ async def urbdef(message, client):
     *Example: `{0}urbdef doom`*
     '''
     if message.content.strip()[len(base.config['invoker']):] == 'urbdef':
-        await client.send_message(message.channel, '{}: Please provide the word you would like to get the definition from Urban Dictionary from.'.format(message.author.name))
+        await client.send_message(message.channel, '{}: Please provide the word you would like to get the definition from Urban Dictionary from.'.format(message.author.display_name))
     else:
         definition = message.content.split(None, 1)[1].lower()
         encoded = urllib.parse.quote(definition, safe='')
@@ -145,7 +145,7 @@ async def urbdef(message, client):
             definitions.append(result['list'][0]['definition'])
             definitions.append('*Read more at {}*'.format(result['list'][0]['permalink']))
             msg = '\n'.join(definitions)
-            await client.send_message(message.channel, '{}: {}'.format(message.author.name, msg))
+            await client.send_message(message.channel, '{}: {}'.format(message.author.display_name, msg))
         except: # I shouldn't be doing a general except, but I forgot what this throws. I think urllib.error.HTTPError?
-            await client.send_message(message.channel, '{}: Urban Dictionary doesn\'t have that word.'.format(message.author.name))
+            await client.send_message(message.channel, '{}: Urban Dictionary doesn\'t have that word.'.format(message.author.display_name))
             print(traceback.format_exc())

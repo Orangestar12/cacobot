@@ -9,7 +9,7 @@ import cacobot.base as base
 
 # Please place the latest date you want the bot to check for commits:
 # format is YYYY-MM-DDTHH:MM:SSZ
-comdate = '2016-04-13'
+comdate = '2016-06-09'
 
 @base.cacofunc
 async def help(message, client): # pylint: disable=W0622
@@ -72,7 +72,7 @@ async def help(message, client): # pylint: disable=W0622
             for x in base.functions:
                 if hasattr(base.functions[x], 'server') and params[1].lower() == base.functions[x].server.lower():
                     await client.send_message(message.channel, '{}: ...Why did you just try to look up the help for a command category? I tried to split up the help message into categories so they could be read easier. Those big headers with the underlines and everything? Those are *categories*. There isn\'t a command called {}. (Why do so many people get this wrong? It\'s infuriating.)\n\n*~Orangestar, Bot maintainer.*'.format(
-                        message.author.name,
+                        message.author.display_name,
                         params[1]
                         ))
                     return
@@ -85,7 +85,7 @@ async def welcome(message, client):
         await client.send_message(
             message.channel,
             '{0}: For information on this bot, type `{1}help`. I don\'t log messages unless asked. Also, check out the `{1}git` command for my TOS and code.'.format(
-                message.author.name,
+                message.author.display_name,
                 base.config['invoker']
                 )
             )

@@ -66,14 +66,14 @@ async def stats(message, client):
     #Determine amount of messages sent by each user and total messages.
     #Save message content to be compared later.
     for msg in history:
-        if msg.author.name in users:
-            users[msg.author.name]['msgcount'] += 1
-            users[msg.author.name]['messages'].append(msg)
+        if msg.author.display_name in users:
+            users[msg.author.display_name]['msgcount'] += 1
+            users[msg.author.display_name]['messages'].append(msg)
         else:
-            users[msg.author.name] = {}
-            users[msg.author.name]['msgcount'] = 1
-            users[msg.author.name]['messages'] = []
-            users[msg.author.name]['repetitions'] = 0
+            users[msg.author.display_name] = {}
+            users[msg.author.display_name]['msgcount'] = 1
+            users[msg.author.display_name]['messages'] = []
+            users[msg.author.display_name]['repetitions'] = 0
         users['totalmsgcount'] += 1
 
     #Variables that store the previous user's SVG vars.
@@ -92,7 +92,7 @@ async def stats(message, client):
             #Prepare a line to be inserted into an SVG file to create a pie chart.
             users[usr]['angle'] = users[usr]['percentdecimal'] * 360
 
-            usrToPrint = htmlEntities(str(usr).replace('', '').replace('\00', ''))
+            usrToPrint = htmlEntities(str(usr).replace('\u0007', '').replace('\00', ''))
             if len(usr) > 35:
                 usrToPrint = str(usr)[:33] + '...'
 

@@ -28,7 +28,7 @@ async def hush(message, client):
             await client.send_message(
                 message.channel,
                 ':mute: **Server hush!** :mute:\n{} will no longer respond to commands in this server. Call `{}listen` if you want me back. Ask Orangestar to remove me if you want me gone permanently.'.format(
-                    message.author.name,
+                    message.author.display_name,
                     base.config['invoker']
                     )
                 )
@@ -39,7 +39,7 @@ async def hush(message, client):
             await client.send_message(
                 message.channel,
                 ':mute: **Channel hush!** :mute:\n{0}: I will no longer respond to commands in this channel. Call `{1}listen` if you want to bring me back. Call `{1}hush server` if you were hoping to silence me on the whole server. (Hint: Do it somewhere I can hear it since you silenced me here.)'.format(
-                    message.author.name,
+                    message.author.display_name,
                     base.config['invoker']
                     )
                 )
@@ -50,8 +50,8 @@ async def hush(message, client):
     else:
         await client.send_message(
             message.channel,
-            '🚫 {} You do not have permission to call this command.'.format(
-                message.author.mention
+            '\U0001F6AB {}: You do not have permission to call this command.'.format(
+                message.author.display_name
                 )
             )
 
@@ -79,7 +79,7 @@ async def checkForHush(message, client):
             await client.send_message(
                 message.channel,
                 ':loud_sound: **Now listening!** :loud_sound:\n{}: I will now respond to commands in this channel.'.format(
-                    message.author.mention
+                    message.author.display_name
                     )
                 )
             with open('configs/hush.json', 'w') as z:
@@ -96,7 +96,7 @@ async def checkForHush(message, client):
             await client.send_message(
                 message.channel,
                 ':loud_sound: **Now listening!** :loud_sound:\n{}: I will now respond to commands in this channel.'.format(
-                    message.author.mention
+                    message.author.display_name
                     )
                 )
             with open('configs/hush.json', 'w') as z:
@@ -118,54 +118,8 @@ async def listen(message, client):
 
     await client.send_message(
         message.channel,
-        '🚫 I am not hushed in this channel.'
+        '\U0001F6AB {}: I am not hushed in this channel.'.format(message.author.display_name)
         )
-
-# People be like "Hey why can't we mention specific roles like mods?" and I add
-# it to my bot and then it gets spammed as expected.
-# Boy howdy Discord, aren't you a good community.
-
-# @base.cacofunc # Uncomment this line to add it back.
-async def call(message, client):
-    '''
-    **{0}call** [*role*]
-    Mentions everyone in the role [*role*]. This is primarily for notifying mods that are away.
-    *Example: `{0}call Mods`*
-    '''
-
-    roleToMention = message.content.split(None, 1)[1].lower()
-
-    if roleToMention != '@everyone':
-        mentions = [] # holds mention strings
-        for x in message.server.roles:
-            if x.name.lower() == roleToMention:
-                for y in message.server.members:
-                    if discord.utils.find(lambda m: m == x, y.roles) != None:
-                        mentions.append(y.mention)
-        # Yeah, that *is* a shitty way of doing it.
-
-        if mentions:
-            await client.send_message(
-                message.channel,
-                '{}, you have been mentioned by {}!'.format(
-                    ', '.join(mentions),
-                    message.author.mention
-                    )
-                )
-        else:
-            await client.send_message(
-                message.channel,
-                '{}: Nobody in this server has that role.'.format(
-                    message.author.mention
-                    )
-                )
-    else:
-        await client.send_message(
-            message.channel,
-            '{}: You have already mentioned everyone in that role.'.format(
-                message.author.mention
-                )
-            )
 
 @base.cacofunc
 async def connect(message, client):
@@ -181,7 +135,7 @@ async def connect(message, client):
         await client.send_message(
             message.channel,
             '🕴 {}: This command does not require an invite anymore. You must have an administrator authorize me at this URL:\n{}.'.format(
-                message.author.name,
+                message.author.display_name,
                 discord.utils.oauth_url(base.config['client_id'])
                 )
             )
@@ -190,7 +144,7 @@ async def connect(message, client):
     await client.send_message(
         message.channel,
         '❤ {}: Please have an administrator authorize me here:\n{}.'.format(
-            message.author.name,
+            message.author.display_name,
             discord.utils.oauth_url(base.config['client_id'])
             )
         )
@@ -236,7 +190,7 @@ async def debug(message, client):
     else:
         await client.send_message(
             message.channel,
-            '🚫 You are not authorized to perform that command.'
+            '\U0001F6AB You are not authorized to perform that command.'
             )
 debug.server = 'Debug'
 
@@ -261,8 +215,8 @@ async def plug(message, client):
      not message.channel.permissions_for(message.author).kick_members:
         await client.send_message(
             message.channel,
-             '🚫 {}: You are not authorized to perform that command.'.format(
-                message.author.name
+             '\U0001F6AB {}: You are not authorized to perform that command.'.format(
+                message.author.display_name
                 )
             )
         return
@@ -271,8 +225,8 @@ async def plug(message, client):
         if message.author.id != base.config['owner_id']:
             await client.send_message(
                message.channel,
-                '🚫 {}: You are not authorized to plug users globally.'.format(
-                   message.author.name
+                '\U0001F6AB {}: You are not authorized to plug users globally.'.format(
+                   message.author.display_name
                    )
                )
             return
@@ -281,7 +235,7 @@ async def plug(message, client):
             plugs['GLOBAL'].append(mention.id)
             await client.send_message(
                 message.channel,
-                '✔ {}: {} has been globally plugged.'.format(message.author.name, mention.name)
+                '✔ {}: {} has been globally plugged.'.format(message.author.display_name, mention.display_name)
                 )
 
         with open('configs/plugs.json', 'w') as z:
@@ -292,33 +246,33 @@ async def plug(message, client):
         if x.id == client.user.id:
             await client.send_message(
                 message.channel,
-                '🚫 {}: You cannot plug me from my own commands.'.format(message.author.name, x.name)
+                '\U0001F6AB {}: You cannot plug me from my own commands.'.format(message.author.display_name, x.display_name)
                 )
 
         elif x.id in plugs['GLOBAL']:
             await client.send_message(
                 message.channel,
-                '🚫 {}: {} is globally plugged. You do not have to plug him locally.'.format(message.author.name, x.name)
+                '\U0001F6AB {}: {} is globally plugged. You do not have to plug him locally.'.format(message.author.display_name, x.display_name)
                 )
 
         elif message.server.id not in plugs:
             plugs[message.server.id] = [x.id]
             await client.send_message(
                 message.channel,
-                '✔ {}: {} has been plugged.'.format(message.author.name, x.name)
+                '✔ {}: {} has been plugged.'.format(message.author.display_name, x.display_name)
                 )
 
         elif x.id in plugs[message.server.id]:
             await client.send_message(
                 message.channel,
-                '🚫 {}: {} is already plugged.'.format(message.author.name, x.name)
+                '\U0001F6AB {}: {} is already plugged.'.format(message.author.display_name, x.name)
                 )
 
         else:
             plugs[message.server.id].append(x.id)
             await client.send_message(
                 message.channel,
-                '✔ {}: {} has been plugged.'.format(message.author.name, x.name)
+                '✔ {}: {} has been plugged.'.format(message.author.display_name, x.display_name)
                 )
 
     with open('configs/plugs.json', 'w') as z:
@@ -337,8 +291,8 @@ async def unplug(message, client):
      not message.channel.permissions_for(message.author).kick_members:
         await client.send_message(
             message.channel,
-             '🚫 {}: You are not authorized to perform that command.'.format(
-                message.author.name
+             '\U0001F6AB {}: You are not authorized to perform that command.'.format(
+                message.author.display_name
                 )
             )
         return
@@ -346,31 +300,31 @@ async def unplug(message, client):
     if message.server.id not in plugs:
        await client.send_message(
            message.channel,
-            '🚫 {}: There are no users plugged in this server.'.format(
-               message.author.name
+            '\U0001F6AB {}: There are no users plugged in this server.'.format(
+               message.author.display_name
                )
            )
        return
 
     for mention in message.mentions:
         if mention.id in plugs[message.server.id]:
-            plugs[message.server.id].remove([mention.id])
+            plugs[message.server.id].remove(mention.id)
             await client.send_message(
                 message.channel,
-                '✔ {}: {} has been unplugged.'.format(message.author.name, mention.name)
+                '✔ {}: {} has been unplugged.'.format(message.author.display_name, mention.display_name)
                 )
 
         if mention.id in plugs['GLOBAL']:
             if message.author.id != base.config['owner_id']:
                 await client.send_message(
                     message.channel,
-                    '🚫 {}: {} has been plugged globally, and cannot be unplugged by you.'.format(message.author.name, mention.name)
+                    '\U0001F6AB {}: {} has been plugged globally, and cannot be unplugged by you.'.format(message.author.display_name, mention.display_name)
                     )
             else:
-                plugs['GLOBAL'].remove([mention.id])
+                plugs['GLOBAL'].remove(mention.id)
                 await client.send_message(
                     message.channel,
-                    '✔ {}: {} has been unplugged.'.format(message.author.name, mention.name)
+                    '✔ {}: {} has been unplugged.'.format(message.author.display_name, mention.display_name)
                     )
 
     if plugs[message.server.id] == []:
@@ -386,16 +340,17 @@ async def checkForPlug(message, client):
 
     if message.channel.is_private:
         if message.author.id in plugs['GLOBAL']:
-            await client.send_message(message.channel, '🚫 {}: Sorry, but you have been plugged.'.format(message.author.name))
+            await client.send_message(message.channel, '\U0001F6AB {}: Sorry, but you have been plugged.'.format(message.author.name))
             return False
+
         return True
+
+    if message.author.id in plugs['GLOBAL']:
+        return False
 
     if message.server.id in plugs:
         if message.author.id in plugs[message.server.id]:
             return False
-
-    if message.author.id in plugs['GLOBAL']:
-        return False
 
     return True
 
@@ -463,14 +418,14 @@ async def nuke(message, client):
     if not message.channel.permissions_for(message.author).manage_messages:
         await client.send_message(
             message.channel,
-            '🚫 {}: Sorry, but I can\'t let you delete messages if you don\'t have the permission to.'.format(message.author.name)
+            '\U0001F6AB {}: Sorry, but I can\'t let you delete messages if you don\'t have the permission to.'.format(message.author.display_name)
             )
         return
 
     if not message.channel.permissions_for(message.server.me).manage_messages:
             await client.send_message(
                 message.channel,
-                '🚫 I do not have permissions to delete messages yet, so I cannot perform this command.'
+                '\U0001F6AB {}: I do not have permissions to delete messages yet, so I cannot perform this command.'.format(message.author.display_name)
                 )
             return
 
@@ -521,11 +476,11 @@ async def cleanup(message, client):
         else:
             await client.send_message(
                 message.channel,
-                '🚫 I do not have permissions to delete messages yet, so I cannot perform this command.'
+                '\U0001F6AB I do not have permissions to delete messages yet, so I cannot perform this command.'
                 )
     else:
         await client.send_message(
-            message.channel, '🚫 Sorry, but I can\'t let you delete messages if you don\'t have the permission to.'
+            message.channel, '\U0001F6AB Sorry, but I can\'t let you delete messages if you don\'t have the permission to.'
             )
 
 # @base.cacofunc
@@ -540,7 +495,7 @@ async def chanuke(message, client):
     else:
         await client.send_message(
             message.channel,
-            "🚫 You do not have the proper permissions to manage channels in this server."
+            "\U0001F6AB You do not have the proper permissions to manage channels in this server."
             )
 chanuke.server = 'hidden'
 
@@ -570,3 +525,61 @@ async def ssg(message, client):
         await client.send_message(message.channel, '*Cacodemon death gurgle.*')
         await client.close()
 ssg.server = 'Debug'
+
+@base.cacofunc
+async def give(message, client):
+    params = message.content.split(None, 2)
+    if len(params) < 3:
+        return
+
+    if message.server.id == '120330239996854274' and message.channel.permissions_for(message.author).kick_members:
+        try:
+            role2give = discord.utils.get(message.server.roles, name=params[2])
+            if role2give:
+                for ment in message.mentions:
+                    await client.add_roles(ment, role2give)
+                    await client.send_message(message.channel, '{}: {} has been given that role.'.format(message.author.display_name, ment.display_name))
+            else:
+                await client.send_message(message.channel, '{}: I couldn\'t find a role with that name.'.format(message.author.display_name))
+        except discord.Forbidden:
+            await client.send_message(message.channel, '{}: I do not have the permission to perform this command yet.'.format(message.author.display_name))
+    else:
+        await client.send_message(message.channel, '{}: You do not have the permission to ban.'.format(message.author.display_name))
+
+@base.cacofunc
+async def massivelog(message, client):
+    with open('HUGE LOG.txt', 'w') as data:
+
+        p = message.content.split(None, 2)
+
+        amount = int(p[1])
+        query = p[2]
+
+        first_instance = None
+        last_instance = None
+
+        msg_iter = []
+        async for x in client.logs_from(message.channel, amount):
+            msg_iter.append(x)
+
+        messages = list(reversed(msg_iter))
+        for i, x in enumerate(messages):
+            data.write(x.author.display_name + ': ' + x.clean_content + '\n')
+            if query in x.clean_content:
+                if not first_instance:
+                    first_instance = i + 1
+                if x != message:
+                    last_instance = i + 1
+
+        messageToSend = 'I have logged {} messages for you.'.format(len(messages))
+        if not first_instance:
+            messageToSend += ' Your query was not found in any of the messages.'
+        elif first_instance and not last_instance:
+            messageToSend += ' Your query was found {} messages ago.'.format(len(messages) - first_instance)
+        else:
+            messageToSend += ' The first message containing your query was {} messages ago, and the last message containing your query was {} messages ago.'.format(len(messages) - first_instance, len(messages) - last_instance)
+
+        if first_instance == 1:
+            messageToSend += ' Since the first instance of your query was the first message, it may be even further behind than what you searched for.'
+
+    await client.send_file(message.author, "HUGE LOG.txt", content=messageToSend)

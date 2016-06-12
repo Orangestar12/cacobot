@@ -30,7 +30,7 @@ async def wadidea(message, client):
     #Next, we remove all <br>s and line breaks.
     result = result.replace('<br>\n', ' ')
 
-    await client.send_message(message.channel, '{}: {}\n\n*Provided by boris.slipgate.org/?a=mapgen*'.format(message.author.name, result))
+    await client.send_message(message.channel, '{}: {}\n\n*Provided by boris.slipgate.org/?a=mapgen*'.format(message.author.display_name, result))
     return
 wadidea.server = 'Doom'
 
@@ -191,7 +191,7 @@ async def fortune(message, client):
         'Remember, ironic shitposting is still shitposting.',
         'Behold, I have created the smith that bloweth the coals in the fire and that bringeth forth an instrument for this work; and I have created the waster, to destroy.',
         'I looked, and there was a pale horse! Its rider\'s name was Death, and Hell followed him. They were given authority over one-fourth of the earth to kill people using wars, famines, plagues, and the wild animals of the earth.',
-        'DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO',
+        '**DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO DOO**',
         'The only thing better than a delicious cake is a delicious cake on fire.',
         'Your difficulties will strengthen you. Or break you. One of the two.',
         'Remember your love, for hate is never conquered by hate; hate is conquered by love. Both are kind of flimsy against a .45, though.',
@@ -254,15 +254,19 @@ async def fortune(message, client):
         'I am a nihilist I believe in nothing.',
         'Killing me won\'t bring back your honey.',
         'Go Team Edward!',
+        'Go Team Jacob!',
         r'\*dramatic pause\*',
         'Better not tell you now.',
         'Outlook good.',
         'Good luck.',
-        'Guys, the thermal drill, go get it.'
+        'Guys, the thermal drill, go get it.',
+        '\U0001F346', # Suggested by Zero#8516
+        'ROLLING AROUND AT THE SPEED OF SOUND',
+        'discord.errors.HTTPException: BAD REQUEST (status code: 400)'
     ]
     # most of these are from https://github.com/TerminusEst13/Folded1000Times/blob/940b824a071f4a8298d6426be406725374355825/pk3/acs/weeb_const.h
 
-    await client.send_message(message.channel, '{}: **FORTUNE SAY**:\n{}'.format(message.author.mention, random.choice(fortunes)))
+    await client.send_message(message.channel, '{}: **FORTUNE SAY**:\n{}'.format(message.author.display_name, random.choice(fortunes)))
 fortune.server = 'Doom'
 
 @base.postcommand
