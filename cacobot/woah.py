@@ -848,7 +848,7 @@ killmsgs = [
     '%k told %o to check %p privilege.'
     '%k ayy lmao\'d %o.',
     '%k Jerry\'d %o.',
-    '%k Balrog\'ed %o.\n~~Huzzah!~~ Oh Yeah!',
+    '%k crushed %o with Balrog.\n~~Huzzah!~~ Oh Yeah!',
     '%k force-fed %o a mushroom.',
     '%k fed %o to a mammoth.',
     '%k Eric\'d %o.',
@@ -871,7 +871,9 @@ killmsgs = [
     '%k deleted %o.',
     '%k made %o into a movie.\nIt wasn\'t as good as the book.',
     '%k randverbed %o.',
-    '%k randomverbed %o.'
+    '%k randomverbed %o.',
+    '%k rate-limited %o.',
+    '%o is banne by %k'
 ]
 
 def postify(phrase, message, pronouns, suicide=False, *args):
