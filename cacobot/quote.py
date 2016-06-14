@@ -6,8 +6,6 @@ import asyncio # to sleep in log
 import discord
 import cacobot.base as base
 
-mention_syntax = re.compile(r'(<@([0-9#]*?)>)')
-
 @base.cacofunc
 async def quote(message, client):
     '''
@@ -26,11 +24,11 @@ async def quote(message, client):
         await client.send_message(message.channel, 'I do not have any quotes to puke.')
         return
 
-    if len(message.content.strip().split()) > 1:
+    if len(message.clean_content.strip().split()) > 1:
         try:
-            r = int(message.content.split()[1])
+            r = int(message.clean_content.split()[1])
         except ValueError:
-            if re.match(r'^[0-9]*\.[0-9]*$', message.content.split(None, 1)[1]):
+            if re.match(r'^[0-9]*\.[0-9]*$', message.clean_content.split(None, 1)[1]):
                 await client.send_message(
                     message.channel,
                     '2:23 AM - 🎮 Mr McPowned: @KeksGiven to be fair, he can\'t store floats\n2:23 AM - 🎮 Mr McPowned: And if he did, I\'d call him retarded'
@@ -39,13 +37,13 @@ async def quote(message, client):
 
             search = True
 
-            msgslist = [i for i, x in enumerate(quotes) if message.content.split(None, 1)[1].lower() in x[0].lower()]
+            msgslist = [i for i, x in enumerate(quotes) if message.clean_content.split(None, 1)[1].lower() in x[0].lower()]
 
             if not msgslist:
                 await client.send_message(
                     message.channel,
                     'I did not find any quotes with "{}" in them.'.format(
-                        message.content.split(None, 1)[1].lower()
+                        message.clean_content.split(None, 1)[1].lower()
                         )
                     )
                 return
@@ -99,7 +97,7 @@ async def addquote(message, client):
     <idgamesbot> Nothing found.
     <TerminusEst13> Well there you have it, folks.`*
     '''
-    cmd = message.content.split(None, 1)[1].strip()
+    cmd = message.clean_content.split(None, 1)[1].strip()
 
     # Complain about cheeky asses.
 
@@ -128,23 +126,8 @@ async def addquote(message, client):
 
         if not [x[0] for x in quotes if x[0] == cmd]:
             # Add quote to list
-            #replace mentions
-            while mention_syntax.search(cmd):
-                member = discord.utils.get(
-                    message.server.members,
-                    id=mention_syntax.search(cmd).group(2)
-                    )
 
-                if member:
-                    cmd = cmd.replace(
-                        mention_syntax.search(cmd).group(1),
-                        '@' + member.name)
-                else:
-                    cmd = cmd.replace(
-                        mention_syntax.search(cmd).group(1),
-                        '@invalid_user'
-                    )
-
+            # escape here and everyone mentions
             cmd = cmd.replace('@everyone', '@\u2020everyone').replace('@here', '@\u2020here')
 
             quotes.append([cmd, message.author.id])
@@ -339,8 +322,8 @@ async def log(message, client):
                     x.author.name,
                     )
 
-                if x.content:
-                    msgToAdd += message.content
+                if x.clean_content:
+                    msgToAdd += message.clean_content
 
                 for ach in x.attachments:
                     msgToAdd += '\n{}'.format(ach['url'])
@@ -351,7 +334,7 @@ async def log(message, client):
                     x.timestamp.hour,
                     minute,
                     x.author.name,
-                    x.content.replace('*', r'\*').replace('_', r'\_').replace('~', r'\~').replace('`', r'\`')
+                    x.clean_content.replace('*', r'\*').replace('_', r'\_').replace('~', r'\~').replace('`', r'\`')
                     )
 
             if len(msgToSend + msgToAdd) < 2000:
@@ -425,8 +408,8 @@ async def logquote(message, client):
                     x.author.name,
                     )
 
-                if x.content:
-                    msgToAdd += message.content
+                if x.clean_content:
+                    msgToAdd += message.clean_content
 
                 for ach in x.attachments:
                     msgToAdd += '\n{}'.format(ach['url'])
@@ -437,28 +420,12 @@ async def logquote(message, client):
                     x.timestamp.hour,
                     minute,
                     x.author.name,
-                    x.content
+                    x.clean_content
                     )
 
 
     #replace mentions
-    while mention_syntax.search(msgToAdd):
-        member = discord.utils.get(
-            message.server.members,
-            id=mention_syntax.search(msgToAdd).group(2)
-            )
-
-        if member:
-            msgToAdd = msgToAdd.replace(
-                mention_syntax.search(msgToAdd).group(1),
-                '@' + member.name)
-        else:
-            msgToAdd = msgToAdd.replace(
-                mention_syntax.search(msgToAdd).group(1),
-                '@invalid_user'
-            )
-
-    cmd = msgToAdd.replace('@everyone', '@\u2020everyone').replace('@here', '@\u2020here')
+    msgToAdd = msgToAdd.replace('@everyone', '@\u2020everyone').replace('@here', '@\u2020here')
 
     if not msgToAdd:
         await client.send_message(message.channel, ':no_entry_sign: I ended up logging nothing, so I added nothing to my quotes.')
@@ -639,7 +606,7 @@ async def sendmemo(message, client):
                     x.timestamp.hour,
                     minute,
                     x.author.name,
-                    x.content
+                    x.clean_content
                     )
 
             for mention in msgme:
@@ -684,7 +651,7 @@ async def sendmemo(message, client):
                     x.timestamp.hour,
                     minute,
                     x.author.name,
-                    x.content
+                    x.clean_content
                     )
 
             for mention in msgme:
