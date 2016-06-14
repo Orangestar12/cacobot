@@ -8,7 +8,7 @@ from apiclient.discovery import build # pylint: disable=e0401
 
 import cacobot.base as base
 
-mention_syntax = re.compile(r'(<@([0-9#]*?)>)')
+mention_syntax = re.compile(r'(<@(\!?[0-9]*?)>)')
 
 youtube = build(base.config['youtube']['API_SERVICE_NAME'], base.config['youtube']['API_VERSION'], developerKey=base.config['youtube']['DEVELOPER_KEY'])
 
