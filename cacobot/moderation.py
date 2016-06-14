@@ -429,7 +429,7 @@ async def nuke(message, client):
                 )
             return
 
-    await client.purge_from(message.channel, limit=r):
+    await client.purge_from(message.channel, limit=r)
 
 @base.cacofunc
 async def cleanup(message, client):
