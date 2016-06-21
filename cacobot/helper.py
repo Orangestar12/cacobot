@@ -6,7 +6,7 @@ import discord # for errors
 
 import cacobot.base as base
 
-mention_syntax = re.compile(r'(<@([0-9#]*?)>)')
+mention_syntax = re.compile(r'(<@(\!?[0-9]*?)>)')
 
 # Load msgs
 try:
