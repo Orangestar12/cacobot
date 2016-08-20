@@ -24,8 +24,7 @@ except FileNotFoundError:
 # mention_syntax is a useful regex that matches any mention of a person.
 # i.e. <@88401933936640000> (which resolves to @Orangestar) would capture, and
 # return the ID as the second capturing group (The mention itself is the first.)
-# Includes # for discriminators now (It's a shitty fix but it works)
-mention_syntax = re.compile(r'(<@([0-9#]*?)>)')
+mention_syntax = re.compile(r'(<@((\!|\&)?[0-9]*?)>)')
 
 # limit is a regex that only includes alphanumeric characters, underscores, and
 # dashes.
