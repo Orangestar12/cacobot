@@ -845,7 +845,7 @@ killmsgs = [
     '%k and Cartoon Network UK leaked %o. We\'re still on hiatus, though.',
     '%o wasn\'t noticed by %k-senpai.',
     '%k SJW\'ed %o.',
-    '%k told %o to check %p privilege.'
+    '%k told %o to check %p privilege.',
     '%k ayy lmao\'d %o.',
     '%k Jerry\'d %o.',
     '%k crushed %o with Balrog.\n~~Huzzah!~~ Oh Yeah!',
