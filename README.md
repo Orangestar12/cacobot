@@ -1,30 +1,36 @@
-#Introduction
+Introduction
+============
 
 CacoBot is a Discord bot designe with a lot of small, useful, and fun commands specializing in memory, recall, and vector image generation. It can be run with a default set of plugins, or integrated and extended in your own code.
 
 **[Please read the terms of service before adding the main CB to your server.](https://github.com/Orangestar12/cacobot/blob/master/tos.md)**
 
-#Prerequisites
+Prerequisites
+=============
 
 Install the latest version of [Python](https://www.python.org). CacoBot requires *at minimum* version 3.6, which could cause problems on some Ubuntu based systems.
 
 Install [discord.py](https://github.com/Rapptz/discord.py/). For Python 3.6, you may have to run `pip` as a module. (`python3.6 -m pip install discord.py`)
 
-#Download
+Download
+========
 
 Check out the latest version of CacoBot with `git` (Recommended.)
 
 ```
-git checkout https://github.com/Orangestar12/cacobot```
+git checkout https://github.com/Orangestar12/cacobot
+```
 
 **or**
 
 Download [the latest version of CacoBot](https://github.com/Orangestar12/cacobot/archive/master.zip).
 
 ```
-wget https://github.com/Orangestar12/cacobot/archive/master.zip```
+wget https://github.com/Orangestar12/cacobot/archive/master.zip
+```
 
-#Configuration
+Configuration
+=============
 
 Create a file called `config.json` with the following structure:
 
@@ -32,15 +38,18 @@ Create a file called `config.json` with the following structure:
 {
     "invokers" : ["."],
     "token" : "Your user token here."
-}```
+}
+```
 
-#Activation
+Activation
+==========
 
 You can run CacoBot as a module, which will look for a configuration in the directory `./configs` and activate every command stored in `cacobot/plugins`
 
 ```
 cd Documents/git/CacoBot
-python3.6 -m cacobot```
+python3.6 -m cacobot
+```
 
 You can run `archvile.sh` to do the above, and automatically restart CacoBot every time it closes. (You may need to edit it with your Python binary's name.)
 
