@@ -1,4 +1,1 @@
-while true; do
-    python3 main.py
-    sleep 5
-done;
+sleep 5\npython3.6 -m cacobot

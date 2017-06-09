@@ -30,7 +30,7 @@ As the owner and maintainer of CacoBot, I retain some rights about what I can do
 
 1. **I retain the right to use any CacoBot commands to access or view any server he is connected to.** This means that I will, occasionally (usually to debug) use CacoBot's debug commands to examine servers he's connected to and messages he's received. Usually what I do with CacoBot isn't too intrusive, but I'm putting this here to cover my ass because people complained about this last time.
 
-2. **I retain the right to completely restrict your usage of CacoBot through the global plug command, at any time.** This is usually restricted to other bots to prevent CacoBot from doing commands spurred by them from other users, but just know that if you're being enough of a nuisance, I can kick you out of CacoBot.
+2. **I retain the right to completely restrict your usage of CacoBot in any way at any time.** This is usually restricted to other bots to prevent CacoBot from doing commands spurred by them from other users, but just know that if you're being enough of a nuisance, I can kick you out of CacoBot.
 
 3. **Any data you input into CacoBot at any time is stored on** ***my*** **hardware and** ***my*** **user account on** ***my*** **terms, and may be stored, saved, deleted, edited, or posted elsewhere, without your consent.** This includes quotes added to the `.quote/.addquote` command, tags added through the `.tag` command, your user ID (as posted via `.tag`, `.memo`, etc.), or any servers you ask CacoBot to connect to.
 

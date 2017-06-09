@@ -59,18 +59,7 @@ target/
 # Linting
 pylintrc
 .pylintrc
+.linter-py_*
 
 # CacoBot-Specific
-configs/*
-configs - backup/*
-tmp.svg
-tmp.png
-
-# Debug stuff from me
-Radio/
-IRC/
-sam
-
-# This is the old 1-file version of CB
-# I keep it around to steal old code from.
-cacobot-discord.py
+config/
